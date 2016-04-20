@@ -1,0 +1,142 @@
+#include <SDL.h>
+#include <stdio.h>
+#include <stdbool.h>
+
+//Fönsterstorlek
+const int SCREEN_WIDTH = 950;
+const int SCREEN_HEIGHT = 750;
+
+//Startar SDL och öppnar ett fönster
+bool init();
+
+//Laddar media
+bool loadMedia();
+
+//Friar media och stänger av SDL
+void close();
+
+//Fönstrets som media ska renderas till
+SDL_Window* gWindow = NULL;
+
+//Ytan inom fönstret
+SDL_Surface* gScreenSurface = NULL;
+
+//Bakgrunden
+SDL_Surface* gBakgrund = NULL;
+
+bool init()
+{
+	//Initialiseringsflaggan
+	bool success=true;
+
+	//Initialisera SDL
+	if(SDL_Init(SDL_INIT_VIDEO)<0)
+	{
+		printf("SDL could not initialize! SDL_Error: %s\n",SDL_GetError());
+		success=false;
+	}
+	else
+	{
+		//Skapa fönster
+		gWindow=SDL_CreateWindow("SDL Tutorial",SDL_WINDOWPOS_UNDEFINED,SDL_WINDOWPOS_UNDEFINED,SCREEN_WIDTH,SCREEN_HEIGHT,SDL_WINDOW_SHOWN);
+		if(gWindow==NULL)
+		{
+			printf("Window could not be created! SDL_Error: %s\n",SDL_GetError());
+			success=false;
+		}
+		else
+		{
+			//Visa bakgrunden i fönstret
+			gScreenSurface=SDL_GetWindowSurface(gWindow);
+		}
+	}
+
+	return success;
+}
+
+bool loadMedia()
+{
+	//Ladda success-flag
+	bool success=true;
+
+	//Ladda bakgrunden
+	gBakgrund=SDL_LoadBMP("bakgrund.bmp");
+
+	if(gBakgrund==NULL)
+	{
+	    //Laddningen av bakgrunden misslyckades
+		printf("Unable to load image %s! SDL Error: %s\n","bakgrund.bmp",SDL_GetError());
+		success = false;
+	}
+
+	return success;
+}
+
+void close()
+{
+	//Ta bort bakgrunden från fönstret
+	SDL_FreeSurface(gBakgrund);
+	gBakgrund=NULL;
+
+	//Stäng ner fönstret
+	SDL_DestroyWindow(gWindow);
+	gWindow=NULL;
+
+	//Stäng av SDL
+	SDL_Quit();
+}
+
+int main( int argc, char* args[] )
+{
+	//Starta SDL och skapa ett fönster
+	if(!init())
+	{
+		printf("Failed to initialize!\n");
+	}
+	else
+	{
+		//Ladda media
+		if(!loadMedia())
+		{
+			printf("Failed to load media!\n");
+		}
+		else
+		{
+			//Loop-flaggan i huvudfunktionen
+			bool quit=false;
+
+			//Eventhanteraren
+			SDL_Event e;
+
+			//Medan fönstret är öppet
+			while(!quit)
+			{
+				//Hantera eventer som står på kö
+				while(SDL_PollEvent(&e)!=0)
+				{
+					//Stäng fönstret om användaren klickar på X-rutan på fönstret
+					if(e.type==SDL_QUIT)
+					{
+						quit=true;
+					}
+					//Stäng fönstret om användaren trycker på ESC-knappen på tangentbordet
+					else if(e.key.keysym.sym==SDLK_ESCAPE)
+                    {
+                        quit=true;
+                    }
+				}
+
+				//Visa bakgrunden på fönstret
+				SDL_BlitSurface(gBakgrund,NULL,gScreenSurface,NULL);
+
+				//Uppdatera fönstret
+				SDL_UpdateWindowSurface(gWindow);
+			}
+		}
+	}
+
+	//Stäng ner fönstret och SDL
+	close();
+
+	return 0;
+}
