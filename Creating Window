@@ -3,8 +3,8 @@
 #include <stdbool.h>
 
 //Fönsterstorlek
-const int SCREEN_WIDTH = 950;
-const int SCREEN_HEIGHT = 750;
+const int SCREEN_WIDTH = 640;
+const int SCREEN_HEIGHT = 480;
 
 //Startar SDL och öppnar ett fönster
 bool init();
