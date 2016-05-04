@@ -2,9 +2,10 @@
 #ifndef _MSC_VER
 #include <unistd.h>
 #endif
-#include <SDL2/SDL.h>
-#include <SDL2/SDL_net.h>
+#include <SDL.h>
+#include <SDL_net.h>
 #include <string.h>
+#include <stdio.h>
 
 struct player{
   TCPsocket socket;
@@ -20,7 +21,7 @@ int main(int argc, char **argv)
   char tmp[1024];
   int curid=0;
   int playernum=0;
-	
+
   Uint32 ipaddr;
   Uint16 port;
   struct player players[maxPlayers];
@@ -32,16 +33,16 @@ int main(int argc, char **argv)
   for(i=0;i<maxPlayers;i++){ //initiera allt till 0
     players[i].exists = 0;
   }
-  
+
   port=(Uint16)strtol(argv[1],NULL,0);
-  
+
   /* Resolve the argument into an IPaddress type */
   SDLNet_ResolveHost(&ip,NULL,port);
 
   /* open the server socket */
   TCPsocket server=SDLNet_TCP_Open(&ip);
   int next=0;
-  
+
   while(1){
 
     for(i=0;i<10;i++){ //Hittar första bästa lediga spot
@@ -54,7 +55,7 @@ int main(int argc, char **argv)
     // Försöker acca connection
     players[next].socket = SDLNet_TCP_Accept(server);
     if(players[next].socket){
-	  
+
       SDLNet_TCP_AddSocket(sockets,players[next].socket);
       players[next].exists = 1;
       sprintf(tmp,"%d",next);
@@ -64,11 +65,9 @@ int main(int argc, char **argv)
 
     //check for incoming data
     while(SDLNet_CheckSockets(sockets,0)>0){
-      printf("check sockets\n");
       for(i=0;i<maxPlayers;i++){
 	if(players[i].exists)
 	  if(SDLNet_SocketReady(players[i].socket)){
-	    printf("socket ready\n");
 	    //	  printf("Inkommande paket\n");
 	    if(!(SDLNet_TCP_Recv(players[i].socket,tmp,1024)))
 	      {
@@ -76,7 +75,6 @@ int main(int argc, char **argv)
 		return 1;
 	      }
 	    else sscanf(tmp,"%d %d",&type,&id);
-	    printf("inlast\n");
 
 	    if(type==2){
 	      for(k=0;k<maxPlayers;k++){
@@ -90,7 +88,7 @@ int main(int argc, char **argv)
 	    else if(type == 3){
 	      for(k=0;k<maxPlayers;k++){
 		if(players[k].exists){
-		  
+
 		  if(k!=i){
 		    SDLNet_TCP_Send(players[k].socket,tmp,strlen(tmp)+1);
 		  }
@@ -102,20 +100,20 @@ int main(int argc, char **argv)
 	    }
 	  }
       }
-      
-      SDL_Delay(1);
+
+      SDL_Delay(20);
     }
 
-    
+
   }
-  
+
   SDLNet_TCP_Close(server);
   SDLNet_FreeSocketSet(sockets);
   /* shutdown SDL_net */
   SDLNet_Quit();
-  
+
   /* shutdown SDL */
   SDL_Quit();
-  
+
   return(0);
 }
