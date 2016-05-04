@@ -15,7 +15,7 @@ struct player{
 int main(int argc, char **argv)
 {
   int maxPlayers = 10;
-  int x,y,type,id;
+  int x,y,type,id,hej;
   IPaddress ip;
   char tmp[1024];
   int curid=0;
