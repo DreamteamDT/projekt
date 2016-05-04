@@ -13,7 +13,7 @@ struct player{
 
 int main(int argc, char **argv)
 {
-  int x,y;
+  int x,y,test;
   IPaddress ip;
   char tmp[1024];
   int curid=0;
