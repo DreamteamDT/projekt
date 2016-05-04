@@ -1,6 +1,7 @@
 # Makefile för SDL i windows 
 # Följ den här för att kunna kompilera i cmd https://www.youtube.com/watch?v=EIywMxRiXAQ
-# Skriv mingw32-make för att kompilera i cmd
+# Installera cygwin för en linux liknande cmd https://www.youtube.com/watch?v=hh-V6el8Oxk
+# Skriv make för att kompilera i cmd
 
 # Alla C filer 
 OBJS = main.c alien.c spaceman.c world.c
