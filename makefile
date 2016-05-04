@@ -1,20 +1,29 @@
-CFLAGS = -Wall -pedantic -Werror
-LFLAGS = `sdl-config --libs` -lSDL -lSDL_image -lSDL_mixer
-OBJS   = audio.o bullet.o draw.o entity.o init.o input.o graphics.o main.o player.o
-PROG = tutorial05
-CXX = gcc
+# Makefile för SDL i windows 
+# Följ den här för att kunna kompilera i cmd https://www.youtube.com/watch?v=EIywMxRiXAQ
+# Installera cygwin för en linux liknande cmd https://www.youtube.com/watch?v=hh-V6el8Oxk
+# Skriv make för att kompilera i cmd
 
-# top-level rule to create the program.
-all: $(PROG)
+# Alla C filer 
+OBJS = main.c alien.c spaceman.c world.c
 
-# compiling other source files.
-%.o: src/%.c src/%.h src/defs.h src/structs.h
-	$(CXX) $(CFLAGS) -c -s $<
+# Kompilatorn
+CC = gcc
 
-# linking the program.
-$(PROG): $(OBJS)
-	$(CXX) $(OBJS) -o $(PROG) $(LFLAGS)
+# Peka dit alla .h filer finns på hårddisken (ändra så det passar din dator)
+INCLUDE_PATHS = -IC:\min_dl\include\SDL2 -IC:\min_dl\image\include\SDL2 -IC:\min_dl\ttf\include\SDL2 -IC:\min_dl\net\include\SDL2
 
-# cleaning everything that can be automatically recreated with "make".
-clean:
-	rm $(PROG) *.o
+# Peka dit alla libraries finns på hårddisken (ändra så det passar din dator)
+LIBRARY_PATHS = -LC:\min_dl\lib -LC:\min_dl\image\lib -LC:\min_dl\ttf\lib -LC:\min_dl\net\lib
+
+# Kompilator flaggor
+COMPILER_FLAGS = -std=c99
+
+# Linker flaggor
+LINKER_FLAGS = -lmingw32 -lSDL2main -lSDL2 -lSDL2_image -lSDL2_mixer -lSDL2_net
+
+# namnet för .exe filen
+OBJ_NAME = main
+
+# Det som skrivs i cmd, $() översätts till det du skrivit ovanför
+all : $(OBJS)
+	$(CC) $(OBJS) $(INCLUDE_PATHS) $(LIBRARY_PATHS) $(COMPILER_FLAGS) $(LINKER_FLAGS) -o $(OBJ_NAME)
