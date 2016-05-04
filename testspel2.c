@@ -1,10 +1,9 @@
-#include <SDL/SDL.h>
 #include <stdbool.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <SDL2/SDL.h>
-#include <SDL2/SDL_net.h>
+#include <SDL.h>
+#include <SDL_net.h>
 #include <time.h>
 
 const int WINDOW_WIDTH = 640;
@@ -66,24 +65,24 @@ int main(int argc, char **argv)
   SDLNet_TCP_Recv(sock,tmp,1024);
   sscanf(tmp,"%d",&id);
   printf("my ID: %d\n",id);
-  
+
   SDLNet_TCP_AddSocket(socketset,sock);
   int test;
   SDL_Window *screen = nullptr;
   SDL_Texture *currentImage = nullptr;
   SDL_Renderer *renderTarget = nullptr;
-  
+
   screen = SDL_CreateWindow("My Game Window",SDL_WINDOWPOS_CENTERED,SDL_WINDOWPOS_CENTERED,640,480,SDL_WINDOW_SHOWN);
-  
+
   screenSurface = SDL_GetWindowSurface(screen);
   bitmap = SDL_LoadBMP("bat.bmp");
-  
+
   int change=0;
   int batImageX = 20;
   int batImageY = 58;
    int batWidth = 75;
    int batHeight = 50;
- 
+
    srand(time(NULL));
    // We change these to make the bat move
    int batX = rand()%576;
@@ -94,7 +93,7 @@ int main(int argc, char **argv)
    printf("connected\n");
    int enemyX;
    int enemyY;
-   
+
    SDL_Event event;
    bool gameRunning = true;
 
@@ -109,9 +108,9 @@ int main(int argc, char **argv)
    batDest.y = batY;
    batDest.w = batWidth;
    batDest.h = batHeight;
-   
+
    // SDL_EnableKeyRepeat(20,20);
-   
+
    while (gameRunning)
    {
      printf("game running\n");
@@ -125,7 +124,7 @@ int main(int argc, char **argv)
        enemies[enemyid].x = enemyX;
        enemies[enemyid].y = enemyY;
        if(!enemies[enemyid].exists){//Om ny fiende
-	 
+
 	 enemies[enemyid].bitmap = SDL_LoadBMP("bat.bmp");
 	 SDL_SetColorKey(enemies[enemyid].bitmap,SDL_SRCCOLORKEY,SDL_MapRGB(enemies[enemyid].bitmap->format,255,0,255));
 	 enemies[enemyid].dstRect.w = 75;
@@ -180,11 +179,11 @@ int main(int argc, char **argv)
 	 }
 	 change = 0;
        }
-       
+
      }
      int i;
      for(i=0;i<maxPlayers;i++){
-       
+
        if(enemies[i].exists){ //Printar ut alla fiender på skärmen
        	 SDL_FillRect(screen,&(enemies[i].dstRect),SDL_MapRGB(screen->format,0,0,0));
 	 enemies[i].dstRect.x = enemies[i].x;
@@ -196,7 +195,7 @@ int main(int argc, char **argv)
      //Printar spelaren på skärmen
        batDest.x = batX;
        batDest.y = batY;
-      
+
        SDL_FillRect(screen,&batDest, SDL_MapRGB(screen->format, 0, 0, 0));
        SDL_BlitSurface(bitmap,&batSource,screen,&batDest);
        SDL_Flip(screen);
