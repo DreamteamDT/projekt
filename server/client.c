@@ -41,7 +41,7 @@ void send_data(int type,int id,int x,int y)
     while(size<len)
     {
 
-       size+=SDLNet_TCP_Send(sock,tmp+size,len-size);
+        size+=SDLNet_TCP_Send(sock,tmp+size,len-size);
         printf("skickat!\n");
     }
 }
@@ -196,15 +196,17 @@ int main(int argc, char **argv)
                 default:
                     break;
                 }
-                if(change)  //Skickar data om man rört sig
-                {
-                    send_data(type,id,batX,batY);
-                    change = 0;
-                }
-                change = 0;
+
             }
 
         }
+
+        if(change)  //Skickar data om man rört sig
+        {
+            send_data(type,id,batX,batY);
+            change = 0;
+        }
+
         int i;
         for(i=0; i<maxPlayers; i++)
         {
@@ -225,7 +227,7 @@ int main(int argc, char **argv)
         SDL_FillRect(screen,&batDest, SDL_MapRGB(screen->format, 0, 0, 0));
         SDL_BlitSurface(bitmap,&batSource,screen,&batDest);
         SDL_Flip(screen);
-       // SDL_Delay(1);
+        SDL_Delay(10);
     }
 
     SDLNet_TCP_Close(sock);

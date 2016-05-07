@@ -29,7 +29,7 @@ struct player
 int main(int argc, char **argv)
 {
     int maxPlayers = 4;
-    int x,y,type,id,hej;
+    int x,y,type,id,next=0,offset;
     IPaddress ip;
     char tmp[1024];
     int curid=0;
@@ -56,44 +56,59 @@ int main(int argc, char **argv)
     /* open the server socket */
     TCPsocket server=SDLNet_TCP_Open(&ip);
 
+
+
     while(1)
     {
-        // printf("%d \n",next);
+
         // Försöker acca connection
-        players[curid].socket = SDLNet_TCP_Accept(server);
-        if(players[curid].socket)
+        players[next].socket = SDLNet_TCP_Accept(server);
+
+        if(players[next].socket)
         {
-            SDLNet_TCP_AddSocket(sockets,players[curid].socket);
-            sprintf(tmp,"%d",curid);
+
+            SDLNet_TCP_AddSocket(sockets,players[next].socket);
+            players[next].exists = 1;
+            sprintf(tmp,"%d",next);
             printf("New connection\n");
-            SDLNet_TCP_Send(players[curid].socket,tmp,strlen(tmp)+1);
-            curid++;
+            SDLNet_TCP_Send(players[next].socket,tmp,strlen(tmp)+1);
+            for(i=0; i<maxPlayers; i++) //Hittar första bästa lediga spot
+            {
+                if(!players[i].exists)
+                {
+                    next = i;
+                    i = 10;
+                }
+            }
+
         }
 
         //check for incoming data
         while(SDLNet_CheckSockets(sockets,0)>0)
         {
-
-            for(i=0; i<curid; i++)
+            printf("fore ");
+            for(i=0; i<maxPlayers; i++)
             {
+                if(players[i].exists)
                     if(SDLNet_SocketReady(players[i].socket))
                     {
+
                         //	  printf("Inkommande paket\n");
-                        int offset = 0;
-                      do
-                        {
-                            offset+=SDLNet_TCP_Recv(players[i].socket,tmp+offset,1024);
-                            //printf("strlen: %d ",strlen(tmp));
-                        }
-                        while(uncomplete_string(tmp));
+                        offset = 0;
+                         do
+                         {
+                        offset+=SDLNet_TCP_Recv(players[i].socket,tmp,1024);
+                          printf("strlen: %d ",strlen(tmp));
+                          }
+                          while(uncomplete_string(tmp));
 
                         sscanf(tmp,"%d %d",&type,&id);
 
                         if(type==2)
                         {
-                            for(k=0; k<curid; k++)
+                            for(k=0; k<maxPlayers; k++)
                             {
-
+                                if(players[k].exists)
                                     if(k!=i)
                                     {
                                         if(!SDLNet_TCP_Send(players[k].socket,tmp,strlen(tmp)+1))
@@ -107,9 +122,9 @@ int main(int argc, char **argv)
                         }
                         else if(type == 3)
                         {
-                            for(k=0; k<curid; k++)
+                            for(k=0; k<maxPlayers; k++)
                             {
-
+                                if(players[k].exists)
                                     if(k!=i)
                                     {
                                         if(!SDLNet_TCP_Send(players[k].socket,tmp,strlen(tmp)+1))
@@ -122,14 +137,22 @@ int main(int argc, char **argv)
                             }
                             SDLNet_TCP_DelSocket(sockets,players[id].socket);
                             SDLNet_TCP_Close(players[id].socket);
-                           // players[id].exists = 0;
-
+                            players[id].exists = 0;
+                            for(i=0; i<maxPlayers; i++) //Hittar första bästa lediga spot
+                            {
+                                if(!players[i].exists)
+                                {
+                                    next = i;
+                                    i = 10;
+                                }
+                            }
                         }
                     }
 
             }
 
-            SDL_Delay(1);
+            SDL_Delay(10);
+
         }
 
 
