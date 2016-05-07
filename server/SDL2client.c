@@ -26,23 +26,13 @@ TCPsocket sock;
 void send_data(int type,int id,int x,int y)
 {
     char tmp[1024];
-    if(type==2)
-    {
-        sprintf(tmp,"%d %d %d %d \n",type,id,x,y);
-    }
-    if(type == 3)
-    {
-
-        sprintf(tmp,"%d %d %d %d \n",type,id,x,y);
-    }
-    printf("%s",tmp);
+    sprintf(tmp,"%d %d %d %d \n",type,id,x,y);
     int size=0;
-    int len=strlen(tmp)+1;
+    int len=strlen(tmp);
     while(size<len)
     {
 
-       size+=SDLNet_TCP_Send(sock,tmp+size,len-size);
-        printf("skickat!\n");
+        size+=SDLNet_TCP_Send(sock,tmp+size,len-size);
     }
 }
 
@@ -127,16 +117,15 @@ int main(int argc, char **argv)
 
     while (gameRunning)
     {
-        while((SDLNet_CheckSockets(socketset,0)>0) && SDLNet_SocketReady(sock))
+        while(SDLNet_CheckSockets(socketset,0)>0)
         {
             int offset = 0;
+            int test;
             do
             {
-                offset+=SDLNet_TCP_Recv(sock,tmp+offset,1024);
+                SDLNet_TCP_Recv(sock,tmp+offset,1024);
             }
             while(uncomplete_string(tmp));
-
-            printf("%s\n",tmp);
             sscanf(tmp,"%d %d %d %d",&type,&enemyid,&enemyX,&enemyY);
             enemies[enemyid].x = enemyX;
             enemies[enemyid].y = enemyY;
@@ -225,7 +214,7 @@ int main(int argc, char **argv)
         SDL_FillRect(screen,&batDest, SDL_MapRGB(screen->format, 0, 0, 0));
         SDL_BlitSurface(bitmap,&batSource,screen,&batDest);
         SDL_Flip(screen);
-       // SDL_Delay(1);
+        SDL_Delay(1);
     }
 
     SDLNet_TCP_Close(sock);
