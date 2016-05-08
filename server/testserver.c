@@ -95,12 +95,12 @@ int main(int argc, char **argv)
 
                         //	  printf("Inkommande paket\n");
                         offset = 0;
-                         do
-                         {
-                        offset+=SDLNet_TCP_Recv(players[i].socket,tmp,1024);
-                          printf("strlen: %d ",strlen(tmp));
-                          }
-                          while(uncomplete_string(tmp));
+                        do
+                        {
+                            offset+=SDLNet_TCP_Recv(players[i].socket,tmp,1024);
+                            printf("strlen: %d ",strlen(tmp));
+                        }
+                        while(uncomplete_string(tmp));
 
                         sscanf(tmp,"%d %d",&type,&id);
 
@@ -151,11 +151,11 @@ int main(int argc, char **argv)
 
             }
 
-            SDL_Delay(10);
+
 
         }
 
-
+        SDL_Delay(10);
     }
 
     SDLNet_TCP_Close(server);
