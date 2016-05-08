@@ -56,7 +56,9 @@ int main(int argc, char **argv)
     Uint16 port;
     port=(Uint16) strtol(argv[2],NULL,0);
     IPaddress ip;
+
     SDLNet_ResolveHost(&ip,argv[1],port);
+
 
     if(!(sendSock = SDLNet_UDP_Open(0)))
     {
@@ -72,6 +74,7 @@ int main(int argc, char **argv)
         exit(2);
     }
     printf("my port: %d\n",myaddress->port);
+    printf("my host: %d\n",myaddress->host);
 
     UDPpacket *rcvPack = SDLNet_AllocPacket(1024);
     if(!rcvPack)
@@ -80,12 +83,7 @@ int main(int argc, char **argv)
         return 1;
     }
 
-    rcvSock = SDLNet_UDP_Open(myaddress->port);
-    if(!rcvSock)
-    {
-        printf("Could not allocate receiving socket\n");
-        return 1;
-    }
+
     UDPpacket *p = SDLNet_AllocPacket(1024);
     if(!p)
     {
@@ -95,23 +93,25 @@ int main(int argc, char **argv)
 
     p->address.host = ip.host;
     p->address.port = ip.port;
+    printf("Server host: %d\n",ip.host);
+
     type = 0;
     sprintf(p->data,"%d",type);
-    p->len = 20;
+    p->len = 50;
     SDLNet_UDP_Send(sendSock,-1,p);
-    int waiting = 1;
 
 
-    while(!(SDLNet_UDP_Recv(rcvSock,rcvPack)))
+    sscanf(tmp,"%d",&id);
+    while(!(SDLNet_UDP_Recv(sendSock,rcvPack)))
     {
     }
 
-    printf("ej recv\n");
+    printf("efter recv\n");
 
     sscanf(rcvPack->data,"%d %d",&type,&id);
     printf("my ID: %d\n",id);
 
-    SDLNet_UDP_AddSocket(socketset,rcvSock);
+    SDLNet_UDP_AddSocket(socketset,sendSock);
 
     int test;
     SDL_Surface* screen = SDL_SetVideoMode( WINDOW_WIDTH, WINDOW_HEIGHT, 0,0);
@@ -159,7 +159,7 @@ int main(int argc, char **argv)
         while((SDLNet_CheckSockets(socketset,0)>0))
         {
 
-            SDLNet_UDP_Recv(rcvSock,rcvPack);
+            SDLNet_UDP_Recv(sendSock,rcvPack);
             printf("%s\n",rcvPack->data);
             sscanf(rcvPack->data,"%d %d %d %d",&type,&enemyid,&enemyX,&enemyY);
             enemies[enemyid].x = enemyX;
@@ -255,7 +255,6 @@ int main(int argc, char **argv)
         SDL_Delay(10);
     }
 
-    SDLNet_UDP_Close(rcvSock);
     SDLNet_UDP_Close(sendSock);
     SDLNet_Quit();
     SDL_FreeSurface(bitmap);

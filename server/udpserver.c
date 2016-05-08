@@ -6,6 +6,7 @@
 #include <SDL_net.h>
 #include <string.h>
 #include <stdio.h>
+#include <inttypes.h>
 
 int uncomplete_string(char tmp[])
 {
@@ -24,6 +25,8 @@ struct player
     UDPpacket *p;
     int id;
     int exists;
+    TCPsocket socket;
+    IPaddress ip;
 
 };
 
@@ -73,13 +76,6 @@ int main(int argc, char **argv)
         return 1;
     }
 
-    if(!(sendSock = SDLNet_UDP_Open(5001)))
-    {
-        printf("Couldnt open socket\n");
-        SDLNet_Quit();
-        SDL_Quit();
-        return 1;
-    }
 
     SDLNet_UDP_AddSocket(sockets,rcvSock);
 
@@ -95,16 +91,19 @@ int main(int argc, char **argv)
 
             if(type == 0)
             {
-                for(i=0;i<maxPlayers;i++)
+                for(i=0; i<maxPlayers; i++)
                 {
                     if(!players[i].exists)
                     {
                         players[i].id = i;
                         players[i].p = rcvPack;
                         players[i].exists = 1;
-                        sprintf(players[i].p->data,"%d %d",type,players[i].id);
+                        players[i].ip = rcvPack->address;
+                        printf("rcvpack address: %d \n",rcvPack->address.host);
+                        sprintf(rcvPack->data,"%d %d",type,players[i].id);
                         printf("%s\n",players[i].p->data);
-                        SDLNet_UDP_Send(sendSock,-1,players[i].p);
+                        printf("%d %d\n",players[i].p->address.port,players[i].p->address.host);
+                        SDLNet_UDP_Send(rcvSock,-1,players[i].p);
                         i = maxPlayers;
                         printf("Ny spelare tillagd!\n");
                     }
@@ -113,12 +112,20 @@ int main(int argc, char **argv)
 
             if(type == 2)
             {
-                for(i=0;i<maxPlayers;i++)
+                for(i=0; i<maxPlayers; i++)
                 {
-                    if(players[i].exists && i!=id)
+                    if(players[i].exists)
                     {
-                        players[i].p = rcvPack;
-                        SDLNet_UDP_Send(sendSock,-1,players[i].p);
+
+                        if(i!=id)
+                        {
+                            printf("id: %d\n",id);
+                            printf("i: %d\n",i);
+                            rcvPack->address = players[i].ip;
+                            SDLNet_UDP_Send(rcvSock,-1,rcvPack);
+                            printf("skickat!\n");
+                        }
+
                     }
                 }
             }
