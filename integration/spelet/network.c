@@ -48,6 +48,7 @@ int networkInit(Network *client,Player *man)
     }
     client->sendpack->address.host = ip.host;
     client->sendpack->address.port = ip.port;
+    client->sendpack->len = 50;
 
     //Försöker connecta till servern
     if(!(client->tcpsock = SDLNet_TCP_Open(&tcpip)))
@@ -63,4 +64,11 @@ int networkInit(Network *client,Player *man)
     SDLNet_UDP_AddSocket(client->udpset,client->udpsock);
 
     return 1;
+}
+
+void send_position(Player *man,Network *client)
+{
+    int type = 2;
+    sprintf(client->sendpack->data,"%d %d %d %d",type,man->id,man->x,man->y);
+    SDLNet_UDP_Send(client->udpsock,-1,client->sendpack);
 }

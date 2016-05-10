@@ -11,8 +11,9 @@ extern void sendPosition(Player *man);
 extern void loadAmmo(Bullet b[]);
 //extern void initBullet();
 extern SDL_Texture *initBullet();
-
 extern void updateLogic(Player *p, Bullet b[]);
+
+extern void send_position(Player *man,Network *client);
 extern int networkInit(Network *client,Player *man);
 
 int global = 0;
@@ -23,36 +24,22 @@ int main(int argc, char *argv[])
     Network client;
     int choice;
     int newline;
+    int moved = 0;
+    bullet.texture=initBullet();
+    Bullet ammo[20];
+
     printf("Vill du connecta till servern? 1=JA 0=NEJ");
     scanf("%d",&choice);
     scanf("%c",&newline);
-
     if(choice==1)
-    {
-        //*******INIT NETWORK***************
-
-
-
+    {//*******INIT NETWORK***************
         if(!(networkInit(&client,&player)))
         {
             done = 1;
         }
-
     }//**********************************
 
     init(&player);
-
-    bullet.texture=initBullet();
-    Bullet ammo[20];
-
-
-    int moved = 0;
-
-
-
-
-
-
 
     //link(ammo);
     //Event loop
@@ -61,11 +48,11 @@ int main(int argc, char *argv[])
     while(!done)
     {
         done = processEvents(&player,ammo,&moved);
-        //if(moved)
-        // {
-        //   send_position(&player);
-        //   moved = 0;
-        // }
+        if(moved)
+        {
+           send_position(&player,&client);
+           moved = 0;
+        }
         updateLogic(&player,ammo);
         doRender(&player,ammo);
         //don't burn up the CPU
