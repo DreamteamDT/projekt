@@ -51,6 +51,9 @@ int processEvents(Player *man,Bullet b[])
           case SDLK_ESCAPE:
             done = 1;
           break;
+          case SDLK_RETURN:
+            done = 1;
+          break;
         }
       }
       break;
