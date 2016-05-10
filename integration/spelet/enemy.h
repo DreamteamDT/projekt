@@ -5,4 +5,4 @@ struct enemies
     SDL_Surface* bitmap;
     int exists;
     SDL_Rect srcRect,dstRect;
-}typedef struct enemies enemy;
+}typedef struct enemies Enemies;

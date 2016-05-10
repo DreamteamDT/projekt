@@ -14,7 +14,7 @@ void init(Player *player)
                             );
   program.renderer = SDL_CreateRenderer(program.window, -1, SDL_RENDERER_ACCELERATED);
 
-    SDL_Surface *image = IMG_Load("USA.png");
+    SDL_Surface *image = IMG_Load("USA.PNG");
     SDL_Texture *texture;
     texture = SDL_CreateTextureFromSurface(program.renderer,image);
     SDL_FreeSurface(image);
@@ -26,7 +26,7 @@ void init(Player *player)
 }
 SDL_Texture *initBullet()
 {
-     SDL_Surface *image = IMG_Load("bullet.png");
+     SDL_Surface *image = IMG_Load("bullet.PNG");
      SDL_Texture *texture;
      texture = SDL_CreateTextureFromSurface(program.renderer,image);
      return texture;

@@ -1,6 +1,12 @@
+#ifdef __linux__
 #include <stdio.h>
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_image.h>
+#elif _WIN32
+#include <stdio.h>
+#include <SDL.h>
+#include <SDL_image.h>
+#endif // _WIN32
 
 typedef struct
 {
