@@ -41,6 +41,8 @@ int processEvents(Player *man,Bullet b[],int *moved,int *type)
           SDL_DestroyWindow(program.window);
           program.window = NULL;
           done = 1;
+          *moved = 1;
+            *type = 3;
         }
       }
       break;
@@ -50,9 +52,13 @@ int processEvents(Player *man,Bullet b[],int *moved,int *type)
         {
           case SDLK_ESCAPE:
             done = 1;
+            *moved = 1;
+            *type = 3;
           break;
           case SDLK_RETURN:
             done = 1;
+            *moved = 1;
+            *type = 3;
           break;
         }
       }
@@ -60,6 +66,8 @@ int processEvents(Player *man,Bullet b[],int *moved,int *type)
       case SDL_QUIT:
         //quit out of the game
         done = 1;
+        *moved = 1;
+        *type = 3;
       break;
       case SDL_MOUSEBUTTONDOWN :
       printf("clicked on mouse");

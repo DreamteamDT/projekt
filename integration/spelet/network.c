@@ -20,11 +20,11 @@ int networkInit(Network *client,Player *man)
     IPaddress ip,tcpip;
     char tmp[1024];
 
-    if(!(SDLNet_ResolveHost(&ip,"127.0.0.1",5000)))
+    if(!(SDLNet_ResolveHost(&ip,"localhost",5000)))
     {
         printf("Couldnt resolve udp host\n");
     }
-    if(!(SDLNet_ResolveHost(&tcpip,"127.0.0.1",4000)))
+    if(!(SDLNet_ResolveHost(&tcpip,"localhost",4000)))
     {
         printf("Couldnt resolve tcp host\n");
     }
@@ -68,10 +68,22 @@ int networkInit(Network *client,Player *man)
 
 void send_data(Player *man,Network *client,int type)
 {
+    char tmp[128];
+
     if(type == 2)
     {
         sprintf(client->sendpack->data,"%d %d %d %d",type,man->id,man->x,man->y);
         SDLNet_UDP_Send(client->udpsock,-1,client->sendpack);
     }
-
+    if(type == 3)
+    {
+        sprintf(tmp,"%d %d \n",type,man->id);
+        int size=0;
+        int len=strlen(tmp)+1;
+        while(size<len)
+        {
+            size+=SDLNet_TCP_Send(client->tcpsock,tmp+size,len-size);
+        }
+        printf("Disconnected!\n");
+    }
 }

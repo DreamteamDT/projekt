@@ -167,7 +167,7 @@ int main(int argc, char **argv)
                             offset+=SDLNet_TCP_Recv(players[i].tcpsock,tmp+offset,1024);
                         }
                         while(uncomplete_string(tmp));
-
+                        printf("%s",tmp);
                         sscanf(tmp,"%d %d",&type,&id);
 
                         if(type == 3)
@@ -188,6 +188,7 @@ int main(int argc, char **argv)
                             SDLNet_TCP_DelSocket(tcpset,players[id].tcpsock);
                             SDLNet_TCP_Close(players[id].tcpsock);
                             players[id].exists = 0;
+                            printf("Successfully disconnected player %d.\n",id);
                             for(i=0; i<maxPlayers; i++) //Hittar första bästa lediga spot
                             {
                                 if(!players[i].exists)
@@ -215,11 +216,10 @@ int main(int argc, char **argv)
                                 if(players[k].exists)
                                     {
                                         SDLNet_TCP_Send(players[k].tcpsock,tmp,strlen(tmp)+1);
-
-                                        printf("Shutting down in 5 seconds.\n",k);
                                     }
 
                             }
+
                     running = 0;
                 default:
                     break;
@@ -232,7 +232,11 @@ int main(int argc, char **argv)
         SDL_Delay(1);
         if(running == 0)
         {
-            SDL_Delay(5000);
+            for(i=5;i>0;i--)
+            {
+                printf("Shutting down in %d seconds.\n",i);
+                SDL_Delay(1000);
+            }
         }
     }
 
