@@ -1,8 +1,4 @@
-#include <stdio.h>
-#include <stdlib.h>
-#include "network.h"
-#include <SDL.h>
-#include <SDL_net.h>
+#include "definition.h"
 
 int uncomplete_string(char tmp[])
 {
@@ -16,4 +12,55 @@ int uncomplete_string(char tmp[])
     return 1;
 }
 
+void networkInit(Network *client)
+{
+    SDLNet_Init();
+    client->tcpset=SDLNet_AllocSocketSet(10);
+    client->udpset=SDLNet_AllocSocketSet(10);
+    IPaddress ip,tcpip;
+    char tmp[1024];
 
+    if(!(SDLNet_ResolveHost(&ip,"127.0.0.1",5000)))
+    {
+        printf("Couldnt resolve udp host\n");
+    }
+    if(!(SDLNet_ResolveHost(&tcpip,"127.0.0.1",4000)))
+    {
+        printf("Couldnt resolve tcp host\n");
+    }
+
+    if(!(client->udpsock = SDLNet_UDP_Open(0)))
+    {
+        printf("Couldnt open socket\n");
+        return 0;
+    }
+
+    if(!(client->sendpack = SDLNet_AllocPacket(1024)))
+    {
+        printf("could not allocate packet\n");
+        return 0;
+    }
+
+    if(!(client->rcvpack = SDLNet_AllocPacket(1024))
+    {
+        printf("Could not allocate receiving packet\n");
+        return 0;
+    }
+    client->sendpack.host = ip.host;
+    client->sendpack.port = ip.port;
+
+    //Försöker connecta till servern
+    if(!(client->tcpsock = SDLNet_TCP_Open(&tcpip)))
+    {
+        printf("Couldnt connect to server\n");
+        return 0;
+    }
+    SDLNet_TCP_Recv(tcpsock,tmp,1024);
+    sscanf(tmp,"%d",&(client->id));
+    printf("my ID: %d\n",client->id);
+
+    SDLNet_TCP_AddSocket(client->tcpset,client->tcpsock);
+    SDLNet_UDP_AddSocket(client->udpset,client->udpsock);
+
+    return 1;
+}

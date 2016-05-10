@@ -17,7 +17,7 @@ void updateLogic(Player *p,Bullet b[])
     global++;
 }
 
-int processEvents(Player *man,Bullet b[])
+int processEvents(Player *man,Bullet b[],int *moved)
 {
   unsigned int spellOne, spellOne_False=0;
   spellOne = SDL_GetTicks();
@@ -74,6 +74,7 @@ int processEvents(Player *man,Bullet b[])
   if(state[SDL_SCANCODE_LEFT])
   {
     man->x -= 10;
+    *moved = 1;
     if(man->frameX == 192)
 		{
 		    man->frameX = 224;
@@ -87,6 +88,7 @@ int processEvents(Player *man,Bullet b[])
   if(state[SDL_SCANCODE_RIGHT])
   {
     man->x += 10;
+    *moved = 1;
     if(man->frameX == 128)
 		{
 		   man->frameX = 160;
@@ -100,6 +102,7 @@ int processEvents(Player *man,Bullet b[])
   if(state[SDL_SCANCODE_UP])
   {
     man->y -= 10;
+    *moved = 1;
     if(man->frameX == 64)
 		{
            man->frameX= 96;
@@ -112,6 +115,7 @@ int processEvents(Player *man,Bullet b[])
   if(state[SDL_SCANCODE_DOWN])
   {
     man->y += 10;
+    *moved = 1;
     if(man->frameX == 0)
 		{
 		   man->frameX = 32;

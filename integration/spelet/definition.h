@@ -2,10 +2,12 @@
 #include <stdio.h>
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_image.h>
+#include <SDL2/SDL_net.h>
 #elif _WIN32
 #include <stdio.h>
 #include <SDL.h>
 #include <SDL_image.h>
+#include <SDL_net.h>
 #endif // _WIN32
 
 typedef struct
@@ -29,6 +31,7 @@ typedef struct
    SDL_Texture *texture;
    int thinkTime;
    int shot;
+   int id;
 }Player;
 
 typedef struct
@@ -46,6 +49,16 @@ typedef struct Vector2d
 {
   float x, y;
 }Vector2d;
+
+typedef struct
+{
+    TCPsocket tcpsock;
+    UDPsocket udpsock;
+    SDLNet_SocketSet tcpset,udpset;
+    UDPpacket *sendpack,*rcvpack;
+    int type;
+
+}Network;
 
 Bullet bullet;
 Program program;
