@@ -15,11 +15,13 @@ typedef struct
   char *name;
   int shot;
 } Man;
+
 typedef struct
 {
   SDL_Window *window;
   SDL_Renderer *renderer;
 }Program;
+
 typedef struct
 {
    int x, y;
@@ -28,6 +30,7 @@ typedef struct
    int thinkTime;
    int shot;
 }Player;
+
 typedef struct
 {
    float x, y;
@@ -37,8 +40,8 @@ typedef struct
    float v_length;
    SDL_Texture *texture;
    int active;
-
 }Bullet;
+
 typedef struct Vector2d
 {
   float x, y;
