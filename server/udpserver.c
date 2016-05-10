@@ -1,3 +1,4 @@
+#include <D:\mingw_dev_lib\SDL-1.2.15\include\SDL\SDL.h>
 #include <stdlib.h>
 #ifndef _MSC_VER
 #include <unistd.h>
@@ -7,6 +8,10 @@
 #include <string.h>
 #include <stdio.h>
 #include <inttypes.h>
+
+const int WINDOW_WIDTH = 640;
+const int WINDOW_HEIGHT = 480;
+const char* WINDOW_TITLE = "SDL Start";
 
 int uncomplete_string(char tmp[])
 {
@@ -38,14 +43,15 @@ int main(int argc, char **argv)
     char tmp[1024];
     int curid=0;
     int playernum=0;
+    SDL_Event event;
 
     TCPsocket tcpsock;
     UDPsocket rcvSock;
-    UDPsocket sendSock;
+
     Uint32 ipaddr;
     Uint16 port;
     struct player players[maxPlayers];
-    SDL_Init(0);
+    SDL_Init(SDL_INIT_EVERYTHING);
     SDLNet_Init();
     int i,k;
 
@@ -88,9 +94,11 @@ int main(int argc, char **argv)
     SDLNet_UDP_AddSocket(udpset,rcvSock);
     SDLNet_TCP_AddSocket(tcpset,tcpsock);
 
+    SDL_Surface* screen = SDL_SetVideoMode( WINDOW_WIDTH, WINDOW_HEIGHT, 0,0);
+    SDL_WM_SetCaption( WINDOW_TITLE, 0 );
 
-
-    while(1)
+    int running = 1;
+    while(running)
     {
 
         // Lägger till ny klient vid ny connection
@@ -193,12 +201,46 @@ int main(int argc, char **argv)
             }
         }
 
+        while(SDL_PollEvent(&event) != 0)
+        {
+            if(event.type == SDL_KEYDOWN)
+            {
+                switch(event.key.keysym.sym)
+                {
+                case SDLK_1:
+                    type = 6;
+                    sprintf(tmp,"%d \n",type);
+                    for(k=0; k<maxPlayers; k++)
+                            {
+                                if(players[k].exists)
+                                    {
+                                        SDLNet_TCP_Send(players[k].tcpsock,tmp,strlen(tmp)+1);
+
+                                        printf("Shutting down in 5 seconds.\n",k);
+                                    }
+
+                            }
+                    running = 0;
+                default:
+                    break;
+                }
+
+            }
+
+        }
+
         SDL_Delay(1);
+        if(running == 0)
+        {
+            SDL_Delay(5000);
+        }
     }
 
-    SDLNet_UDP_Close(sendSock);
+    SDLNet_TCP_Close(tcpsock);
     SDLNet_UDP_Close(rcvSock);
     SDLNet_FreeSocketSet(udpset);
+    SDLNet_FreeSocketSet(tcpset);
+    SDL_FreeSurface(screen);
     /* shutdown SDL_net */
     SDLNet_Quit();
 

@@ -1,7 +1,7 @@
 #include <D:\mingw_dev_lib\SDL-1.2.15\include\SDL\SDL.h>
 #include <stdbool.h>
-#include <stdio.h>
 #include <stdlib.h>
+#include <stdio.h>
 #include <string.h>
 #include <SDL.h>
 #include <SDL_net.h>
@@ -184,18 +184,25 @@ int main(int argc, char **argv)
         }
         while((SDLNet_CheckSockets(tcpset,0)>0))
         {
+            printf("mottagit shutdown\n");
             offset = 0;
             do
             {
                 offset+=SDLNet_TCP_Recv(tcpsock,tmp+offset,1024);
             }
             while(uncomplete_string(tmp));
+            printf("%s\n",tmp);
             sscanf(tmp,"%d %d",&type,&enemyid);
             if(type == 3)
             {
                 SDL_FreeSurface(enemies[enemyid].bitmap);
                 enemies[enemyid].exists = 0;
                 SDL_FillRect(screen,&(enemies[enemyid].dstRect),SDL_MapRGB(screen->format,0,0,0));
+            }
+            if(type == 6)
+            {
+                printf("Server shut down!\n");
+                gameRunning = 0;
             }
         }
         // Handle input
@@ -256,8 +263,8 @@ int main(int argc, char **argv)
                 while(size<len)
                 {
                     size+=SDLNet_TCP_Send(tcpsock,tmp+size,len-size);
-                    printf("skickat!\n");
                 }
+                printf("Disconnected!\n");
             }
             change = 0;
         }
@@ -285,13 +292,13 @@ int main(int argc, char **argv)
         SDL_Delay(10);
     }
 
-
+    SDLNet_FreeSocketSet(socketset);
+    SDLNet_FreeSocketSet(tcpset);
     SDLNet_UDP_Close(udpsock);
     SDLNet_TCP_Close(tcpsock);
-    SDLNet_Quit();
     SDL_FreeSurface(bitmap);
     SDL_FreeSurface(screen);
-
+    SDLNet_Quit();
     SDL_Quit();
 
     return 0;

@@ -5,20 +5,19 @@ OBJS = udpclient.c
 CC = gcc
 
 #INCLUDE_PATHS
-INCLUDE_PATHS = -ID:\mingw_dev_lib\i686-w64-mingw32\include\SDL2 -ID:\mingw_dev_lib\i686-w64-mingw32-net\include\SDL2 -ID:\mingw_dev_lib\SDL-1.2.15\include\SDL -ID:\mingw_dev_lib\i686-w64-mingw32-image\include\SDL2
+INCLUDE_PATHS = -ID:\mingw_dev_lib\i686-w64-mingw32\include\SDL2 -ID:\mingw_dev_lib\i686-w64-mingw32-net\include\SDL2 -ID:\mingw_dev_lib\SDL-1.2.15\include\SDL
 
 #LIBRARY_PATHS
-LIBRARY_PATHS = -LD:\mingw_dev_lib\i686-w64-mingw32\lib -LD:\mingw_dev_lib\SDL-1.2.15\lib -LD:\mingw_dev_lib\i686-w64-mingw32-net\lib -LD:\mingw_dev_lib\i686-w64-mingw32-image\lib
+LIBRARY_PATHS = -LD:\mingw_dev_lib\i686-w64-mingw32\lib -LD:\mingw_dev_lib\SDL-1.2.15\lib -LD:\mingw_dev_lib\i686-w64-mingw32-net\lib
 
 #COMPILER_FLAGS
 
 #-w suppresses all warnings
 # -Wl,-subsystem,windows gets rid of the console window
-#COMPILER_FLAGS = -w 
-#-Wl,-subsystem,windows
+#COMPILER_FLAGS = -w -Wl,-subsystem,windows
 
 #LINKER_FLAGS
-LINKER_FLAGS = -lmingw32 -lSDL -lSDL2main -lSDL2 -lSDL2_net -lSDL2_image
+LINKER_FLAGS = -lmingw32 -lSDL -lSDL2main -lSDL2 -lSDL2_net
 
 #OBJ_NAME specifies the name of our executable
 OBJ_NAME = udpclient
