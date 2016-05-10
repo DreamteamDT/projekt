@@ -5,10 +5,10 @@ OBJS = newmain.c init.c processing.c bullet.c
 CC = gcc
 
 #INCLUDE_PATHS
-INCLUDE_PATHS = -IC:\Users\Jakob\Desktop\projekt\integration\spelet\libraries\SDL2\include\SDL2 -IC:\Users\Jakob\Desktop\projekt\integration\spelet\libraries\SDL2_image\include\SDL2 -IC:\Users\Jakob\Desktop\projekt\integration\spelet\libraries\SDL2_mixer\include\SDL2 -IC:\Users\Jakob\Desktop\projekt\integration\spelet\libraries\SDL2_net\include\SDL2 -IC:\Users\Jakob\Desktop\projekt\integration\spelet\libraries\SDL2_ttf\include\SDL2
+INCLUDE_PATHS = -IC:\libraries\SDL2\include\SDL2 -IC:\libraries\SDL2_image\include\SDL2 -IC:\libraries\SDL2_mixer\include\SDL2 -IC:\libraries\SDL2_net\include\SDL2 -IC:\libraries\SDL2_ttf\include\SDL2
 
 #LIBRARY_PATHS
-LIBRARY_PATHS = -LC:\Users\Jakob\Desktop\projekt\integration\spelet\libraries\SDL2\lib -LC:\Users\Jakob\Desktop\projekt\integration\spelet\libraries\SDL2_image\lib -LC:\Users\Jakob\Desktop\projekt\integration\spelet\libraries\SDL2_mixer\lib -LC:\Users\Jakob\Desktop\projekt\integration\spelet\libraries\SDL2_net\lib -LC:\Users\Jakob\Desktop\projekt\integration\spelet\libraries\SDL2_ttf\lib
+LIBRARY_PATHS = -LC:\libraries\SDL2\lib -LC:\libraries\SDL2_image\lib -LC:\libraries\SDL2_mixer\lib -LC:\libraries\SDL2_net\lib -LC:\libraries\SDL2_ttf\lib
 
 #COMPILER_FLAGS
 
