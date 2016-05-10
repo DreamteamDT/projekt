@@ -66,9 +66,12 @@ int networkInit(Network *client,Player *man)
     return 1;
 }
 
-void send_position(Player *man,Network *client)
+void send_data(Player *man,Network *client,int type)
 {
-    int type = 2;
-    sprintf(client->sendpack->data,"%d %d %d %d",type,man->id,man->x,man->y);
-    SDLNet_UDP_Send(client->udpsock,-1,client->sendpack);
+    if(type == 2)
+    {
+        sprintf(client->sendpack->data,"%d %d %d %d",type,man->id,man->x,man->y);
+        SDLNet_UDP_Send(client->udpsock,-1,client->sendpack);
+    }
+
 }

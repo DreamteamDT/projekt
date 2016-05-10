@@ -2,7 +2,7 @@
 
 extern void init(Player *);
 extern void doRender(Player *man,Bullet b[]);
-extern int processEvents(Player *man,Bullet b[],int moved);
+extern int processEvents(Player *man,Bullet b[],int *moved,int *type);
 
 extern void clearCartridge(Bullet ammo[]);
 extern void Quit();
@@ -13,22 +13,24 @@ extern void loadAmmo(Bullet b[]);
 extern SDL_Texture *initBullet();
 extern void updateLogic(Player *p, Bullet b[]);
 
-extern void send_position(Player *man,Network *client);
+extern void send_data(Player *man,Network *client,int type);
 extern int networkInit(Network *client,Player *man);
 
 int global = 0;
 int main(int argc, char *argv[])
 {
     int done = 0;
+    int connected;
     Player player;
     Network client;
     int choice;
     int newline;
     int moved = 0;
+    int type;
     bullet.texture=initBullet();
     Bullet ammo[20];
 
-    printf("Vill du connecta till servern? 1=JA 0=NEJ");
+    printf("Vill du connecta till servern? 1=JA 0=NEJ: ");
     scanf("%d",&choice);
     scanf("%c",&newline);
     if(choice==1)
@@ -37,7 +39,10 @@ int main(int argc, char *argv[])
         {
             done = 1;
         }
+        connected = 1;
     }//**********************************
+    else
+        connected = 0;
 
     init(&player);
 
@@ -47,10 +52,10 @@ int main(int argc, char *argv[])
 
     while(!done)
     {
-        done = processEvents(&player,ammo,&moved);
-        if(moved)
+        done = processEvents(&player,ammo,&moved,&type);
+        if(moved && connected)
         {
-           send_position(&player,&client);
+           send_data(&player,&client,type);
            moved = 0;
         }
         updateLogic(&player,ammo);
