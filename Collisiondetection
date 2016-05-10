@@ -1,0 +1,322 @@
+#include <stdio.h>
+#include <SDL2/SDL.h>
+#include <SDL2/SDL_image.h>
+#include <stdbool.h>
+#include <math.h>
+#include <time.h>
+
+bool init();
+void loadMedia();
+void setRect(SDL_Rect *rect);
+bool checkCollision(int x, int y,SDL_Rect *rect);
+SDL_Window* gWindow = NULL;
+SDL_Renderer* gRenderer = NULL;
+SDL_Texture* mSpaceman = NULL;
+SDL_Texture* bullet = NULL;
+SDL_Renderer *renderer = NULL;
+SDL_Cursor *cursor = NULL;
+SDL_bool error = SDL_TRUE;
+SDL_Renderer *renderer1=NULL;
+
+SDL_Rect gSpriteClips[8];
+SDL_Rect bulletArray[0];
+
+struct Vector2d
+{
+  float x, y;
+};
+
+struct ledge
+{
+  int x, y, w, h;
+};
+typedef struct ledge Ledge;
+
+int main(int argc, char* args[])
+{
+    Ledge ledges[100];
+    SDL_Event e;
+    SDL_RendererFlip flip = SDL_FLIP_VERTICAL;
+    bool quit = false;
+    SDL_Rect position;
+    position.y = 100;
+    position.x = 100;
+    position.h = 32;
+    position.w = 32;
+    int frame = 6;
+//    SDL_Rect place;
+//    place.y = 50;
+//    place.x = 50;
+//    place.h = 32;
+//    place.w = 32;
+    SDL_Rect rect;
+
+    if (init()) {
+        printf("worked\n");
+    }
+    loadMedia();
+    unsigned int spellOne, spellOne_False=0;
+
+
+
+    while (!quit) {
+        spellOne = SDL_GetTicks();
+
+        while (SDL_PollEvent(&e)) {
+
+
+//            SDL_RenderCopyEx(gRenderer, bullet, &bulletArray[0],&place , 0, NULL, flip);
+            if (e.type == SDL_QUIT) {
+                quit = true;
+            }
+            else if (e.type == SDL_MOUSEBUTTONDOWN)
+            {
+                //SDL_RenderCopyEx(gRenderer, bullet, &bulletArray[0],&place , 0, NULL, flip);
+                int apa,apb;
+                //place.x -=10;
+
+                SDL_GetMouseState(&apa, &apb);
+
+                printf("Cursor is at %d x,%d y\n", apb,apa);
+            }
+            else if(e.type == SDL_KEYUP && e.key.keysym.sym  == SDLK_1){
+                    int blinkX,blinkY;
+
+
+                        if(spellOne > spellOne_False+1000){
+                            spellOne_False=spellOne-1;
+                        //SDL_Delay(500);
+
+                            SDL_GetMouseState(&blinkX, &blinkY);
+
+                           // float v_length = sqrtf(((blinkX-position.x)*(blinkX-position.x))+((blinkY-position.y)*(blinkY-position.y)));
+
+                            struct Vector2d unit_vector;
+                            struct Vector2d direction;
+    //
+                            direction.x = blinkX-position.x;
+                            direction.y = blinkY-position.y;
+                            unit_vector.x = (direction.x)/ 20;
+                            unit_vector.y = (direction.y)/ 20;
+
+                            SDL_Delay(150);
+                            position.x+=(unit_vector.x*100)-16;
+                            position.y+=(unit_vector.y*100)-16;
+
+                        }
+
+            }
+            else if( e.type == SDL_KEYDOWN )
+            {
+
+
+                //Select surfaces based on key press
+                switch( e.key.keysym.sym )
+                {
+
+                    case SDLK_w:
+                        if(!checkCollision(position.x,position.y-2,&rect)){
+                            position.y -= 2;
+                             flip = SDL_FLIP_NONE;
+                            if(frame == 4)
+                                frame = 5;
+                            else
+                                frame = 4;
+                        }
+
+
+                        break;
+                    case SDLK_s:
+                        if(!checkCollision(position.x,position.y+2,&rect))
+                        {
+                            position.y += 2;
+                            flip = SDL_FLIP_NONE;
+                            if(frame == 1)
+                                frame = 2;
+                            else
+                                frame = 1;
+                        }
+                        break;
+                    case SDLK_a:
+                        if(!checkCollision(position.x-4,position.y,&rect))
+                        {
+                            position.x -= 4;
+                            flip = SDL_FLIP_HORIZONTAL;
+                            if(frame == 6)
+                                frame = 7;
+                            else
+                                frame = 6;
+                        }
+                        break;
+                    case SDLK_d:
+                    if(!checkCollision(position.x+4,position.y,&rect))
+                    {
+
+                        position.x += 4;
+
+                        flip = SDL_FLIP_NONE;
+                        if(frame == 6)
+                            frame = 7;
+                        else
+                            frame = 6;
+                    }
+                        break;
+                    default:
+
+                        break;
+                }
+            }
+
+        }
+
+        setRect(&rect);
+
+        // Sets background white
+        SDL_SetRenderDrawColor(gRenderer, 0xFF, 0xFF, 0xFF, 0xFF);
+        //SDL_RenderClear(gRenderer);
+        // Shows spaceman
+
+        SDL_RenderCopyEx(gRenderer, mSpaceman, &gSpriteClips[frame],&position , 0, NULL, flip);
+        //SDL_RenderCopyEx(gRenderer, bullet, &bulletArray[0],&place , 0, NULL, flip);
+
+        // Shows screen
+        SDL_RenderPresent(gRenderer);
+        // Clears screen
+        SDL_RenderClear(gRenderer);
+
+    }
+
+    return 0;
+}
+/*
+    Will set the posistion and render the rectangle on the screen.
+    input : the rect pointer.
+*/
+void setRect(SDL_Rect *rect){
+    // Sets the cordinates for the rect
+    rect->x = 50;
+    rect->y = 50;
+    rect->w = 50;
+    rect->h = 50;
+
+    // Change color to blue!
+    SDL_SetRenderDrawColor( gRenderer, 0, 0, 255, 255 );
+
+    // Render our SDL_Rect
+    // The rectangle will now be blue
+    SDL_RenderDrawRect( gRenderer, rect );
+
+}
+/*
+    Checks if an collision has been made. Checks if its a collision with the
+    game window wall or a rectangle.
+    input : x and y pos that the hero wants to move to
+    input : rect is the current active rectangle.
+    output : true if collision occourd else false
+*/
+bool checkCollision(int x, int y, SDL_Rect *rect){
+    int width ;
+    int height;
+    // Will get the current heigh and width of the game window. So it will work with other sizes too.
+    SDL_GetWindowSize(gWindow,&width,&height);
+    // -32 otherwise the character will go offscreen
+    // Checks collision with game window walls.
+    if(y > height -32 || y < 0 || x > width - 32 || x < 0){
+        return true;
+    }
+    // -32 otherwise the character will go offscreen
+    // Checks if collision with rect
+    if((rect->x-32 < x && (rect->x + rect->h) > x) && (rect->y-32 < y && (rect->y + rect->h) > y) ){
+        return true;
+    }
+    // Just some info for you when you debugg.
+    printf("rect : x %d\n", rect->x);
+    printf("rect : y %d\n" ,rect->y);
+    printf("hero : x %d\n", x);
+    printf("hero : y %d\n", y);
+    printf("\n");
+    return false;
+
+}
+void loadMedia(Ledge ledges[]){
+
+    cursor = SDL_CreateSystemCursor(SDL_SYSTEM_CURSOR_CROSSHAIR); //Skapar crosshair
+    SDL_SetCursor(cursor);
+    SDL_Surface* gSpacemanSurface = IMG_Load("USA.png");
+    if(!gSpacemanSurface) {
+         printf("IMG_Load: %s\n", IMG_GetError());
+    }
+
+
+
+    mSpaceman = SDL_CreateTextureFromSurface(gRenderer, gSpacemanSurface);
+
+    gSpriteClips[ 0 ].x =   0;
+    gSpriteClips[ 0 ].y =   0;
+    gSpriteClips[ 0 ].w =  100;
+    gSpriteClips[ 0 ].h = 32;
+
+    gSpriteClips[ 1 ].x =  32;
+    gSpriteClips[ 1 ].y =   0;
+    gSpriteClips[ 1 ].w =  32;
+    gSpriteClips[ 1 ].h = 32;
+
+    gSpriteClips[ 2 ].x = 64;
+    gSpriteClips[ 2 ].y =   0;
+    gSpriteClips[ 2 ].w =  32;
+    gSpriteClips[ 2 ].h = 32;
+
+    gSpriteClips[ 3 ].x = 96;
+    gSpriteClips[ 3 ].y =   0;
+    gSpriteClips[ 3 ].w =  32;
+    gSpriteClips[ 3 ].h = 32;
+
+    gSpriteClips[ 4 ].x = 128;
+    gSpriteClips[ 4 ].y =   0;
+    gSpriteClips[ 4 ].w =  32;
+    gSpriteClips[ 4 ].h = 32;
+
+    gSpriteClips[ 5 ].x = 160;
+    gSpriteClips[ 5 ].y =   0;
+    gSpriteClips[ 5 ].w =  32;
+    gSpriteClips[ 5 ].h = 32;
+
+    gSpriteClips[ 6 ].x = 192;
+    gSpriteClips[ 6 ].y =   0;
+    gSpriteClips[ 6 ].w =  32;
+    gSpriteClips[ 6 ].h = 32;
+
+    gSpriteClips[ 7 ].x = 224;
+    gSpriteClips[ 7 ].y =   0;
+    gSpriteClips[ 7 ].w =  32;
+    gSpriteClips[ 7 ].h = 32;
+
+
+    SDL_Surface* bulletSurface = IMG_Load("bullet.png");
+    bullet = SDL_CreateTextureFromSurface(gRenderer, bulletSurface);
+
+    bulletArray[ 0 ].x =   0;
+    bulletArray[ 0 ].y =   0;
+    bulletArray[ 0 ].w =  32;
+    bulletArray[ 0 ].h = 32;
+    SDL_RenderClear(gRenderer);
+
+}
+
+bool init(){
+    bool test = true;
+    SDL_Init(SDL_INIT_VIDEO);
+    gWindow = SDL_CreateWindow("SDL F4", SDL_WINDOWPOS_UNDEFINED,SDL_WINDOWPOS_UNDEFINED, 640, 480, SDL_WINDOW_SHOWN);
+    if(gWindow == NULL){
+        printf("Fungerar ej\n");
+        test = false;
+    }
+    gRenderer = SDL_CreateRenderer(gWindow, -1, SDL_RENDERER_ACCELERATED);
+    renderer1 = SDL_CreateRenderer(gWindow, -1, SDL_RENDERER_ACCELERATED);
+    if(gRenderer == NULL){
+        printf("Fungerar ej\n");
+        test = false;
+    }
+    return test;
+
+}
