@@ -1,5 +1,6 @@
 #include "definition.h"
 
+
 int uncomplete_string(char tmp[])
 {
     int i=0;

@@ -19,6 +19,11 @@ extern int networkInit(Network *client,Player *man);
 int global = 0;
 int main(int argc, char *argv[])
 {
+<<<<<<< HEAD
+=======
+    int testttttt;
+    int test = 123;
+>>>>>>> 7da9c63775333773a13af11a9458512471063795
     int done = 0;
     int connected, i;
     Player player;
@@ -52,6 +57,7 @@ int main(int argc, char *argv[])
          player.enemies[1].srcRect.w = 32;
          player.enemies[1].srcRect.h = 32;
 
+<<<<<<< HEAD
          player.enemies[1].dstRect.x = 320;
          player.enemies[1].dstRect.y = 340;
          player.enemies[1].dstRect.w = 32;
@@ -71,6 +77,9 @@ int main(int argc, char *argv[])
          player.enemies[2].dstRect.h = 32;
 
          player.enemies[2].exists = 1;*/
+=======
+
+>>>>>>> 7da9c63775333773a13af11a9458512471063795
     init(&player);
 
     //link(ammo);

@@ -191,8 +191,21 @@ void doRender(Player *man,Bullet b[]) //, Enemy *enemies
 
   //SDL_RenderFillRect(program.renderer, &rect);
   SDL_RenderCopy(program.renderer,man->texture,&src,&rect);
+<<<<<<< HEAD
   //if (enemies->exists)
   //  SDL_RenderCopy(program.renderer,man->texture,&srcE,&rectE);
+=======
+
+  //for(i=0;i<maxPlayers;i++)
+  //{
+  //    if(enemies[i].exists)
+   //   {
+
+  //    }
+  //}
+
+
+>>>>>>> 7da9c63775333773a13af11a9458512471063795
   for(i=0;i<20;i++)
   {
      if(b[i].active == 1)
