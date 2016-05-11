@@ -21,11 +21,11 @@ int networkInit(Network *client,Player *man)
     IPaddress ip,tcpip;
     char tmp[1024];
 
-    if(!(SDLNet_ResolveHost(&ip,"localhost",5000)))
+    if(!(SDLNet_ResolveHost(&ip,"130.237.84.177",5000)))
     {
         printf("Couldnt resolve udp host\n");
     }
-    if(!(SDLNet_ResolveHost(&tcpip,"localhost",4000)))
+    if(!(SDLNet_ResolveHost(&tcpip,"130.237.84.177",4000)))
     {
         printf("Couldnt resolve tcp host\n");
     }
@@ -115,7 +115,7 @@ void recv_data(Player *man, Network *client)
          man->enemies[enemyid].dstRect.w = 32;
          man->enemies[enemyid].dstRect.h = 32;
          man->enemies[enemyid].exists = 1;
-         //send_data(&man,&client,2);
+         //send_data(&(*man),&(*client),2);
        }
        if (type == 2)
        {
