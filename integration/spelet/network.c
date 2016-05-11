@@ -106,20 +106,16 @@ void recv_data(Player *man, Network *client)
        //Om ny fiende
        if (!man->enemies[enemyid].exists)
        {
-
          man->enemies[enemyid].srcRect.x = enemySX;
          man->enemies[enemyid].srcRect.y = 0;
          man->enemies[enemyid].srcRect.w = 32;
          man->enemies[enemyid].srcRect.h = 32;
-
          man->enemies[enemyid].dstRect.x = enemyDX;
          man->enemies[enemyid].dstRect.y = enemyDY;
          man->enemies[enemyid].dstRect.w = 32;
          man->enemies[enemyid].dstRect.h = 32;
-
          man->enemies[enemyid].exists = 1;
-         //enemies[enemyid].id = enemyid;
-         send_data(&man,&client,2);
+         //send_data(&man,&client,2);
        }
        if (type == 2)
        {
