@@ -49,6 +49,7 @@ int main(int argc, char *argv[])
     else
         connected = 0;
 
+
     init(&player);
 
     //link(ammo);
