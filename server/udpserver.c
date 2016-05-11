@@ -1,4 +1,3 @@
-#include <D:\mingw_dev_lib\SDL-1.2.15\include\SDL\SDL.h>
 #include <stdlib.h>
 #ifndef _MSC_VER
 #include <unistd.h>
@@ -33,6 +32,12 @@ struct player
     TCPsocket tcpsock;
     IPaddress ip;
 
+};
+
+struct Program
+{
+  SDL_Window *window;
+  SDL_Renderer *renderer;
 };
 
 int main(int argc, char **argv)
@@ -94,8 +99,17 @@ int main(int argc, char **argv)
     SDLNet_UDP_AddSocket(udpset,rcvSock);
     SDLNet_TCP_AddSocket(tcpset,tcpsock);
 
-    SDL_Surface* screen = SDL_SetVideoMode( WINDOW_WIDTH, WINDOW_HEIGHT, 0,0);
-    SDL_WM_SetCaption( WINDOW_TITLE, 0 );
+    SDL_Init(SDL_INIT_VIDEO);
+
+    struct Program program;
+    program.window = SDL_CreateWindow("Game Window",                     // window title
+                            SDL_WINDOWPOS_UNDEFINED,           // initial x position
+                            SDL_WINDOWPOS_UNDEFINED,           // initial y position
+                            640,                               // width, in pixels
+                            480,                               // height, in pixels
+                            0                                  // flags
+                            );
+    program.renderer = SDL_CreateRenderer(program.window, -1, SDL_RENDERER_ACCELERATED);
 
     int running = 1;
     while(running)
@@ -245,7 +259,7 @@ int main(int argc, char **argv)
     SDLNet_UDP_Close(rcvSock);
     SDLNet_FreeSocketSet(udpset);
     SDLNet_FreeSocketSet(tcpset);
-    SDL_FreeSurface(screen);
+   // SDL_FreeSurface(screen);
     /* shutdown SDL_net */
     SDLNet_Quit();
 

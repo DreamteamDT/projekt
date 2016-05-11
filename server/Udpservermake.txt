@@ -5,10 +5,10 @@ OBJS = udpserver.c
 CC = gcc
 
 #INCLUDE_PATHS
-INCLUDE_PATHS = -ID:\mingw_dev_lib\i686-w64-mingw32\include\SDL2 -ID:\mingw_dev_lib\i686-w64-mingw32-net\include\SDL2 -ID:\mingw_dev_lib\SDL-1.2.15\include\SDL
+INCLUDE_PATHS = -IC:\libraries\SDL2\include\SDL2 -IC:\libraries\SDL2_image\include\SDL2 -IC:\libraries\SDL2_mixer\include\SDL2 -IC:\libraries\SDL2_net\include\SDL2 -IC:\libraries\SDL2_ttf\include\SDL2
 
 #LIBRARY_PATHS
-LIBRARY_PATHS = -LD:\mingw_dev_lib\i686-w64-mingw32\lib -LD:\mingw_dev_lib\SDL-1.2.15\lib -LD:\mingw_dev_lib\i686-w64-mingw32-net\lib
+LIBRARY_PATHS = -LC:\libraries\SDL2\lib -LC:\libraries\SDL2_image\lib -LC:\libraries\SDL2_mixer\lib -LC:\libraries\SDL2_net\lib -LC:\libraries\SDL2_ttf\lib
 
 #COMPILER_FLAGS
 
@@ -17,7 +17,7 @@ LIBRARY_PATHS = -LD:\mingw_dev_lib\i686-w64-mingw32\lib -LD:\mingw_dev_lib\SDL-1
 #COMPILER_FLAGS = -w -Wl,-subsystem,windows
 
 #LINKER_FLAGS
-LINKER_FLAGS = -lmingw32 -lSDL -lSDL2main -lSDL2 -lSDL2_net
+LINKER_FLAGS = -lmingw32 -lSDL2main -lSDL2 -lSDL2_net
 
 #OBJ_NAME specifies the name of our executable
 OBJ_NAME = udpserver
