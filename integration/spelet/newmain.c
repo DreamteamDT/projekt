@@ -38,10 +38,10 @@ int main(int argc, char *argv[])
     bullet.texture=initBullet();
     Bullet ammo[20];
 
-   // printf("Vill du connecta till servern? 1=JA 0=NEJ: ");
-   // scanf("%d",&choice);
-   // scanf("%c",&newline);
-    //choice = 0;
+    printf("Vill du connecta till servern? 1=JA 0=NEJ: ");
+    scanf("%d",&choice);
+    scanf("%c",&newline);
+    choice = 0;
     if(choice==1)
     {
         //*******INIT NETWORK***************
