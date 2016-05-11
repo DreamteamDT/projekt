@@ -96,11 +96,10 @@ void recv_data(Player *man, Network *client)
        char tmp[1024];
        int offset = 0;
        int type, enemyid, enemyDX, enemyDY, enemySX;
-       do{
-	     SDLNet_UDP_Recv(client->udpsock,tmp);
-       } while(uncomplete_string(tmp));
 
-       sscanf(tmp,"%d %d %d %d %d",&type,&enemyid,&enemyDX,&enemyDY,&enemySX);
+        SDLNet_UDP_Recv(client->udpsock,client->rcvpack);
+
+       sscanf(client->rcvpack->data,"%d %d %d %d %d",&type,&enemyid,&enemyDX,&enemyDY,&enemySX);
        man->enemies[enemyid].x = enemyDX;
        //enemies[enemyid].y = enemyDY;
 

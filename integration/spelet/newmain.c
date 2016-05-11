@@ -19,11 +19,11 @@ extern int networkInit(Network *client,Player *man);
 int global = 0;
 int main(int argc, char *argv[])
 {
-<<<<<<< HEAD
-=======
+//<<<<<<< HEAD
+//=======
     int testttttt;
     int test = 123;
->>>>>>> 7da9c63775333773a13af11a9458512471063795
+//>>>>>>> 7da9c63775333773a13af11a9458512471063795
     int done = 0;
     int connected, i;
     Player player;
@@ -77,9 +77,9 @@ int main(int argc, char *argv[])
          player.enemies[2].dstRect.h = 32;
 
          player.enemies[2].exists = 1;*/
-=======
+//=======
 
->>>>>>> 7da9c63775333773a13af11a9458512471063795
+//>>>>>>> 7da9c63775333773a13af11a9458512471063795
     init(&player);
 
     //link(ammo);
@@ -97,7 +97,7 @@ int main(int argc, char *argv[])
         //printf("1\n");
         if (choice == 1){
             recv_data(&player,&client);
-            printf("client connect\n");
+          //  printf("client connect\n");
         }
         updateLogic(&player,ammo);
         //for (i = 0; i < 10; i++)
