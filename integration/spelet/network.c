@@ -72,7 +72,7 @@ void send_data(Player *man,Network *client,int type)
 
     if(type == 2)
     {
-        sprintf(client->sendpack->data,"%d %d %d %d",type,man->id,man->x,man->y);
+        sprintf(client->sendpack->data,"%d %d %d %d %d",type,man->id,man->x,man->y, man->frameX);
         SDLNet_UDP_Send(client->udpsock,-1,client->sendpack);
     }
     if(type == 3)
@@ -86,4 +86,63 @@ void send_data(Player *man,Network *client,int type)
         }
         printf("Disconnected!\n");
     }
+}
+
+void recv_data(Player *man, Network *client)
+{
+     while(SDLNet_CheckSockets(client->udpset,0)>0)
+     {
+       char tmp[1024];
+       int offset = 0;
+       int type, enemyid, enemyDX, enemyDY, enemySX;
+       do{
+	     SDLNet_UDP_Recv(client->udpsock,tmp);
+       } while(uncomplete_string(tmp));
+
+       sscanf(tmp,"%d %d %d %d %d",&type,&enemyid,&enemyDX,&enemyDY,&enemySX);
+       man->enemies[enemyid].x = enemyDX;
+       //enemies[enemyid].y = enemyDY;
+
+       //Om ny fiende
+       if (!man->enemies[enemyid].exists)
+       {
+
+         man->enemies[enemyid].srcRect.x = 32;
+         man->enemies[enemyid].srcRect.y = 0;
+         man->enemies[enemyid].srcRect.w = 32;
+         man->enemies[enemyid].srcRect.h = 32;
+
+         man->enemies[enemyid].dstRect.x = 120;
+         man->enemies[enemyid].dstRect.y = 140;
+         man->enemies[enemyid].dstRect.w = 32;
+         man->enemies[enemyid].dstRect.h = 32;
+
+         man->enemies[enemyid].exists = 1;
+         //enemies[enemyid].id = enemyid;
+         send_data(&man,&client,2);
+       }
+       if (type == 2)
+       {
+           man->enemies[enemyid].dstRect.x = enemyDX;
+           man->enemies[enemyid].dstRect.y = enemyDY;
+           man->enemies[enemyid].srcRect.x = enemySX;
+       }
+       if(type == 3)
+       {
+	     // flyttar spelaren av skärmen
+         //man->enemies[enemyid].dstRect.x = 1000;
+         //man->enemies[enemyid].dstRect.y = 1000;
+         //doRender(renderer, &gameState);
+         man->enemies[enemyid].exists = 0;
+       }
+       /*if(type == 4)
+       {
+           gameState.enemies[enemyid].bul = 1;
+           gameState.enemies[enemyid].bulRect.x = enemyX + BAT_WIDTH + 4;
+           gameState.enemies[enemyid].bulRect.y = enemyY + BAT_HEIGHT/2;
+           gameState.enemies[enemyid].bulRect.w = BUL_WIDTH;
+           gameState.enemies[enemyid].bulRect.h = BUL_HEIGHT;
+           printf("type 4 recv\n");
+       }*/
+     }
 }
