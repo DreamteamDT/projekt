@@ -143,6 +143,7 @@ int main(int argc, char **argv)
 
                         if(i!=id)
                         {
+                            printf("paket skickat till klient %d\n",i);
                             rcvPack->address = players[i].ip;
                             SDLNet_UDP_Send(rcvSock,-1,rcvPack);
                         }
