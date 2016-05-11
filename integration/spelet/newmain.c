@@ -19,11 +19,8 @@ extern int networkInit(Network *client,Player *man);
 int global = 0;
 int main(int argc, char *argv[])
 {
-<<<<<<< HEAD
     int testttttt;
-=======
     int test = 123;
->>>>>>> 12b1a63ea8ee8bd16566a0788ae37b4d3706caa3
     int done = 0;
     int connected;
     Player player;

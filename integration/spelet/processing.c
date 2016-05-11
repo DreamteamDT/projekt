@@ -187,13 +187,13 @@ void doRender(Player *man,Bullet b[])
   //SDL_RenderFillRect(program.renderer, &rect);
   SDL_RenderCopy(program.renderer,man->texture,&src,&rect);
 
-  for(i=0;i<maxPlayers;i++)
-  {
-      if(enemies[i].exists)
-      {
+  //for(i=0;i<maxPlayers;i++)
+  //{
+  //    if(enemies[i].exists)
+   //   {
 
-      }
-  }
+  //    }
+  //}
 
 
   for(i=0;i<20;i++)
