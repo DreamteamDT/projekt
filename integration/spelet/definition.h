@@ -60,6 +60,16 @@ typedef struct
 
 }Network;
 
+typedef struct
+{
+    int x,y;
+    int frameX,frameY;
+    SDL_Texture *texture;
+    int exists;
+    SDL_Rect srcRect,dstRect;
+}Enemy;
+
+
 Bullet bullet;
 Program program;
 
