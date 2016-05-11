@@ -23,6 +23,7 @@ int main(int argc, char *argv[])
 //=======
     int testttttt;
     int test = 123;
+    int q = 0;
 //>>>>>>> 7da9c63775333773a13af11a9458512471063795
     int done = 0;
     int connected, i;
@@ -41,7 +42,8 @@ int main(int argc, char *argv[])
     scanf("%c",&newline);
     //choice = 0;
     if(choice==1)
-    {//*******INIT NETWORK***************
+    {
+        //*******INIT NETWORK***************
         if(!(networkInit(&client,&player)))
         {
             done = 1;
@@ -50,36 +52,7 @@ int main(int argc, char *argv[])
     }//**********************************
     else
         connected = 0;
-    //init(&player.enemies[1]);
-      //  printf("asd\n");
-         /*player.enemies[1].srcRect.x = 32;
-         player.enemies[1].srcRect.y = 0;
-         player.enemies[1].srcRect.w = 32;
-         player.enemies[1].srcRect.h = 32;
 
-<<<<<<< HEAD
-         player.enemies[1].dstRect.x = 320;
-         player.enemies[1].dstRect.y = 340;
-         player.enemies[1].dstRect.w = 32;
-         player.enemies[1].dstRect.h = 32;
-
-         player.enemies[1].exists = 1;
-
-    //init(&player.enemies[2]);
-         player.enemies[2].srcRect.x = 32;
-         player.enemies[2].srcRect.y = 0;
-         player.enemies[2].srcRect.w = 32;
-         player.enemies[2].srcRect.h = 32;
-
-         player.enemies[2].dstRect.x = 360;
-         player.enemies[2].dstRect.y = 340;
-         player.enemies[2].dstRect.w = 32;
-         player.enemies[2].dstRect.h = 32;
-
-         player.enemies[2].exists = 1;*/
-//=======
-
-//>>>>>>> 7da9c63775333773a13af11a9458512471063795
     init(&player);
 
     //link(ammo);
@@ -91,13 +64,13 @@ int main(int argc, char *argv[])
         done = processEvents(&player,ammo,&moved,&type);
         if(moved && connected)
         {
-           send_data(&player,&client,type);
-           moved = 0;
+            send_data(&player,&client,type);
+            moved = 0;
         }
-        //printf("1\n");
-        if (choice == 1){
+        if (choice == 1)
+        {
             recv_data(&player,&client);
-          //  printf("client connect\n");
+            //  printf("client connect\n");
         }
         updateLogic(&player,ammo);
         //for (i = 0; i < 10; i++)
