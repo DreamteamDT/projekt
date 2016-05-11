@@ -15,6 +15,7 @@ extern void updateLogic(Player *p, Bullet b[]);
 
 extern void send_data(Player *man,Network *client,int type);
 extern int networkInit(Network *client,Player *man);
+extern void recv_data(Player *player,Network *client,int *done);
 
 int global = 0;
 int main(int argc, char *argv[])
@@ -30,16 +31,16 @@ int main(int argc, char *argv[])
     Player player;
     //Enemy enemies[10];
     Network client;
-    int choice;
+    int choice = 1;
     int newline;
     int moved = 0;
     int type;
     bullet.texture=initBullet();
     Bullet ammo[20];
 
-    printf("Vill du connecta till servern? 1=JA 0=NEJ: ");
-    scanf("%d",&choice);
-    scanf("%c",&newline);
+   // printf("Vill du connecta till servern? 1=JA 0=NEJ: ");
+   // scanf("%d",&choice);
+   // scanf("%c",&newline);
     //choice = 0;
     if(choice==1)
     {
@@ -55,6 +56,11 @@ int main(int argc, char *argv[])
 
     init(&player);
 
+    if(connected)
+    {
+        send_data(&player,&client,2);
+    }
+
     //link(ammo);
     //Event loop
     clearCartridge(ammo);
@@ -69,7 +75,7 @@ int main(int argc, char *argv[])
         }
         if (choice == 1)
         {
-            recv_data(&player,&client);
+            recv_data(&player,&client,&done);
             //  printf("client connect\n");
         }
         updateLogic(&player,ammo);
