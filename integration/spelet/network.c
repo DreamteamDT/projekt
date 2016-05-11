@@ -100,20 +100,20 @@ void recv_data(Player *man, Network *client)
         SDLNet_UDP_Recv(client->udpsock,client->rcvpack);
 
        sscanf(client->rcvpack->data,"%d %d %d %d %d",&type,&enemyid,&enemyDX,&enemyDY,&enemySX);
-       man->enemies[enemyid].x = enemyDX;
-       //enemies[enemyid].y = enemyDY;
+       //man->enemies[enemyid].x = enemyDX;
+       //man->enemies[enemyid].y = enemyDY;
 
        //Om ny fiende
        if (!man->enemies[enemyid].exists)
        {
 
-         man->enemies[enemyid].srcRect.x = 32;
+         man->enemies[enemyid].srcRect.x = enemySX;
          man->enemies[enemyid].srcRect.y = 0;
          man->enemies[enemyid].srcRect.w = 32;
          man->enemies[enemyid].srcRect.h = 32;
 
-         man->enemies[enemyid].dstRect.x = 120;
-         man->enemies[enemyid].dstRect.y = 140;
+         man->enemies[enemyid].dstRect.x = enemyDX;
+         man->enemies[enemyid].dstRect.y = enemyDY;
          man->enemies[enemyid].dstRect.w = 32;
          man->enemies[enemyid].dstRect.h = 32;
 
