@@ -31,7 +31,7 @@ int main(int argc, char *argv[])
     Player player;
     //Enemy enemies[10];
     Network client;
-    int choice = 1;
+    int choice;
     int newline;
     int moved = 0;
     int type;
@@ -41,7 +41,7 @@ int main(int argc, char *argv[])
     printf("Vill du connecta till servern? 1=JA 0=NEJ: ");
     scanf("%d",&choice);
     scanf("%c",&newline);
-    choice = 0;
+    //choice = 0;
     if(choice==1)
     {
         //*******INIT NETWORK***************

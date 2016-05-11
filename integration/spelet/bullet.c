@@ -48,6 +48,7 @@ void clearCartridge(Bullet a[])
   int i;
      for(i=0;i<20;i++)
      {
+         a[i].active = 0;
          memset(&a[i],0,sizeof(Bullet));
      }
 }
