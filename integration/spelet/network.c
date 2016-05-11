@@ -15,6 +15,7 @@ int uncomplete_string(char tmp[])
 
 int networkInit(Network *client,Player *man)
 {
+    int i;
     SDLNet_Init();
     client->tcpset=SDLNet_AllocSocketSet(10);
     client->udpset=SDLNet_AllocSocketSet(10);
@@ -64,6 +65,11 @@ int networkInit(Network *client,Player *man)
     SDLNet_TCP_AddSocket(client->tcpset,client->tcpsock);
     SDLNet_UDP_AddSocket(client->udpset,client->udpsock);
 
+    for(i=0;i<10;i++)
+    {
+        man->enemies[i].exists = 0;
+    }
+
     return 1;
 }
 
@@ -106,6 +112,12 @@ void recv_data(Player *man, Network *client)
        //Om ny fiende
        if (!man->enemies[enemyid].exists)
        {
+
+        SDL_Surface *image = IMG_Load("USA.PNG");
+        SDL_Texture *texture;
+        texture = SDL_CreateTextureFromSurface(program.renderer,image);
+        SDL_FreeSurface(image);
+        man->enemies[enemyid].texture = texture;
          man->enemies[enemyid].srcRect.x = enemySX;
          man->enemies[enemyid].srcRect.y = 0;
          man->enemies[enemyid].srcRect.w = 32;
@@ -140,5 +152,9 @@ void recv_data(Player *man, Network *client)
            gameState.enemies[enemyid].bulRect.h = BUL_HEIGHT;
            printf("type 4 recv\n");
        }*/
+     }
+     while(SDLNet_CheckSockets(client->tcpset,0)>0)
+     {
+
      }
 }

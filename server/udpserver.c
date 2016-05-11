@@ -1,12 +1,18 @@
-#include <stdlib.h>
-#ifndef _MSC_VER
-#include <unistd.h>
-#endif
-#include <SDL.h>
-#include <SDL_net.h>
-#include <string.h>
+#ifdef __linux__
 #include <stdio.h>
+#include <SDL2/SDL.h>
+#include <SDL2/SDL_image.h>
+#include <SDL2/SDL_net.h>
+#include <unistd.h>
+#elif _WIN32
+#include <stdio.h>
+#include <SDL.h>
+#include <SDL_image.h>
+#include <SDL_net.h>
+#endif // _WIN32
 #include <inttypes.h>
+#include <string.h>
+#include <stdlib.h>
 
 const int WINDOW_WIDTH = 640;
 const int WINDOW_HEIGHT = 480;
