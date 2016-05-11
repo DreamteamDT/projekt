@@ -42,6 +42,12 @@ int main(int argc, char *argv[])
     scanf("%d",&choice);
     scanf("%c",&newline);
     //choice = 0;
+
+    for(i=0; i<10; i++)
+    {
+        player.enemies[i].exists = 0;
+    }
+
     if(choice==1)
     {
         //*******INIT NETWORK***************
