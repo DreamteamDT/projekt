@@ -10,13 +10,7 @@
 #include <SDL_net.h>
 #endif // _WIN32
 
-typedef struct
-{
-  int x, y;
-  short life;
-  char *name;
-  int shot;
-} Man;
+
 
 typedef struct
 {
@@ -67,6 +61,7 @@ typedef struct
     SDL_Texture *texture;
     int exists;
     SDL_Rect srcRect,dstRect;
+    Bullet bullet[10];
 }Enemy;
 
 
