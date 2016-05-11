@@ -61,7 +61,7 @@ typedef struct
     SDL_Texture *texture;
     int exists;
     SDL_Rect srcRect,dstRect;
-    Bullet bullet[10];
+    Bullet bullet[20];
 }Enemy;
 
 

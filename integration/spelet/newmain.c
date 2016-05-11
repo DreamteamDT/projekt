@@ -19,6 +19,7 @@ extern int networkInit(Network *client,Player *man);
 int global = 0;
 int main(int argc, char *argv[])
 {
+    int testttttt;
     int done = 0;
     int connected;
     Player player;
