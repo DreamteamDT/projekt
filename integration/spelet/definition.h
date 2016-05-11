@@ -20,16 +20,6 @@ typedef struct
 
 typedef struct
 {
-   int x, y;
-   int frameX,frameY;
-   SDL_Texture *texture;
-   int thinkTime;
-   int shot;
-   int id;
-}Player;
-
-typedef struct
-{
    float x, y;
    float dx;
    float directionX,directionY;
@@ -63,6 +53,17 @@ typedef struct
     SDL_Rect srcRect,dstRect;
     Bullet bullet[20];
 }Enemy;
+
+typedef struct
+{
+   Enemy enemies[10];
+   int x, y;
+   int frameX,frameY;
+   SDL_Texture *texture;
+   int thinkTime;
+   int shot;
+   int id;
+}Player;
 
 
 Bullet bullet;

@@ -1,7 +1,7 @@
 #include "definition.h"
 
 extern void init(Player *);
-extern void doRender(Player *man,Bullet b[]);
+extern void doRender(Player *man,Bullet b[]); //, Enemy *enemies
 extern int processEvents(Player *man,Bullet b[],int *moved,int *type);
 
 extern void clearCartridge(Bullet ammo[]);
@@ -19,14 +19,10 @@ extern int networkInit(Network *client,Player *man);
 int global = 0;
 int main(int argc, char *argv[])
 {
-<<<<<<< HEAD
-    int testttttt;
-=======
-    int test = 123;
->>>>>>> 12b1a63ea8ee8bd16566a0788ae37b4d3706caa3
     int done = 0;
-    int connected;
+    int connected, i;
     Player player;
+    //Enemy enemies[10];
     Network client;
     int choice;
     int newline;
@@ -38,6 +34,7 @@ int main(int argc, char *argv[])
     printf("Vill du connecta till servern? 1=JA 0=NEJ: ");
     scanf("%d",&choice);
     scanf("%c",&newline);
+    //choice = 0;
     if(choice==1)
     {//*******INIT NETWORK***************
         if(!(networkInit(&client,&player)))
@@ -48,7 +45,32 @@ int main(int argc, char *argv[])
     }//**********************************
     else
         connected = 0;
+    //init(&player.enemies[1]);
+      //  printf("asd\n");
+         /*player.enemies[1].srcRect.x = 32;
+         player.enemies[1].srcRect.y = 0;
+         player.enemies[1].srcRect.w = 32;
+         player.enemies[1].srcRect.h = 32;
 
+         player.enemies[1].dstRect.x = 320;
+         player.enemies[1].dstRect.y = 340;
+         player.enemies[1].dstRect.w = 32;
+         player.enemies[1].dstRect.h = 32;
+
+         player.enemies[1].exists = 1;
+
+    //init(&player.enemies[2]);
+         player.enemies[2].srcRect.x = 32;
+         player.enemies[2].srcRect.y = 0;
+         player.enemies[2].srcRect.w = 32;
+         player.enemies[2].srcRect.h = 32;
+
+         player.enemies[2].dstRect.x = 360;
+         player.enemies[2].dstRect.y = 340;
+         player.enemies[2].dstRect.w = 32;
+         player.enemies[2].dstRect.h = 32;
+
+         player.enemies[2].exists = 1;*/
     init(&player);
 
     //link(ammo);
@@ -63,10 +85,16 @@ int main(int argc, char *argv[])
            send_data(&player,&client,type);
            moved = 0;
         }
+        //printf("1\n");
+        if (choice == 1){
+            recv_data(&player,&client);
+            printf("client connect\n");
+        }
         updateLogic(&player,ammo);
-        doRender(&player,ammo);
+        //for (i = 0; i < 10; i++)
+        doRender(&player,ammo); //,&enemies[i]
         //don't burn up the CPU
-        SDL_Delay(10);
+        SDL_Delay(40);
     }
     SDLNet_FreeSocketSet(client.udpset);
     SDLNet_FreeSocketSet(client.tcpset);

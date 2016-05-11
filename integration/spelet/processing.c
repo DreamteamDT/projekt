@@ -175,17 +175,24 @@ int processEvents(Player *man,Bullet b[],int *moved,int *type)
   return done;
 }
 
-void doRender(Player *man,Bullet b[])
+void doRender(Player *man,Bullet b[]) //, Enemy *enemies
 {
   int i;
   //set the drawing color to blue
   SDL_SetRenderDrawColor(program.renderer, 0, 0, 255, 255);
   //Clear the screen (to blue)
   SDL_RenderClear(program.renderer);
+
   SDL_Rect rect = { man->x, man->y, 32, 32 };
   SDL_Rect src = {man->frameX,0,32,32};
+
+  //SDL_Rect rectE = {enemies->dstRect.x, enemies->dstRect.y, 32, 32};
+  //SDL_Rect srcE = {enemies->srcRect.x, 0, 32, 32};
+
   //SDL_RenderFillRect(program.renderer, &rect);
   SDL_RenderCopy(program.renderer,man->texture,&src,&rect);
+  //if (enemies->exists)
+  //  SDL_RenderCopy(program.renderer,man->texture,&srcE,&rectE);
   for(i=0;i<20;i++)
   {
      if(b[i].active == 1)
@@ -194,5 +201,11 @@ void doRender(Player *man,Bullet b[])
         SDL_RenderCopy(program.renderer,bullet.texture,NULL,&faggot);
      }
   }
+  for(i=0;i<10;i++){
+  if (man->enemies[i].exists)
+      SDL_RenderCopyEx(program.renderer,man->texture, &man->enemies[i].srcRect, &man->enemies[i].dstRect, 0, NULL, 0);
+
+  }
+
   SDL_RenderPresent(program.renderer);
 }
