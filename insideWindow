@@ -1,0 +1,16 @@
+bool insideWindow(int x, int y){
+    int width;
+    int height;
+    // Will get the current heigh and width of the game window. So it will work with other sizes too.
+    SDL_GetWindowSize(gWindow,&width,&height);
+    // -32 otherwise the character will go offscreen
+    // Checks collision with game window walls.
+    if(y > height -32 || y < 0 || x > width - 32 || x < 0)
+    {
+        return true;
+    }
+    else
+    {
+        return false;
+    }
+}
