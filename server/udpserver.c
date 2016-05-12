@@ -49,7 +49,7 @@ struct Program
 int main(int argc, char **argv)
 {
     int maxPlayers = 4;
-    int x,y,type,id,next=0,offset;
+    int x,y,type,id,next=0,offset,max;
     IPaddress ip;
     char tmp[1024];
     int curid=0;
@@ -183,13 +183,18 @@ int main(int argc, char **argv)
 
                         //	  printf("Inkommande paket\n");
                         offset = 0;
+                        max = 0;
                         do
                         {
+                            printf("incoming\n");
                             offset+=SDLNet_TCP_Recv(players[i].tcpsock,tmp+offset,1024);
+                            max++;
                         }
-                        while(uncomplete_string(tmp));
+                        while(uncomplete_string(tmp) && max<20);
                         printf("%s",tmp);
                         sscanf(tmp,"%d %d",&type,&id);
+                        if(max)
+                            type = 3;
 
                         if(type == 3)
                         {
