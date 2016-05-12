@@ -89,7 +89,12 @@ int main(int argc, char *argv[])
     int testss = 0;
     while(!exit)
     {
+<<<<<<< HEAD
+//<<<<<<< HEAD
+//=======
+=======
 
+>>>>>>> ed613658dcaa40ee57746396abc7975b06164adb
         displayMenu(menu);
         pickCharacter = handleMenu(&exit);
         while(pickCharacter)
@@ -99,12 +104,16 @@ int main(int argc, char *argv[])
             ingame = handlePick(&pickCharacter);
             if(ingame)
             {
+<<<<<<< HEAD
+                init(&player);
+=======
                 int s;
                 for (s=0; s < 3; s++)
                 {
                     init(&player, &ledges[s]);
                     printf("%d\n", ledges[s].x);
                 }
+>>>>>>> ed613658dcaa40ee57746396abc7975b06164adb
             }
             while(ingame)
             {
