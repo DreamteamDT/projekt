@@ -1,8 +1,9 @@
 #include "definition.h"
 
-extern void init(Player *);
-extern void doRender(Player *man,Bullet b[]); //, Enemy *enemies
+extern void init(Player *, Ledge *ledges);
+extern void doRender(Player *man,Bullet b[], Ledge *ledges); //, Enemy *enemies
 extern int processEvents(Player *man,Bullet b[],int *moved,int *type);
+extern void collisionDetect(Player *man, int *moved, Ledge *ledges);
 
 extern void clearCartridge(Bullet ammo[]);
 extern void Quit();
@@ -29,6 +30,7 @@ int main(int argc, char *argv[])
     int done = 0;
     int connected, i;
     Player player;
+    Ledge ledges[3];
     //Enemy enemies[10];
     Network client;
     int choice;
@@ -59,8 +61,14 @@ int main(int argc, char *argv[])
     }//**********************************
     else
         connected = 0;
+//printf("init\n");
 
-    init(&player);
+    int s;
+    for (s=0; s < 3; s++)
+    {
+        init(&player, &ledges[s]);
+        printf("%d\n", ledges[s].x);
+    }
 
     if(connected)
     {
@@ -74,6 +82,8 @@ int main(int argc, char *argv[])
     while(!done)
     {
         done = processEvents(&player,ammo,&moved,&type);
+        for (i = 0; i < 3; i++)
+            collisionDetect(&player, &moved, &ledges[i]);
         if(moved && connected)
         {
             send_data(&player,&client,type);
@@ -85,8 +95,9 @@ int main(int argc, char *argv[])
             //  printf("client connect\n");
         }
         updateLogic(&player,ammo);
-        //for (i = 0; i < 10; i++)
-        doRender(&player,ammo); //,&enemies[i]
+        for (i = 0; i < 3; i++)
+          doRender(&player,ammo,&ledges[i]); //,&enemies[i]
+        //printf("init\n");
         //don't burn up the CPU
         SDL_Delay(40);
     }

@@ -11,6 +11,11 @@
 #endif // _WIN32
 
 
+typedef struct
+{
+    SDL_Texture *ltexture;
+    int x, y, w, h;
+} Ledge;
 
 typedef struct
 {
@@ -57,8 +62,10 @@ typedef struct
 typedef struct
 {
    Enemy enemies[10];
+   Ledge ledges[3];
    int x, y;
    int frameX,frameY;
+
    SDL_Texture *texture;
    int thinkTime;
    int shot;
