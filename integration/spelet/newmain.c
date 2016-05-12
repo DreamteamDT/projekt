@@ -1,8 +1,9 @@
 #include "definition.h"
 
-extern void init(Player *);
-extern void doRender(Player *man,Bullet b[]); //, Enemy *enemies
+extern void init(Player *, Ledge *ledges);
+extern void doRender(Player *man,Bullet b[], Ledge *ledges); //, Enemy *enemies
 extern int processEvents(Player *man,Bullet b[],int *moved,int *type);
+extern void collisionDetect(Player *man, int *moved, Ledge *ledges);
 
 extern void clearCartridge(Bullet ammo[]);
 extern void Quit();
@@ -35,6 +36,7 @@ int main(int argc, char *argv[])
     int done = 0;
     int connected, i;
     Player player;
+    Ledge ledges[3];
     //Enemy enemies[10];
     Network client;
     int choice;
@@ -65,7 +67,17 @@ int main(int argc, char *argv[])
     }//**********************************
     else
         connected = 0;
+//printf("init\n");
 
+<<<<<<< HEAD
+    int s;
+    for (s=0; s < 3; s++)
+    {
+        init(&player, &ledges[s]);
+        printf("%d\n", ledges[s].x);
+    }
+=======
+>>>>>>> 4fd6c0fd942b4c795ba0bcb258b485843f18957f
 
     if(connected)
     {
@@ -82,9 +94,21 @@ int main(int argc, char *argv[])
 
     while(!exit)
     {
+<<<<<<< HEAD
+        done = processEvents(&player,ammo,&moved,&type);
+        for (i = 0; i < 3; i++)
+            collisionDetect(&player, &moved, &ledges[i]);
+        if(moved && connected)
+        {
+            send_data(&player,&client,type);
+            moved = 0;
+        }
+        if (choice == 1)
+=======
         displayMenu(menu);
         pickCharacter = handleMenu(&exit);
         while(pickCharacter)
+>>>>>>> 4fd6c0fd942b4c795ba0bcb258b485843f18957f
         {
             displayMenu(pick);
             ingame = handlePick(&pickCharacter);
@@ -120,6 +144,15 @@ int main(int argc, char *argv[])
             }
             exit = 0;
         }
+<<<<<<< HEAD
+        updateLogic(&player,ammo);
+        for (i = 0; i < 3; i++)
+          doRender(&player,ammo,&ledges[i]); //,&enemies[i]
+        //printf("init\n");
+        //don't burn up the CPU
+        SDL_Delay(40);
+=======
+>>>>>>> 4fd6c0fd942b4c795ba0bcb258b485843f18957f
     }
     SDLNet_FreeSocketSet(client.udpset);
     SDLNet_FreeSocketSet(client.tcpset);
