@@ -94,21 +94,12 @@ int main(int argc, char *argv[])
 
     while(!exit)
     {
-<<<<<<< HEAD
-        done = processEvents(&player,ammo,&moved,&type);
-        for (i = 0; i < 3; i++)
-            collisionDetect(&player, &moved, &ledges[i]);
-        if(moved && connected)
-        {
-            send_data(&player,&client,type);
-            moved = 0;
-        }
-        if (choice == 1)
-=======
+//<<<<<<< HEAD
+//=======
         displayMenu(menu);
         pickCharacter = handleMenu(&exit);
         while(pickCharacter)
->>>>>>> 4fd6c0fd942b4c795ba0bcb258b485843f18957f
+//>>>>>>> 4fd6c0fd942b4c795ba0bcb258b485843f18957f
         {
             displayMenu(pick);
             ingame = handlePick(&pickCharacter);
