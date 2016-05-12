@@ -3,19 +3,6 @@
 
 void init(Player *player, Ledge *ledge)
 {
-//<<<<<<< HEAD
-    //printf("init\n");
-    SDL_Init(SDL_INIT_VIDEO);
-
-    //printf("init\n");
-    program.window = SDL_CreateWindow("Game Window",                     // window title
-                            SDL_WINDOWPOS_UNDEFINED,           // initial x position
-                            SDL_WINDOWPOS_UNDEFINED,           // initial y position
-                            640,                               // width, in pixels
-                            480,                               // height, in pixels
-                            0                                  // flags
-                            );
-  program.renderer = SDL_CreateRenderer(program.window, -1, SDL_RENDERER_ACCELERATED);
 
     SDL_Surface *ledg = IMG_Load("pelare.PNG");
     SDL_Texture *ltexture;

@@ -86,7 +86,7 @@ int main(int argc, char *argv[])
     Menu menu,pick;
     initMenu(&menu);
     initPick(&pick);
-
+    int testss = 0;
     while(!exit)
     {
 
@@ -95,7 +95,6 @@ int main(int argc, char *argv[])
         while(pickCharacter)
 //>>>>>>> 4fd6c0fd942b4c795ba0bcb258b485843f18957f
         {
-            printf("ASD\n");
             displayMenu(pick);
             ingame = handlePick(&pickCharacter);
             if(ingame)
@@ -124,15 +123,16 @@ int main(int argc, char *argv[])
                     //  printf("client connect\n");
                 }
                 updateLogic(&player,ammo);
-                for (i = 0; i < 3; i++)
-                    doRender(&player,ammo, &ledges[i]); //,&enemies[i]
+                //for (i = 0; i < 3; i++)
+                doRender(&player,ammo, &ledges); //,&enemies[i]
                 //don't burn up the CPU
                 SDL_Delay(40);
                 if(done)
                 {
                     pickCharacter = 0;
                     ingame = 0;
-                    printf("ASD\n");
+                    //initMenu(&menu);
+                    //initPick(&pick);
                 }
 
             }
