@@ -15,7 +15,7 @@ extern SDL_Texture *initBullet();
 extern void updateLogic(Player *p, Bullet b[]);
 
 extern void send_data(Player *man,Network *client,int type);
-extern int networkInit(Network *client,Player *man);
+extern int networkInit(Network *client,Player *man,char *ipaddress);
 extern void recv_data(Player *player,Network *client,int *done);
 
 extern void displayMenu(Menu menu);
@@ -30,6 +30,7 @@ int main(int argc, char *argv[])
 
     int startMenu = 1,pickCharacter = 0,imageNo,exit = 0,ingame = 0;
     int test = 123;
+    char *tmp = (char*)malloc(100);
     int q = 0;
     int done = 0;
     int connected, i;
@@ -56,12 +57,16 @@ int main(int argc, char *argv[])
 
     if(choice==1)
     {
+        printf("Ange IP du vill connecta till: ");
+        fgets(tmp,1024,stdin);
+
         //*******INIT NETWORK***************
-        if(!(networkInit(&client,&player)))
+        if(!(networkInit(&client,&player,tmp)))
         {
-            done = 1;
+            exit = 1;
         }
         connected = 1;
+        free(tmp);
     }//**********************************
     else
         connected = 0;

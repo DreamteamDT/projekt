@@ -13,7 +13,7 @@ int uncomplete_string(char tmp[])
     return 1;
 }
 
-int networkInit(Network *client,Player *man)
+int networkInit(Network *client,Player *man,char *ipaddress)
 {
     int i;
     SDLNet_Init();
@@ -22,11 +22,11 @@ int networkInit(Network *client,Player *man)
     IPaddress ip,tcpip;
     char tmp[1024];
 
-    if(!(SDLNet_ResolveHost(&ip,"130.237.84.177",5000)))
+    if(!(SDLNet_ResolveHost(&ip,ipaddress,5000)))
     {
         printf("Couldnt resolve udp host\n");
     }
-    if(!(SDLNet_ResolveHost(&tcpip,"130.237.84.177",4000)))
+    if(!(SDLNet_ResolveHost(&tcpip,ipaddress,4000)))
     {
         printf("Couldnt resolve tcp host\n");
     }
