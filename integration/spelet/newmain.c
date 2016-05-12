@@ -17,12 +17,16 @@ extern void send_data(Player *man,Network *client,int type);
 extern int networkInit(Network *client,Player *man);
 extern void recv_data(Player *player,Network *client,int *done);
 
+extern void displayMenu(Menu menu);
+extern int handleMenu(int *exit);
+extern void initMenu(Menu *menu);
+
 int global = 0;
 int main(int argc, char *argv[])
 {
 //<<<<<<< HEAD
 //=======
-    int testttttt;
+    int startMenu = 1,pickCharacter = 0,imageNo,exit = 0;
     int test = 123;
     int q = 0;
 //>>>>>>> 7da9c63775333773a13af11a9458512471063795
@@ -60,7 +64,6 @@ int main(int argc, char *argv[])
     else
         connected = 0;
 
-    init(&player);
 
     if(connected)
     {
@@ -71,24 +74,39 @@ int main(int argc, char *argv[])
     //Event loop
     clearCartridge(ammo);
 
-    while(!done)
+    Menu menu;
+    initMenu(&menu);
+
+    while(!exit)
     {
-        done = processEvents(&player,ammo,&moved,&type);
-        if(moved && connected)
+        displayMenu(menu);
+        pickCharacter = handleMenu(&exit);
+        while(pickCharacter)
         {
-            send_data(&player,&client,type);
-            moved = 0;
+            init(&player);
+            while(!done)
+            {
+
+                done = processEvents(&player,ammo,&moved,&type);
+                if(moved && connected)
+                {
+                    send_data(&player,&client,type);
+                    moved = 0;
+                }
+                if (choice == 1)
+                {
+                    recv_data(&player,&client,&done);
+                    //  printf("client connect\n");
+                }
+                updateLogic(&player,ammo);
+                //for (i = 0; i < 10; i++)
+                doRender(&player,ammo); //,&enemies[i]
+                //don't burn up the CPU
+                SDL_Delay(40);
+            }
+            pickCharacter = 0;
+            exit = 0;
         }
-        if (choice == 1)
-        {
-            recv_data(&player,&client,&done);
-            //  printf("client connect\n");
-        }
-        updateLogic(&player,ammo);
-        //for (i = 0; i < 10; i++)
-        doRender(&player,ammo); //,&enemies[i]
-        //don't burn up the CPU
-        SDL_Delay(40);
     }
     SDLNet_FreeSocketSet(client.udpset);
     SDLNet_FreeSocketSet(client.tcpset);
