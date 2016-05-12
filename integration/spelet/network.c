@@ -24,10 +24,12 @@ int networkInit(Network *client,Player *man,const char *ipaddress)
     if((SDLNet_ResolveHost(&ip,ipaddress,5000))==-1)
     {
         printf("Couldnt resolve udp host\n");
+        return 0;
     }
     if((SDLNet_ResolveHost(&tcpip,ipaddress,4000))==-1)
     {
         printf("Couldnt resolve tcp host\n");
+        return 0;
     }
 
     if(!(client->udpsock = SDLNet_UDP_Open(0)))

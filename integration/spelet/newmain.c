@@ -58,11 +58,9 @@ int main(int argc, char *argv[])
     if(choice==1)
     {
         printf("Ange IP du vill connecta till: ");
-        fgets(tmp,1024,stdin);
-
-        //*******INIT NETWORK***************
+        fgets(tmp,100,stdin);
         connected = 1;
-    }//**********************************
+    }
     else
         connected = 0;
 
@@ -76,18 +74,17 @@ int main(int argc, char *argv[])
     SDLNet_Init();
     int testss = 0;
 
-    while(!exit)
+    while(!exit) //HUVUDMENYN
     {
         displayMenu(menu);
         pickCharacter = handleMenu(&exit);
-        while(pickCharacter)
 
+        while(pickCharacter) //PICK CHARACTER-MENYN
         {
             displayMenu(pick);
             ingame = handlePick(&pickCharacter);
             if(ingame)
             {
-
                 int s;
                 for (s=0; s < 3; s++)
                 {
@@ -102,12 +99,10 @@ int main(int argc, char *argv[])
                     pickCharacter = 0;
                 }
                 if(connected && exit!=1)
-                {
                     send_data(&player,&client,2);
-                }
 
             }
-            while(ingame)
+            while(ingame) //INGAME
             {
 
                 done = processEvents(&player,ammo,&moved,&type);
@@ -118,10 +113,9 @@ int main(int argc, char *argv[])
                     send_data(&player,&client,type);
                     moved = 0;
                 }
-                if (choice == 1)
+                if (connected)
                 {
                     recv_data(&player,&client,&done);
-                    //  printf("client connect\n");
                 }
                 updateLogic(&player,ammo);
                 //for (i = 0; i < 3; i++)
@@ -132,18 +126,14 @@ int main(int argc, char *argv[])
                 {
                     pickCharacter = 0;
                     ingame = 0;
-                    //initMenu(&menu);
-                    //initPick(&pick);
                     SDLNet_FreeSocketSet(client.udpset);
                     SDLNet_FreeSocketSet(client.tcpset);
                     SDLNet_UDP_Close(client.udpsock);
                     SDLNet_TCP_Close(client.tcpsock);
                 }
-
             }
             exit = 0;
         }
-
     }
     free(tmp);
     SDLNet_Quit();
