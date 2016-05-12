@@ -28,10 +28,10 @@ extern int handlePick(int *pickCharacter);
 int global = 0;
 int main(int argc, char *argv[])
 {
-<<<<<<< HEAD
-=======
+//<<<<<<< HEAD
+//=======
 
->>>>>>> 4f04477192c6dc006aca1aae1c51b75987a36da2
+//>>>>>>> 4f04477192c6dc006aca1aae1c51b75987a36da2
     int startMenu = 1,pickCharacter = 0,imageNo,exit = 0,ingame = 0;
     int test = 123;
     const char *tmp = (const char*)malloc(100);
@@ -67,14 +67,14 @@ int main(int argc, char *argv[])
     }
     else
         connected = 0;
-<<<<<<< HEAD
+//<<<<<<< HEAD
 
     if(connected)
     {
         send_data(&player,&client,2);
     }
-=======
->>>>>>> 4f04477192c6dc006aca1aae1c51b75987a36da2
+//=======
+//>>>>>>> 4f04477192c6dc006aca1aae1c51b75987a36da2
 
     //link(ammo);
     //Event loop
@@ -85,14 +85,7 @@ int main(int argc, char *argv[])
     initPick(&pick);
     SDLNet_Init();
     int testss = 0;
-<<<<<<< HEAD
-    while(!exit)
-    {
 
-        displayMenu(menu);
-        pickCharacter = handleMenu(&exit);
-        while(pickCharacter)
-=======
 
     while(!exit) //HUVUDMENYN
     {
@@ -100,23 +93,13 @@ int main(int argc, char *argv[])
         pickCharacter = handleMenu(&exit);
 
         while(pickCharacter) //PICK CHARACTER-MENYN
->>>>>>> 4f04477192c6dc006aca1aae1c51b75987a36da2
         {
             displayMenu(pick);
             ingame = handlePick(&pickCharacter);
             if(ingame)
             {
-<<<<<<< HEAD
                 initPlayer(&player);
                 initLedges(&player);
-=======
-                int s;
-                for (s=0; s < 3; s++)
-                {
-                    init(&player, &ledges[s]);
-                    printf("%d\n", ledges[s].x);
-                }
-
                 if(connected && !(networkInit(&client,&player,tmp)))
                 {
                     exit = 1;
@@ -125,8 +108,6 @@ int main(int argc, char *argv[])
                 }
                 if(connected && exit!=1)
                     send_data(&player,&client,2);
-
->>>>>>> 4f04477192c6dc006aca1aae1c51b75987a36da2
             }
             while(ingame) //INGAME
             {
@@ -160,10 +141,6 @@ int main(int argc, char *argv[])
             }
             exit = 0;
         }
-<<<<<<< HEAD
-
-=======
->>>>>>> 4f04477192c6dc006aca1aae1c51b75987a36da2
     }
     free(tmp);
     SDLNet_Quit();
