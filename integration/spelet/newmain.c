@@ -16,7 +16,7 @@ extern SDL_Texture *initBullet();
 extern void updateLogic(Player *p, Bullet b[]);
 
 extern void send_data(Player *man,Network *client,int type);
-extern int networkInit(Network *client,Player *man);
+extern int networkInit(Network *client,Player *man,const char *ipaddress);
 extern void recv_data(Player *player,Network *client,int *done);
 
 extern void displayMenu(Menu menu);
@@ -28,8 +28,13 @@ extern int handlePick(int *pickCharacter);
 int global = 0;
 int main(int argc, char *argv[])
 {
+<<<<<<< HEAD
+=======
+
+>>>>>>> 4f04477192c6dc006aca1aae1c51b75987a36da2
     int startMenu = 1,pickCharacter = 0,imageNo,exit = 0,ingame = 0;
     int test = 123;
+    const char *tmp = (const char*)malloc(100);
     int q = 0;
     int done = 0;
     int connected, i;
@@ -56,20 +61,20 @@ int main(int argc, char *argv[])
 
     if(choice==1)
     {
-        //*******INIT NETWORK***************
-        if(!(networkInit(&client,&player)))
-        {
-            done = 1;
-        }
+        printf("Ange IP du vill connecta till: ");
+        fgets(tmp,100,stdin);
         connected = 1;
-    }//**********************************
+    }
     else
         connected = 0;
+<<<<<<< HEAD
 
     if(connected)
     {
         send_data(&player,&client,2);
     }
+=======
+>>>>>>> 4f04477192c6dc006aca1aae1c51b75987a36da2
 
     //link(ammo);
     //Event loop
@@ -78,22 +83,52 @@ int main(int argc, char *argv[])
     Menu menu,pick;
     initMenu(&menu);
     initPick(&pick);
+    SDLNet_Init();
     int testss = 0;
+<<<<<<< HEAD
     while(!exit)
     {
 
         displayMenu(menu);
         pickCharacter = handleMenu(&exit);
         while(pickCharacter)
+=======
+
+    while(!exit) //HUVUDMENYN
+    {
+        displayMenu(menu);
+        pickCharacter = handleMenu(&exit);
+
+        while(pickCharacter) //PICK CHARACTER-MENYN
+>>>>>>> 4f04477192c6dc006aca1aae1c51b75987a36da2
         {
             displayMenu(pick);
             ingame = handlePick(&pickCharacter);
             if(ingame)
             {
+<<<<<<< HEAD
                 initPlayer(&player);
                 initLedges(&player);
+=======
+                int s;
+                for (s=0; s < 3; s++)
+                {
+                    init(&player, &ledges[s]);
+                    printf("%d\n", ledges[s].x);
+                }
+
+                if(connected && !(networkInit(&client,&player,tmp)))
+                {
+                    exit = 1;
+                    ingame = 0;
+                    pickCharacter = 0;
+                }
+                if(connected && exit!=1)
+                    send_data(&player,&client,2);
+
+>>>>>>> 4f04477192c6dc006aca1aae1c51b75987a36da2
             }
-            while(ingame)
+            while(ingame) //INGAME
             {
 
                 done = processEvents(&player,ammo,&moved,&type);
@@ -104,10 +139,9 @@ int main(int argc, char *argv[])
                     send_data(&player,&client,type);
                     moved = 0;
                 }
-                if (choice == 1)
+                if (connected)
                 {
                     recv_data(&player,&client,&done);
-                    //  printf("client connect\n");
                 }
                 updateLogic(&player,ammo);
                 for (i = 0; i < 3; i++)
@@ -118,19 +152,20 @@ int main(int argc, char *argv[])
                 {
                     pickCharacter = 0;
                     ingame = 0;
-                    //initMenu(&menu);
-                    //initPick(&pick);
+                    SDLNet_FreeSocketSet(client.udpset);
+                    SDLNet_FreeSocketSet(client.tcpset);
+                    SDLNet_UDP_Close(client.udpsock);
+                    SDLNet_TCP_Close(client.tcpsock);
                 }
-
             }
             exit = 0;
         }
+<<<<<<< HEAD
 
+=======
+>>>>>>> 4f04477192c6dc006aca1aae1c51b75987a36da2
     }
-    SDLNet_FreeSocketSet(client.udpset);
-    SDLNet_FreeSocketSet(client.tcpset);
-    SDLNet_UDP_Close(client.udpsock);
-    SDLNet_TCP_Close(client.tcpsock);
+    free(tmp);
     SDLNet_Quit();
     Quit();
     printf("ASD\n");
