@@ -1,16 +1,17 @@
 #include "definition.h"
 
-extern void init(Player *, Ledge *ledges);
-extern void doRender(Player *man,Bullet b[], Ledge *ledges); //, Enemy *enemies
+extern void initPlayer(Player *player);
+extern void initLedges(Player *player);
+extern void doRender(Player *man,Bullet b[]); //, Enemy *enemies
 extern int processEvents(Player *man,Bullet b[],int *moved,int *type);
-extern void collisionDetect(Player *man, int *moved, Ledge *ledges);
+extern void collisionDetect(Player *man, int *moved);
 
 extern void clearCartridge(Bullet ammo[]);
 extern void Quit();
 extern void sendPosition(Player *man);
 
 extern void loadAmmo(Bullet b[]);
-//extern void initBullet();
+//extern void infitBullet();
 extern SDL_Texture *initBullet();
 extern void updateLogic(Player *p, Bullet b[]);
 
@@ -27,7 +28,10 @@ extern int handlePick(int *pickCharacter);
 int global = 0;
 int main(int argc, char *argv[])
 {
+//<<<<<<< HEAD
+//=======
 
+//>>>>>>> 4f04477192c6dc006aca1aae1c51b75987a36da2
     int startMenu = 1,pickCharacter = 0,imageNo,exit = 0,ingame = 0;
     int test = 123;
     const char *tmp = (const char*)malloc(100);
@@ -35,7 +39,7 @@ int main(int argc, char *argv[])
     int done = 0;
     int connected, i;
     Player player;
-    Ledge ledges[3];
+    //Ledge ledges[3];
     //Enemy enemies[10];
     Network client;
     int choice;
@@ -63,6 +67,14 @@ int main(int argc, char *argv[])
     }
     else
         connected = 0;
+//<<<<<<< HEAD
+
+    if(connected)
+    {
+        send_data(&player,&client,2);
+    }
+//=======
+//>>>>>>> 4f04477192c6dc006aca1aae1c51b75987a36da2
 
     //link(ammo);
     //Event loop
@@ -73,6 +85,7 @@ int main(int argc, char *argv[])
     initPick(&pick);
     SDLNet_Init();
     int testss = 0;
+
 
     while(!exit) //HUVUDMENYN
     {
@@ -85,13 +98,8 @@ int main(int argc, char *argv[])
             ingame = handlePick(&pickCharacter);
             if(ingame)
             {
-                int s;
-                for (s=0; s < 3; s++)
-                {
-                    init(&player, &ledges[s]);
-                    printf("%d\n", ledges[s].x);
-                }
-
+                initPlayer(&player);
+                initLedges(&player);
                 if(connected && !(networkInit(&client,&player,tmp)))
                 {
                     exit = 1;
@@ -100,14 +108,13 @@ int main(int argc, char *argv[])
                 }
                 if(connected && exit!=1)
                     send_data(&player,&client,2);
-
             }
             while(ingame) //INGAME
             {
 
                 done = processEvents(&player,ammo,&moved,&type);
-                for (i = 0; i < 3; i++)
-                    collisionDetect(&player, &moved, &ledges[i]);
+                //for (i = 0; i < 3; i++)
+                collisionDetect(&player, &moved);
                 if(moved && connected)
                 {
                     send_data(&player,&client,type);
@@ -118,8 +125,8 @@ int main(int argc, char *argv[])
                     recv_data(&player,&client,&done);
                 }
                 updateLogic(&player,ammo);
-                //for (i = 0; i < 3; i++)
-                doRender(&player,ammo, &ledges); //,&enemies[i]
+                for (i = 0; i < 3; i++)
+                    doRender(&player,ammo); //,&enemies[i]
                 //don't burn up the CPU
                 SDL_Delay(40);
                 if(done)

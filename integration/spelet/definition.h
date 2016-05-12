@@ -13,7 +13,7 @@
 
 typedef struct
 {
-    SDL_Texture *ltexture;
+    SDL_Texture *texture;
     int x, y, w, h;
 } Ledge;
 
