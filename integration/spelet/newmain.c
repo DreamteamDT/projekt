@@ -18,12 +18,18 @@ extern void send_data(Player *man,Network *client,int type);
 extern int networkInit(Network *client,Player *man);
 extern void recv_data(Player *player,Network *client,int *done);
 
+extern void displayMenu(Menu menu);
+extern int handleMenu(int *exit);
+extern void initMenu(Menu *menu);
+extern void initPick(Menu *pick);
+extern int handlePick(int *pickCharacter);
+
 int global = 0;
 int main(int argc, char *argv[])
 {
 //<<<<<<< HEAD
 //=======
-    int testttttt;
+    int startMenu = 1,pickCharacter = 0,imageNo,exit = 0,ingame = 0;
     int test = 123;
     int q = 0;
 //>>>>>>> 7da9c63775333773a13af11a9458512471063795
@@ -63,12 +69,15 @@ int main(int argc, char *argv[])
         connected = 0;
 //printf("init\n");
 
+<<<<<<< HEAD
     int s;
     for (s=0; s < 3; s++)
     {
         init(&player, &ledges[s]);
         printf("%d\n", ledges[s].x);
     }
+=======
+>>>>>>> 4fd6c0fd942b4c795ba0bcb258b485843f18957f
 
     if(connected)
     {
@@ -79,8 +88,13 @@ int main(int argc, char *argv[])
     //Event loop
     clearCartridge(ammo);
 
-    while(!done)
+    Menu menu,pick;
+    initMenu(&menu);
+    initPick(&pick);
+
+    while(!exit)
     {
+<<<<<<< HEAD
         done = processEvents(&player,ammo,&moved,&type);
         for (i = 0; i < 3; i++)
             collisionDetect(&player, &moved, &ledges[i]);
@@ -90,16 +104,53 @@ int main(int argc, char *argv[])
             moved = 0;
         }
         if (choice == 1)
+=======
+        displayMenu(menu);
+        pickCharacter = handleMenu(&exit);
+        while(pickCharacter)
+>>>>>>> 4fd6c0fd942b4c795ba0bcb258b485843f18957f
         {
-            recv_data(&player,&client,&done);
-            //  printf("client connect\n");
+            displayMenu(pick);
+            ingame = handlePick(&pickCharacter);
+            if(ingame)
+                init(&player);
+            while(ingame)
+            {
+
+                done = processEvents(&player,ammo,&moved,&type);
+                if(moved && connected)
+                {
+                    send_data(&player,&client,type);
+                    moved = 0;
+                }
+                if (choice == 1)
+                {
+                    recv_data(&player,&client,&done);
+                    //  printf("client connect\n");
+                }
+                updateLogic(&player,ammo);
+                //for (i = 0; i < 10; i++)
+                doRender(&player,ammo); //,&enemies[i]
+                //don't burn up the CPU
+                SDL_Delay(40);
+                if(done)
+                {
+                    pickCharacter = 0;
+                    ingame = 0;
+                }
+
+            }
+            exit = 0;
         }
+<<<<<<< HEAD
         updateLogic(&player,ammo);
         for (i = 0; i < 3; i++)
           doRender(&player,ammo,&ledges[i]); //,&enemies[i]
         //printf("init\n");
         //don't burn up the CPU
         SDL_Delay(40);
+=======
+>>>>>>> 4fd6c0fd942b4c795ba0bcb258b485843f18957f
     }
     SDLNet_FreeSocketSet(client.udpset);
     SDLNet_FreeSocketSet(client.tcpset);

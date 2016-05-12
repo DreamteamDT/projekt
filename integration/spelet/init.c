@@ -3,6 +3,7 @@
 
 void init(Player *player, Ledge *ledge)
 {
+<<<<<<< HEAD
     //printf("init\n");
     SDL_Init(SDL_INIT_VIDEO);
 
@@ -41,6 +42,8 @@ void init(Player *player, Ledge *ledge)
     printf("| %d |\n", ledge->x);
 
 
+=======
+>>>>>>> 4fd6c0fd942b4c795ba0bcb258b485843f18957f
     SDL_Surface *image = IMG_Load("USA.PNG");
     SDL_Texture *texture;
     texture = SDL_CreateTextureFromSurface(program.renderer,image);
@@ -56,17 +59,17 @@ void init(Player *player, Ledge *ledge)
 }
 SDL_Texture *initBullet()
 {
-     SDL_Surface *image = IMG_Load("bullet.PNG");
-     SDL_Texture *texture;
-     texture = SDL_CreateTextureFromSurface(program.renderer,image);
-     return texture;
+    SDL_Surface *image = IMG_Load("bullet.PNG");
+    SDL_Texture *texture;
+    texture = SDL_CreateTextureFromSurface(program.renderer,image);
+    return texture;
 }
 void Quit()
 {
-  SDL_DestroyWindow(program.window);
-  SDL_DestroyRenderer(program.renderer);
+    SDL_DestroyWindow(program.window);
+    SDL_DestroyRenderer(program.renderer);
 
-  // Clean up
-  SDL_Quit();
+    // Clean up
+    SDL_Quit();
 
 }
