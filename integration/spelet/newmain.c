@@ -20,13 +20,15 @@ extern void recv_data(Player *player,Network *client,int *done);
 extern void displayMenu(Menu menu);
 extern int handleMenu(int *exit);
 extern void initMenu(Menu *menu);
+extern void initPick(Menu *pick);
+extern int handlePick(int *pickCharacter);
 
 int global = 0;
 int main(int argc, char *argv[])
 {
 //<<<<<<< HEAD
 //=======
-    int startMenu = 1,pickCharacter = 0,imageNo,exit = 0;
+    int startMenu = 1,pickCharacter = 0,imageNo,exit = 0,ingame = 0;
     int test = 123;
     int q = 0;
 //>>>>>>> 7da9c63775333773a13af11a9458512471063795
@@ -74,8 +76,9 @@ int main(int argc, char *argv[])
     //Event loop
     clearCartridge(ammo);
 
-    Menu menu;
+    Menu menu,pick;
     initMenu(&menu);
+    initPick(&pick);
 
     while(!exit)
     {
@@ -83,8 +86,11 @@ int main(int argc, char *argv[])
         pickCharacter = handleMenu(&exit);
         while(pickCharacter)
         {
-            init(&player);
-            while(!done)
+            displayMenu(pick);
+            ingame = handlePick(&pickCharacter);
+            if(ingame)
+                init(&player);
+            while(ingame)
             {
 
                 done = processEvents(&player,ammo,&moved,&type);
@@ -103,8 +109,13 @@ int main(int argc, char *argv[])
                 doRender(&player,ammo); //,&enemies[i]
                 //don't burn up the CPU
                 SDL_Delay(40);
+                if(done)
+                {
+                    pickCharacter = 0;
+                    ingame = 0;
+                }
+
             }
-            pickCharacter = 0;
             exit = 0;
         }
     }
