@@ -42,8 +42,8 @@ struct player
 
 struct Program
 {
-  SDL_Window *window;
-  SDL_Renderer *renderer;
+    SDL_Window *window;
+    SDL_Renderer *renderer;
 };
 
 int main(int argc, char **argv)
@@ -109,12 +109,12 @@ int main(int argc, char **argv)
 
     struct Program program;
     program.window = SDL_CreateWindow("Game Window",                     // window title
-                            SDL_WINDOWPOS_UNDEFINED,           // initial x position
-                            SDL_WINDOWPOS_UNDEFINED,           // initial y position
-                            640,                               // width, in pixels
-                            480,                               // height, in pixels
-                            0                                  // flags
-                            );
+                                      SDL_WINDOWPOS_UNDEFINED,           // initial x position
+                                      SDL_WINDOWPOS_UNDEFINED,           // initial y position
+                                      640,                               // width, in pixels
+                                      480,                               // height, in pixels
+                                      0                                  // flags
+                                     );
     program.renderer = SDL_CreateRenderer(program.window, -1, SDL_RENDERER_ACCELERATED);
 
     int running = 1;
@@ -126,21 +126,33 @@ int main(int argc, char **argv)
         //printf("test ");
         if(players[next].tcpsock)
         {
-            SDLNet_TCP_AddSocket(tcpset,players[next].tcpsock);
-            players[next].exists = 1;
-            sprintf(tmp,"%d",next);
-            printf("New connection. ID for new player: %d\n",next);
-            SDLNet_TCP_Send(players[next].tcpsock,tmp,strlen(tmp)+1);
-            players[next].ip = *SDLNet_TCP_GetPeerAddress(players[next].tcpsock);
-            printf("Players ip: %d players port: %d\n",players[next].ip.host,players[next].ip.port);
-
-            for(i=0; i<maxPlayers; i++) //Hittar ledig spot för nästa klient
+            if(playernum<4)
             {
-                if(!players[i].exists)
+                SDLNet_TCP_AddSocket(tcpset,players[next].tcpsock);
+                players[next].exists = 1;
+                type = 0;
+                sprintf(tmp,"%d %d",type,  next);
+                printf("New connection. ID for new player: %d\n",next);
+                SDLNet_TCP_Send(players[next].tcpsock,tmp,strlen(tmp)+1);
+                players[next].ip = *SDLNet_TCP_GetPeerAddress(players[next].tcpsock);
+                printf("Players ip: %d players port: %d\n",players[next].ip.host,players[next].ip.port);
+
+                for(i=0; i<maxPlayers; i++) //Hittar ledig spot för nästa klient
                 {
-                    next = i;
-                    i = maxPlayers;
+                    if(!players[i].exists)
+                    {
+                        next = i;
+                        i = maxPlayers;
+                    }
                 }
+                playernum++;
+            }
+            else
+            {
+                type = 4;
+                sprintf(tmp,"%d %d",type,next);
+                printf("Server full, new connection aborted.\n",next);
+                SDLNet_TCP_Send(players[next].tcpsock,tmp,strlen(tmp)+1);
             }
 
         }
@@ -214,6 +226,7 @@ int main(int argc, char **argv)
                             SDLNet_TCP_DelSocket(tcpset,players[id].tcpsock);
                             SDLNet_TCP_Close(players[id].tcpsock);
                             players[id].exists = 0;
+                            playernum--;
                             printf("Successfully disconnected player %d.\n",id);
                             for(i=0; i<maxPlayers; i++) //Hittar första bästa lediga spot
                             {
@@ -238,13 +251,13 @@ int main(int argc, char **argv)
                     type = 6;
                     sprintf(tmp,"%d \n",type);
                     for(k=0; k<maxPlayers; k++)
-                            {
-                                if(players[k].exists)
-                                    {
-                                        SDLNet_TCP_Send(players[k].tcpsock,tmp,strlen(tmp)+1);
-                                    }
+                    {
+                        if(players[k].exists)
+                        {
+                            SDLNet_TCP_Send(players[k].tcpsock,tmp,strlen(tmp)+1);
+                        }
 
-                            }
+                    }
 
                     running = 0;
                 default:
@@ -258,7 +271,7 @@ int main(int argc, char **argv)
         SDL_Delay(1);
         if(running == 0)
         {
-            for(i=5;i>0;i--)
+            for(i=5; i>0; i--)
             {
                 printf("Shutting down in %d seconds.\n",i);
                 SDL_Delay(1000);
@@ -270,7 +283,7 @@ int main(int argc, char **argv)
     SDLNet_UDP_Close(rcvSock);
     SDLNet_FreeSocketSet(udpset);
     SDLNet_FreeSocketSet(tcpset);
-   // SDL_FreeSurface(screen);
+    // SDL_FreeSurface(screen);
     /* shutdown SDL_net */
     SDLNet_Quit();
 

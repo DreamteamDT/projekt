@@ -15,7 +15,7 @@ int uncomplete_string(char tmp[])
 
 int networkInit(Network *client,Player *man,const char *ipaddress)
 {
-    int i;
+    int i,type;
     client->tcpset=SDLNet_AllocSocketSet(10);
     client->udpset=SDLNet_AllocSocketSet(10);
     IPaddress ip,tcpip;
@@ -60,8 +60,14 @@ int networkInit(Network *client,Player *man,const char *ipaddress)
         return 0;
     }
     SDLNet_TCP_Recv(client->tcpsock,tmp,1024);
-    sscanf(tmp,"%d",&(man->id));
-    printf("my ID: %d\n",man->id);
+    sscanf(tmp,"%d %d",&type,&(man->id));
+    if(type==0)
+        printf("my ID: %d\n",man->id);
+    else if (type == 4)
+    {
+        printf("Server is full.\n");
+        return 0;
+    }
 
     SDLNet_TCP_AddSocket(client->tcpset,client->tcpsock);
     SDLNet_UDP_AddSocket(client->udpset,client->udpsock);

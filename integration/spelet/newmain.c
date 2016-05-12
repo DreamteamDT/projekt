@@ -67,14 +67,6 @@ int main(int argc, char *argv[])
     }
     else
         connected = 0;
-//<<<<<<< HEAD
-
-    if(connected)
-    {
-        send_data(&player,&client,2);
-    }
-//=======
-//>>>>>>> 4f04477192c6dc006aca1aae1c51b75987a36da2
 
     //link(ammo);
     //Event loop
