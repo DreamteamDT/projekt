@@ -16,7 +16,6 @@ int uncomplete_string(char tmp[])
 int networkInit(Network *client,Player *man,char *ipaddress)
 {
     int i;
-    SDLNet_Init();
     client->tcpset=SDLNet_AllocSocketSet(10);
     client->udpset=SDLNet_AllocSocketSet(10);
     IPaddress ip,tcpip;

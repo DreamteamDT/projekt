@@ -61,20 +61,10 @@ int main(int argc, char *argv[])
         fgets(tmp,1024,stdin);
 
         //*******INIT NETWORK***************
-        if(!(networkInit(&client,&player,tmp)))
-        {
-            exit = 1;
-        }
         connected = 1;
-        free(tmp);
     }//**********************************
     else
         connected = 0;
-
-    if(connected)
-    {
-        send_data(&player,&client,2);
-    }
 
     //link(ammo);
     //Event loop
@@ -83,12 +73,11 @@ int main(int argc, char *argv[])
     Menu menu,pick;
     initMenu(&menu);
     initPick(&pick);
+    SDLNet_Init();
     int testss = 0;
+
     while(!exit)
     {
-
-
-
         displayMenu(menu);
         pickCharacter = handleMenu(&exit);
         while(pickCharacter)
@@ -104,6 +93,17 @@ int main(int argc, char *argv[])
                 {
                     init(&player, &ledges[s]);
                     printf("%d\n", ledges[s].x);
+                }
+
+                if(connected && !(networkInit(&client,&player,tmp)))
+                {
+                    exit = 1;
+                    ingame = 0;
+                    pickCharacter = 0;
+                }
+                if(connected && exit!=1)
+                {
+                    send_data(&player,&client,2);
                 }
 
             }
@@ -134,6 +134,10 @@ int main(int argc, char *argv[])
                     ingame = 0;
                     //initMenu(&menu);
                     //initPick(&pick);
+                    SDLNet_FreeSocketSet(client.udpset);
+                    SDLNet_FreeSocketSet(client.tcpset);
+                    SDLNet_UDP_Close(client.udpsock);
+                    SDLNet_TCP_Close(client.tcpsock);
                 }
 
             }
@@ -141,10 +145,7 @@ int main(int argc, char *argv[])
         }
 
     }
-    SDLNet_FreeSocketSet(client.udpset);
-    SDLNet_FreeSocketSet(client.tcpset);
-    SDLNet_UDP_Close(client.udpsock);
-    SDLNet_TCP_Close(client.tcpsock);
+    free(tmp);
     SDLNet_Quit();
     Quit();
     printf("ASD\n");
