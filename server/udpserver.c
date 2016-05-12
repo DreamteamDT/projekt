@@ -205,8 +205,13 @@ int main(int argc, char **argv)
                         while(uncomplete_string(tmp) && max<20);
                         printf("%s",tmp);
                         sscanf(tmp,"%d %d",&type,&id);
-                        if(max)
+                        if(max>=20)
+                        {
                             type = 3;
+                            sprintf(tmp,"%d %d \n",type,i);
+                        }
+
+
 
                         if(type == 3)
                         {
@@ -223,9 +228,9 @@ int main(int argc, char **argv)
                                     }
 
                             }
-                            SDLNet_TCP_DelSocket(tcpset,players[id].tcpsock);
-                            SDLNet_TCP_Close(players[id].tcpsock);
-                            players[id].exists = 0;
+                            SDLNet_TCP_DelSocket(tcpset,players[i].tcpsock);
+                            SDLNet_TCP_Close(players[i].tcpsock);
+                            players[i].exists = 0;
                             playernum--;
                             printf("Successfully disconnected player %d.\n",id);
                             for(i=0; i<maxPlayers; i++) //Hittar första bästa lediga spot
