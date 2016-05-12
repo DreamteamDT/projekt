@@ -89,7 +89,9 @@ int main(int argc, char *argv[])
             displayMenu(pick);
             ingame = handlePick(&pickCharacter);
             if(ingame)
+            {
                 init(&player);
+            }
             while(ingame)
             {
 
