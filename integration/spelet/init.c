@@ -1,5 +1,5 @@
 #include "init.h"
-
+//init
 void init(Player *player)
 {
     SDL_Init(SDL_INIT_VIDEO);
