@@ -3,7 +3,7 @@
 
 void init(Player *player, Ledge *ledge)
 {
-<<<<<<< HEAD
+//<<<<<<< HEAD
     //printf("init\n");
     SDL_Init(SDL_INIT_VIDEO);
 
@@ -42,8 +42,8 @@ void init(Player *player, Ledge *ledge)
     printf("| %d |\n", ledge->x);
 
 
-=======
->>>>>>> 4fd6c0fd942b4c795ba0bcb258b485843f18957f
+//=======
+//>>>>>>> 4fd6c0fd942b4c795ba0bcb258b485843f18957f
     SDL_Surface *image = IMG_Load("USA.PNG");
     SDL_Texture *texture;
     texture = SDL_CreateTextureFromSurface(program.renderer,image);

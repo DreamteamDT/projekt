@@ -69,15 +69,10 @@ int main(int argc, char *argv[])
         connected = 0;
 //printf("init\n");
 
-<<<<<<< HEAD
-    int s;
-    for (s=0; s < 3; s++)
-    {
-        init(&player, &ledges[s]);
-        printf("%d\n", ledges[s].x);
-    }
-=======
->>>>>>> 4fd6c0fd942b4c795ba0bcb258b485843f18957f
+//<<<<<<< HEAD
+
+//=======
+//>>>>>>> 4fd6c0fd942b4c795ba0bcb258b485843f18957f
 
     if(connected)
     {
@@ -94,30 +89,30 @@ int main(int argc, char *argv[])
 
     while(!exit)
     {
-<<<<<<< HEAD
-        done = processEvents(&player,ammo,&moved,&type);
-        for (i = 0; i < 3; i++)
-            collisionDetect(&player, &moved, &ledges[i]);
-        if(moved && connected)
-        {
-            send_data(&player,&client,type);
-            moved = 0;
-        }
-        if (choice == 1)
-=======
+
         displayMenu(menu);
         pickCharacter = handleMenu(&exit);
         while(pickCharacter)
->>>>>>> 4fd6c0fd942b4c795ba0bcb258b485843f18957f
+//>>>>>>> 4fd6c0fd942b4c795ba0bcb258b485843f18957f
         {
+            printf("ASD\n");
             displayMenu(pick);
             ingame = handlePick(&pickCharacter);
             if(ingame)
-                init(&player);
+            {
+                int s;
+                for (s=0; s < 3; s++)
+                {
+                    init(&player, &ledges[s]);
+                    printf("%d\n", ledges[s].x);
+                }
+            }
             while(ingame)
             {
 
                 done = processEvents(&player,ammo,&moved,&type);
+                for (i = 0; i < 3; i++)
+                    collisionDetect(&player, &moved, &ledges[i]);
                 if(moved && connected)
                 {
                     send_data(&player,&client,type);
@@ -129,28 +124,23 @@ int main(int argc, char *argv[])
                     //  printf("client connect\n");
                 }
                 updateLogic(&player,ammo);
-                //for (i = 0; i < 10; i++)
-                doRender(&player,ammo); //,&enemies[i]
+                for (i = 0; i < 3; i++)
+                    doRender(&player,ammo, &ledges[i]); //,&enemies[i]
                 //don't burn up the CPU
                 SDL_Delay(40);
                 if(done)
                 {
                     pickCharacter = 0;
                     ingame = 0;
+                    printf("ASD\n");
                 }
 
             }
             exit = 0;
         }
-<<<<<<< HEAD
-        updateLogic(&player,ammo);
-        for (i = 0; i < 3; i++)
-          doRender(&player,ammo,&ledges[i]); //,&enemies[i]
-        //printf("init\n");
-        //don't burn up the CPU
-        SDL_Delay(40);
-=======
->>>>>>> 4fd6c0fd942b4c795ba0bcb258b485843f18957f
+//<<<<<<< HEAD
+//=======
+//>>>>>>> 4fd6c0fd942b4c795ba0bcb258b485843f18957f
     }
     SDLNet_FreeSocketSet(client.udpset);
     SDLNet_FreeSocketSet(client.tcpset);
@@ -158,6 +148,7 @@ int main(int argc, char *argv[])
     SDLNet_TCP_Close(client.tcpsock);
     SDLNet_Quit();
     Quit();
+    printf("ASD\n");
 
     // Close and destroy the window
 
