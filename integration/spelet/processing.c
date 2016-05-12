@@ -79,7 +79,7 @@ int processEvents(Player *man,Bullet b[],int *moved,int *type)
     }
 
     const Uint8 *state = SDL_GetKeyboardState(NULL);
-    if(state[SDL_SCANCODE_LEFT])
+    if(state[SDL_SCANCODE_LEFT] || state[SDL_SCANCODE_A])
     {
         man->x -= 5;
         *moved = 1;
@@ -94,7 +94,7 @@ int processEvents(Player *man,Bullet b[],int *moved,int *type)
         }
 
     }
-    if(state[SDL_SCANCODE_RIGHT])
+    if(state[SDL_SCANCODE_RIGHT] || state[SDL_SCANCODE_D])
     {
         man->x += 5;
         *moved = 1;
@@ -109,7 +109,7 @@ int processEvents(Player *man,Bullet b[],int *moved,int *type)
         }
 
     }
-    if(state[SDL_SCANCODE_UP])
+    if(state[SDL_SCANCODE_UP] || state[SDL_SCANCODE_W])
     {
         man->y -= 5;
         *moved = 1;
@@ -123,7 +123,7 @@ int processEvents(Player *man,Bullet b[],int *moved,int *type)
             man->frameX = 64;
         }
     }
-    if(state[SDL_SCANCODE_DOWN])
+    if(state[SDL_SCANCODE_DOWN] || state[SDL_SCANCODE_S])
     {
         man->y += 5;
         *moved = 1;
@@ -176,7 +176,7 @@ int processEvents(Player *man,Bullet b[],int *moved,int *type)
     return done;
 }
 
-void collisionDetect(Player *man, int *moved, Ledge *ledges)
+void collisionDetect(Player *man, int *moved)
 {
     int i;
     // check for collision with any ledges (brick blocks)
@@ -184,8 +184,7 @@ void collisionDetect(Player *man, int *moved, Ledge *ledges)
     {
         float mw = 32, mh = 32;
         float mx = man->x, my = man->y;
-        //float bx = man->ledges[i].x, by = man->ledges[i].y, bw = man->ledges[i].w, bh = man->ledges[i].h;
-        float bx = ledges->x, by = ledges->y, bw = ledges->w, bh = ledges->h;
+        float bx = man->ledges[i].x, by = man->ledges[i].y, bw = man->ledges[i].w, bh = man->ledges[i].h;
 
 
         // right side
@@ -314,12 +313,14 @@ void doRender(Player *man,Bullet b[], Ledge *ledges) //, Enemy *enemies
             SDL_RenderCopyEx(program.renderer,man->enemies[i].texture, &man->enemies[i].srcRect, &man->enemies[i].dstRect, 0, NULL, 0);
         }
     }
-    //for(i=0; i<3; i++)
-    //{
-        //printf("%d\n", man->ledges[i].x);
-        SDL_Rect ledgeRect = {ledges->x, ledges->y, ledges->w, ledges->h};
-        SDL_RenderCopy(program.renderer, ledges->ltexture, NULL, &ledgeRect);
-    //}
+    for(i=0; i<3; i++)
+    {
+        //printf("| x: %d\n", man->ledges[i].x);
+        SDL_Rect ledgeRect = {man->ledges[i].x, man->ledges[i].y, man->ledges[i].w, man->ledges[i].h};
+        SDL_RenderCopy(program.renderer, man->ledges[i].texture, NULL, &ledgeRect);
+        //printf("test\n");
+    }
+
 
     SDL_RenderPresent(program.renderer);
 }
