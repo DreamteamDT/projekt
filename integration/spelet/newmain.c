@@ -27,12 +27,10 @@ extern int handlePick(int *pickCharacter);
 int global = 0;
 int main(int argc, char *argv[])
 {
-//<<<<<<< HEAD
-//=======
+
     int startMenu = 1,pickCharacter = 0,imageNo,exit = 0,ingame = 0;
     int test = 123;
     int q = 0;
-//>>>>>>> 7da9c63775333773a13af11a9458512471063795
     int done = 0;
     int connected, i;
     Player player;
@@ -67,12 +65,6 @@ int main(int argc, char *argv[])
     }//**********************************
     else
         connected = 0;
-//printf("init\n");
-
-//<<<<<<< HEAD
-
-//=======
-//>>>>>>> 4fd6c0fd942b4c795ba0bcb258b485843f18957f
 
     if(connected)
     {
@@ -89,31 +81,26 @@ int main(int argc, char *argv[])
     int testss = 0;
     while(!exit)
     {
-<<<<<<< HEAD
-//<<<<<<< HEAD
-//=======
-=======
 
->>>>>>> ed613658dcaa40ee57746396abc7975b06164adb
+
+
         displayMenu(menu);
         pickCharacter = handleMenu(&exit);
         while(pickCharacter)
-//>>>>>>> 4fd6c0fd942b4c795ba0bcb258b485843f18957f
+
         {
             displayMenu(pick);
             ingame = handlePick(&pickCharacter);
             if(ingame)
             {
-<<<<<<< HEAD
-                init(&player);
-=======
+
                 int s;
                 for (s=0; s < 3; s++)
                 {
                     init(&player, &ledges[s]);
                     printf("%d\n", ledges[s].x);
                 }
->>>>>>> ed613658dcaa40ee57746396abc7975b06164adb
+
             }
             while(ingame)
             {
@@ -147,9 +134,7 @@ int main(int argc, char *argv[])
             }
             exit = 0;
         }
-//<<<<<<< HEAD
-//=======
-//>>>>>>> 4fd6c0fd942b4c795ba0bcb258b485843f18957f
+
     }
     SDLNet_FreeSocketSet(client.udpset);
     SDLNet_FreeSocketSet(client.tcpset);
