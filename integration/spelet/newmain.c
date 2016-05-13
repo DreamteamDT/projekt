@@ -67,8 +67,11 @@ int main(int argc, char *argv[])
     }
     else
         connected = 0;
+<<<<<<< HEAD
 //=======
 //>>>>>>> 4f04477192c6dc006aca1aae1c51b75987a36da2
+=======
+>>>>>>> ce318405f1a023c9993168b89fe3271e11162403
 
     //link(ammo);
     //Event loop
