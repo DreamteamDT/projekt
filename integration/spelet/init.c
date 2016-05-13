@@ -68,20 +68,25 @@ void initPlayer(Player *player)
 }
 void initLedges(Player *player)
 {
-    SDL_Surface *image = IMG_Load("pelare.PNG");
+    /*SDL_Surface *image = IMG_Load("pelare.PNG");
     SDL_Texture *texture;
     texture = SDL_CreateTextureFromSurface(program.renderer,image);
-    SDL_FreeSurface(image);
+    SDL_FreeSurface(image);*/
     int i, lx = 70, ly = 300;
-    for (i = 0; i < 3; i++)
+    int x = 222;
+    int y = 115;
+    for (i = 0; i < 4; i++)
     {
-        player->ledges[i].w = 60;
-        player->ledges[i].h = 60;
-        player->ledges[i].x = lx;
-        player->ledges[i].y = ly;
-        player->ledges[i].texture = texture;
-        lx += 120;
-        ly -= 80;
+        player->ledges[i].w = 124;
+        player->ledges[i].h = 103;
+        player->ledges[i].x = x;
+        player->ledges[i].y = y;
+        if (i == 0)
+            x += 456;
+        else if (i == 1)
+            y += 238;
+        else if (i == 2)
+            x -= 456;
     }
 }
 

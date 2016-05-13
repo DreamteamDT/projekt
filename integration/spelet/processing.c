@@ -255,7 +255,7 @@ void collisionDetect(Player *man, int *direct)
     {
         int i, bpe = 0;
         // check for collision with any ledges and enemies
-        for (i = 0; i < 3; i++)
+        for (i = 0; i < 4; i++)
         {
             int mw = 32, mh = 32;
             int mx = man->x+mw/2, my = man->y+mh/2;
@@ -325,7 +325,11 @@ void doRender(Player *man,Bullet b[]) //, Enemy *enemies
     SDL_Rect rect = { man->x, man->y, 32, 32 };
     SDL_Rect src = {man->frameX,0,32,32};
     SDL_Rect bg = {0,0,1024,768};
+<<<<<<< HEAD
+    SDL_Rect scoreBg = {0,360,640,120};
+=======
     SDL_Rect scoreBg = {0,630,1024,138};
+>>>>>>> 4a20475473ddc7945e56deb82714930d5bb29826
     SDL_RenderCopy(program.renderer,man->background,NULL,&bg);
     SDL_RenderCopy(program.renderer,man->scoreBackground,NULL,&scoreBg);
 
@@ -341,9 +345,14 @@ void doRender(Player *man,Bullet b[]) //, Enemy *enemies
     {
         if(b[i].active == 1)
         {
+<<<<<<< HEAD
+            SDL_Rect faggot = {b[i].x , b[i].y,8,8};
+            SDL_RenderCopy(program.renderer,bullet.texture,NULL,&faggot);
+=======
             SDL_Rect faggot = {b[i].x , b[i].y,8,8 };
           //  printf("faggot x: %d faggot y: %d\n",faggot.x,faggot.y);
             SDL_RenderCopyEx(program.renderer,man->bullet,NULL,&faggot,0,NULL,0);
+>>>>>>> 4a20475473ddc7945e56deb82714930d5bb29826
         }
     }
     for(i=0; i<10; i++)
@@ -353,13 +362,13 @@ void doRender(Player *man,Bullet b[]) //, Enemy *enemies
             SDL_RenderCopyEx(program.renderer,man->enemies[i].texture, &man->enemies[i].srcRect, &man->enemies[i].dstRect, 0, NULL, 0);
         }
     }
-    for(i=0; i<3; i++)
+    /*for(i=0; i<3; i++)
     {
         //printf("| x: %d\n", man->ledges[i].x);
         SDL_Rect ledgeRect = {man->ledges[i].x, man->ledges[i].y, man->ledges[i].w, man->ledges[i].h};
         SDL_RenderCopy(program.renderer, man->ledges[i].texture, NULL, &ledgeRect);
         //printf("test\n");
-    }
+    }*/
 
 
     SDL_RenderPresent(program.renderer);
