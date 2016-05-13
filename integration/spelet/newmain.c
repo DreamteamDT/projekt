@@ -38,8 +38,6 @@ int main(int argc, char *argv[])
     int done = 0;
     int connected, i;
     Player player;
-    //Ledge ledges[3];
-    //Enemy enemies[10];
     Network client;
     int choice;
     int newline;

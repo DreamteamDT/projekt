@@ -9,8 +9,8 @@ void initMenu(Menu *menu)
     program.window = SDL_CreateWindow("Game Window",                     // window title
                                       SDL_WINDOWPOS_UNDEFINED,           // initial x position
                                       SDL_WINDOWPOS_UNDEFINED,           // initial y position
-                                      640,                               // width, in pixels
-                                      480,                               // height, in pixels
+                                      1024,                               // width, in pixels
+                                      768,                               // height, in pixels
                                       0                                  // flags
                                      );
     program.renderer = SDL_CreateRenderer(program.window, -1, SDL_RENDERER_ACCELERATED);
