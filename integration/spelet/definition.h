@@ -4,6 +4,7 @@
 #include <SDL2/SDL_image.h>
 #include <SDL2/SDL_net.h>
 #elif _WIN32
+#include <stdlib.h>
 #include <stdio.h>
 #include <SDL.h>
 #include <SDL_image.h>
@@ -66,10 +67,11 @@ typedef struct
    int x, y;
    int frameX,frameY;
    int x1, y1;
-   SDL_Texture *texture;
+   SDL_Texture *texture,*background;
    int thinkTime;
    int shot;
    int id;
+   int spritePick;
 }Player;
 
 typedef struct

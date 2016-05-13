@@ -3,17 +3,40 @@
 
 void initPlayer(Player *player)
 {
-    SDL_Surface *image = IMG_Load("USA.PNG");
-    SDL_Texture *texture;
+
+    SDL_Surface *image,*background;
+
+    background = IMG_Load("spaceBackground.PNG");
+    if(player->spritePick==1)
+    {
+        image = IMG_Load("USA.PNG");
+    }
+
+    else if(player->spritePick == 2)
+        {
+            image = IMG_Load("spriteRussia.PNG");
+        }
+    else if(player->spritePick == 3)
+        {
+            image = IMG_Load("spriteMurica.PNG");
+        }
+    else
+        {
+            image = IMG_Load("spriteChina.PNG");
+        }
+
+    SDL_Texture *texture,*bgtexture;
+    bgtexture = SDL_CreateTextureFromSurface(program.renderer,background);
     texture = SDL_CreateTextureFromSurface(program.renderer,image);
+    SDL_FreeSurface(background);
     SDL_FreeSurface(image);
     player->x = 220;
     player->y = 140;
     player->frameX = 0;
     player->frameY = 0;
     player->texture = texture;
+    player->background = bgtexture;
 }
-
 void initLedges(Player *player)
 {
     SDL_Surface *image = IMG_Load("pelare.PNG");

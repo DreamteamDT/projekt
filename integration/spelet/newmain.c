@@ -23,7 +23,7 @@ extern void displayMenu(Menu menu);
 extern int handleMenu(int *exit);
 extern void initMenu(Menu *menu);
 extern void initPick(Menu *pick);
-extern int handlePick(int *pickCharacter);
+extern int handlePick(int *pickCharacter,Player *man);
 
 int global = 0;
 int main(int argc, char *argv[])
@@ -68,7 +68,6 @@ int main(int argc, char *argv[])
     else
         connected = 0;
 
-
     //link(ammo);
     //Event loop
     clearCartridge(ammo);
@@ -88,7 +87,7 @@ int main(int argc, char *argv[])
         while(pickCharacter) //PICK CHARACTER-MENYN
         {
             displayMenu(pick);
-            ingame = handlePick(&pickCharacter);
+            ingame = handlePick(&pickCharacter,&player);
             if(ingame)
             {
                 initPlayer(&player);
@@ -108,7 +107,7 @@ int main(int argc, char *argv[])
                 done = processEvents(&player,ammo,&moved,&type,&direct);
                 //for (i = 0; i < 3; i++)
                 collisionDetect(&player, &direct);
-                if(moved && connected)
+                if(moved && connected )
                 {
                     send_data(&player,&client,type);
                     moved = 0;

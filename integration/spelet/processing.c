@@ -316,6 +316,8 @@ void doRender(Player *man,Bullet b[]) //, Enemy *enemies
 
     SDL_Rect rect = { man->x, man->y, 32, 32 };
     SDL_Rect src = {man->frameX,0,32,32};
+    SDL_Rect bg = {0,0,640,480};
+    SDL_RenderCopy(program.renderer,man->background,NULL,&bg);
 
     //SDL_Rect rectE = {enemies->dstRect.x, enemies->dstRect.y, 32, 32};
     //SDL_Rect srcE = {enemies->srcRect.x, 0, 32, 32};
