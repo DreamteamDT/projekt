@@ -68,7 +68,6 @@ int main(int argc, char *argv[])
 
     //link(ammo);
     //Event loop
-    clearCartridge(ammo);
 
     Menu menu,pick;
     initMenu(&menu);
@@ -88,6 +87,7 @@ int main(int argc, char *argv[])
             ingame = handlePick(&pickCharacter,&player);
             if(ingame)
             {
+                clearCartridge(ammo);
                 initPlayer(&player);
                 initLedges(&player);
                 if(connected && !(networkInit(&client,&player,tmp)))

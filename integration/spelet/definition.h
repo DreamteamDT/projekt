@@ -3,12 +3,14 @@
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_image.h>
 #include <SDL2/SDL_net.h>
+#define LINUX 1
 #elif _WIN32
 #include <stdlib.h>
 #include <stdio.h>
 #include <SDL.h>
 #include <SDL_image.h>
 #include <SDL_net.h>
+#define LINUX 0
 #endif // _WIN32
 
 
@@ -68,7 +70,7 @@ typedef struct
    int frameX,frameY;
    int x1, y1;
 
-   SDL_Texture *texture,*background,*scoreBackground;
+   SDL_Texture *texture,*background,*scoreBackground,*bullet;
    int thinkTime;
    int shot;
    int id;
