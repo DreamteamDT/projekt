@@ -17,7 +17,7 @@ void updateLogic(Player *p,Bullet b[])
     global++;
 }
 
-int processEvents(Player *man,Bullet b[],int *moved,int *type)
+int processEvents(Player *man,Bullet b[],int *moved,int *type,int *direct)
 {
     unsigned int spellOne, spellOne_False=0;
     spellOne = SDL_GetTicks();
@@ -77,13 +77,14 @@ int processEvents(Player *man,Bullet b[],int *moved,int *type)
 
         }
     }
-
+    int canCol = 1;
     const Uint8 *state = SDL_GetKeyboardState(NULL);
     if(state[SDL_SCANCODE_LEFT] || state[SDL_SCANCODE_A])
     {
         man->x -= 5;
         *moved = 1;
         *type = 2;
+        *direct += 1;
         if(man->frameX == 192)
         {
             man->frameX = 224;
@@ -92,13 +93,13 @@ int processEvents(Player *man,Bullet b[],int *moved,int *type)
         {
             man->frameX = 192;
         }
-
     }
     if(state[SDL_SCANCODE_RIGHT] || state[SDL_SCANCODE_D])
     {
         man->x += 5;
         *moved = 1;
         *type = 2;
+        *direct += 2;
         if(man->frameX == 128)
         {
             man->frameX = 160;
@@ -114,6 +115,7 @@ int processEvents(Player *man,Bullet b[],int *moved,int *type)
         man->y -= 5;
         *moved = 1;
         *type = 2;
+        *direct += 4;
         if(man->frameX == 64)
         {
             man->frameX= 96;
@@ -128,6 +130,7 @@ int processEvents(Player *man,Bullet b[],int *moved,int *type)
         man->y += 5;
         *moved = 1;
         *type = 2;
+        *direct += 8;
         if(man->frameX == 0)
         {
             man->frameX = 32;
@@ -137,7 +140,6 @@ int processEvents(Player *man,Bullet b[],int *moved,int *type)
             man->frameX = 0;
         }
     }
-
     if(state[SDL_SCANCODE_SPACE])
     {
         int blinkX,blinkY;
@@ -176,106 +178,64 @@ int processEvents(Player *man,Bullet b[],int *moved,int *type)
     return done;
 }
 
-void collisionDetect(Player *man, int *moved)
+void collisionDetect(Player *man, int *direct)
 {
-    int i;
-    // check for collision with any ledges (brick blocks)
-    for (i = 0; i < 3; i++)
+    if (*direct > 0)
     {
-        float mw = 32, mh = 32;
-        float mx = man->x, my = man->y;
-        float bx = man->ledges[i].x, by = man->ledges[i].y, bw = man->ledges[i].w, bh = man->ledges[i].h;
-
-
-        // right side
-        if (mx > bx+bw/2 && mx < +bx+bw && my < by+bh && my+mh > by)
+        int i, bpe = 0;
+        // check for collision with any ledges (brick blocks)
+        for (i = 0; i < 3; i++)
         {
-            man->x = bx+bw;
-
-        }
-        // left side
-        else if (mx < bx+bw/2 && mx+mw > bx && my < by+bh && my+mh > by)
-        {
-            man->x = bx-mw;
-        }
-        // under
-        else if (my > by+bh/2 && my < by+bh && mx < bx+bw && mx+mw > bx)
-        {
-            man->y = by+bh;
-        }
-        // above
-        else if (my < by+bh/2 && my+mh > by && mx < bx+bw && mx+mw > bx)
-        {
-            man->y = by-mh;
-        }
-
-/*
-        if (mx+mw/2 > bx && mx+mw/2 < bx+bw)
-        {
-            // are we bumping our head?
-            if (my < by+bh && my > by && man->dy < 0)
+            //printf("direct: %d asd\n", direct);
+            int mw = 32, mh = 32;
+            int mx = man->x, my = man->y;
+            int bx = man->ledges[i].x, by = man->ledges[i].y, bw = man->ledges[i].w, bh = man->ledges[i].h;
+            //if (mx > bx+bw && mx+mw < bx && my > by+bh && my+mh < by)
+            while (bpe < 2)
             {
-                // correction of y
-                man->y = by+bh;
-                my = by+bh;
+                if (my+mh > by && mx < bx+bw && mx+mw > bx && my < by+bh)
+                {
+                    // man moving left
+                    if (*direct == 1 || *direct == 13)
+                        man->x += 5;
+                    // man moving right
+                    else if (*direct == 2 || *direct == 14)
+                        man->x -= 5;
+                    // man moving up
+                    else if (*direct == 4 || *direct == 7)
+                        man->y += 5;
+                    // man moving down
+                    else if (*direct == 8 || *direct == 11)
+                        man->y -= 5;
 
-                // bumped our head, stop any jump velocity
-                man->dy = 0;
-                man->onLedge = 1;
+                    /**** DIAGONALT ****/
+                    // man moving left up
+                    else if (*direct == 5 && my < by+bh-6)
+                        man->x += 5;
+                    else if (*direct == 5 && my > by+bh-6)
+                        man->y += 5;
+                    // man moving right up
+                    else if (*direct == 6 && my < by+bh-6)
+                        man->x -= 5;
+                    else if (*direct == 6 && my > by+bh-6)
+                        man->y += 5;
+                    // man moving left down
+                    else if (*direct == 9 && my+mh > by+6)
+                        man->x += 5;
+                    else if (*direct == 9 && my+mh < by+6)
+                        man->y -= 5;
+                    // man moving right down
+                    else if (*direct == 10 && my+mh > by+6)
+                        man->x -= 5;
+                    else if (*direct == 10 && my+mh < by+6)
+                        man->y -= 5;
+                }
+                bpe++;
+                // ladda enemies
+                bx = man->enemies[i].dstRect.x, by = man->enemies[i].dstRect.y, bw = man->enemies[i].dstRect.w, bh = man->enemies[i].dstRect.h;
             }
+            bpe = 0;
         }
-
-
-        if (mx+mw > bx && mx < bx+bw)
-        {
-            // are we bumping our head?
-            //if (my < by+bh && my > by)
-            //{
-                // correction of y
-              //  man->y = by+bh;
-
-                // bumped our head, stop any jump velocity
-                //man->dy = 0;
-                //man->onLedge = 1;
-            //}
-            // are we landing on the ledge
-            if (my+mh > by && my < by && man->dy > 0)
-            {
-                //correction of y
-                man->y = by-mh;
-                my = by-mh;
-
-                // landed on this ledge, stop any jump velocity
-                man->dy = 0;
-                man->onLedge = 1;
-            }
-        }
-
-
-
-
-
-        if (my+mh > by && my < by+bh)
-        {
-            // rubbing against right edge
-            if (mx < bx+bw && mx+mw > bx+bw && man->dx < 0)
-            {
-                // correction of x
-                man->x = bx+bw;
-                mx = bx+bw;
-
-                man->dx = 0;
-            }
-            // rubbing against left edge
-            else if (mx+mw > bx && mx < bx && man->dx > 0)
-            {
-                // correction of x
-                man->x = bx-mw;
-                mx = bx-mw;
-
-                man->dx = 0;
-            }
-        }*/
     }
 }
 

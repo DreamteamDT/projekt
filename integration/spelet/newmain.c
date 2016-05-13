@@ -3,8 +3,8 @@
 extern void initPlayer(Player *player);
 extern void initLedges(Player *player);
 extern void doRender(Player *man,Bullet b[]); //, Enemy *enemies
-extern int processEvents(Player *man,Bullet b[],int *moved,int *type);
-extern void collisionDetect(Player *man, int *moved);
+extern int processEvents(Player *man,Bullet b[],int *moved,int *type,int *direct);
+extern void collisionDetect(Player *man, int *direct);
 
 extern void clearCartridge(Bullet ammo[]);
 extern void Quit();
@@ -33,7 +33,6 @@ int main(int argc, char *argv[])
 
 //>>>>>>> 4f04477192c6dc006aca1aae1c51b75987a36da2
     int startMenu = 1,pickCharacter = 0,imageNo,exit = 0,ingame = 0;
-    int test = 123;
     const char *tmp = (const char*)malloc(100);
     int q = 0;
     int done = 0;
@@ -46,6 +45,7 @@ int main(int argc, char *argv[])
     int newline;
     int moved = 0;
     int type;
+    int direct = 0;
     bullet.texture=initBullet();
     Bullet ammo[20];
 
@@ -67,12 +67,6 @@ int main(int argc, char *argv[])
     }
     else
         connected = 0;
-//<<<<<<< HEAD
-
-    if(connected)
-    {
-        send_data(&player,&client,2);
-    }
 //=======
 //>>>>>>> 4f04477192c6dc006aca1aae1c51b75987a36da2
 
@@ -111,10 +105,10 @@ int main(int argc, char *argv[])
             }
             while(ingame) //INGAME
             {
-
-                done = processEvents(&player,ammo,&moved,&type);
+                direct = 0;
+                done = processEvents(&player,ammo,&moved,&type,&direct);
                 //for (i = 0; i < 3; i++)
-                collisionDetect(&player, &moved);
+                collisionDetect(&player, &direct);
                 if(moved && connected)
                 {
                     send_data(&player,&client,type);
@@ -125,8 +119,8 @@ int main(int argc, char *argv[])
                     recv_data(&player,&client,&done);
                 }
                 updateLogic(&player,ammo);
-                for (i = 0; i < 3; i++)
-                    doRender(&player,ammo); //,&enemies[i]
+                //for (i = 0; i < 3; i++)
+                doRender(&player,ammo); //,&enemies[i]
                 //don't burn up the CPU
                 SDL_Delay(40);
                 if(done)
@@ -145,7 +139,6 @@ int main(int argc, char *argv[])
     free(tmp);
     SDLNet_Quit();
     Quit();
-    printf("ASD\n");
 
     // Close and destroy the window
 
