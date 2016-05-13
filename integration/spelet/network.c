@@ -180,8 +180,8 @@ void recv_data(Player *man, Network *client,int *done)
             man->enemies[enemyid].srcRect.h = 32;
             man->enemies[enemyid].dstRect.x = enemyDX;
             man->enemies[enemyid].dstRect.y = enemyDY;
-            man->enemies[enemyid].dstRect.w = 32;
-            man->enemies[enemyid].dstRect.h = 32;
+            man->enemies[enemyid].dstRect.w = 64;
+            man->enemies[enemyid].dstRect.h = 64;
             man->enemies[enemyid].exists = 1;
             if(man->alive)
             {

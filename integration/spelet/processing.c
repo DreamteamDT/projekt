@@ -10,8 +10,8 @@ void updateLogic(Player *p,Bullet b[])
     {
         if(b[i].active == 1)
         {
-            b[i].x +=b[i].vector_unitX*12;
-            b[i].y +=b[i].vector_unitY*12;
+            b[i].x +=b[i].vector_unitX*6;
+            b[i].y +=b[i].vector_unitY*6;
         }
     }
     global++;
@@ -360,6 +360,7 @@ void doRender(Player *man,Bullet b[]) //, Enemy *enemies
     {
         SDL_Rect rect = { man->x, man->y, 64, 64 };
         SDL_Rect src = {man->frameX,0,32,32};
+
         SDL_RenderCopy(program.renderer,man->texture,&src,&rect);
     }
 

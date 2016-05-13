@@ -65,6 +65,7 @@ void initPlayer(Player *player)
     player->background = bgtexture;
     player->scoreBackground = scoreBgtext;
     player->bullet = bullettxt;
+    player->alive = 1;
 }
 void initLedges(Player *player)
 {

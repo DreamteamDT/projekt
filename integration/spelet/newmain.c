@@ -25,7 +25,7 @@ extern void initMenu(Menu *menu);
 extern void initPick(Menu *pick);
 extern int handlePick(int *pickCharacter,Player *man);
 
-extern void bulletGone(Bullet b[],Player *man,Network *client);
+extern void bulletGone(Bullet b[],Player *man,Network *client,int con);
 extern int detectHit(Player *man,Bullet b[]);
 extern void sendBullets(Player *man,Bullet b[],Network *client);
 extern void bulletClear(Bullet b[],Player *man, Network *client);
@@ -117,7 +117,7 @@ int main(int argc, char *argv[])
 
                 //for (i = 0; i < 3; i++)
                 collisionDetect(&player, &direct);
-                bulletGone(ammo,&player,&client);
+                bulletGone(ammo,&player,&client,connected);
                 if(moved && connected && player.alive)
                 {
                     send_data(&player,&client,type);
@@ -130,9 +130,12 @@ int main(int argc, char *argv[])
                 updateLogic(&player,ammo);
                 //for (i = 0; i < 3; i++)
 
-                sendBullets(&player,ammo,&client);
+                if(connected)
+                {
+                    sendBullets(&player,ammo,&client);
+                }
                 doRender(&player,ammo); //,&enemies[i]
-                if(detectHit(&player,ammo))
+                if(connected && detectHit(&player,ammo))
                 {
                     printf("enemy %d was hit\n",player.hitid);
                     type = 7;

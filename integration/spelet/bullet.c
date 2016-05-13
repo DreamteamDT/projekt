@@ -87,8 +87,8 @@ int detectHit(Player *man,Bullet b[])
                 {
 
                     //  printf("manx: %d manx+32: %d",man->enemies[i].dstRect.x,man->enemies[i].dstRect.x+32);
-                    if(b[j].x > (man->enemies[i].dstRect.x) && b[j].x <= (man->enemies[i].dstRect.x+32)
-                            && b[j].y >= (man->enemies[i].dstRect.y) && b[j].y <= (man->enemies[i].dstRect.y+32))
+                    if(b[j].x > (man->enemies[i].dstRect.x) && b[j].x <= (man->enemies[i].dstRect.x+64)
+                            && b[j].y >= (man->enemies[i].dstRect.y) && b[j].y <= (man->enemies[i].dstRect.y+64))
                     {
                         b[j].active = 0;
                         man->recentHit = j;
@@ -104,7 +104,7 @@ int detectHit(Player *man,Bullet b[])
     return 0;
 }
 
-void bulletGone(Bullet b[],Player *man,Network *client)
+void bulletGone(Bullet b[],Player *man,Network *client,int con)
 {
     int i, j;
     for(i=0; i<20; i++)
@@ -115,11 +115,14 @@ void bulletGone(Bullet b[],Player *man,Network *client)
             {
                 b[i].active = 0;
 
-                int type = 9;
+                if(con)
+                {
+                    int type = 9;
+                    sprintf(client->sendpack->data,"%d %d %d %d %d",
+                            type,man->id,(int)b[i].x,(int)b[i].y,i);
+                    SDLNet_UDP_Send(client->udpsock,-1,client->sendpack);
+                }
 
-                sprintf(client->sendpack->data,"%d %d %d %d %d",
-                        type,man->id,(int)b[i].x,(int)b[i].y,i);
-                SDLNet_UDP_Send(client->udpsock,-1,client->sendpack);
 
             }
         }
