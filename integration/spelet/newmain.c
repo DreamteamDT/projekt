@@ -32,7 +32,7 @@ int main(int argc, char *argv[])
 //=======
 
 //>>>>>>> 4f04477192c6dc006aca1aae1c51b75987a36da2
-    int startMenu = 1,pickCharacter = 0,imageNo,exit = 0,ingame = 0,spritePick;
+    int startMenu = 1,pickCharacter = 0,imageNo,exit = 0,ingame = 0;
     const char *tmp = (const char*)malloc(100);
     int q = 0;
     int done = 0;

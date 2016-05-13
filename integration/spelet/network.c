@@ -86,7 +86,8 @@ void send_data(Player *man,Network *client,int type)
 
     if(type == 2)
     {
-        sprintf(client->sendpack->data,"%d %d %d %d %d",type,man->id,man->x,man->y, man->frameX);
+        sprintf(client->sendpack->data,"%d %d %d %d %d %d",
+                type,man->id,man->x,man->y, man->frameX,man->spritePick);
         SDLNet_UDP_Send(client->udpsock,-1,client->sendpack);
     }
     if(type == 3)
@@ -104,22 +105,39 @@ void send_data(Player *man,Network *client,int type)
 
 void recv_data(Player *man, Network *client,int *done)
 {
-    int type, enemyid, enemyDX, enemyDY, enemySX;
+
+    int type, enemyid, enemyDX, enemyDY, enemySX,spritePick;
     while(SDLNet_CheckSockets(client->udpset,0)>0)
     {
 
 
         SDLNet_UDP_Recv(client->udpsock,client->rcvpack);
 
-        sscanf(client->rcvpack->data,"%d %d %d %d %d",&type,&enemyid,&enemyDX,&enemyDY,&enemySX);
+        sscanf(client->rcvpack->data,"%d %d %d %d %d %d",
+               &type,&enemyid,&enemyDX,&enemyDY,&enemySX,&spritePick);
         //man->enemies[enemyid].x = enemyDX;
         //man->enemies[enemyid].y = enemyDY;
 
         //Om ny fiende
         if (!man->enemies[enemyid].exists)
         {
-
-            SDL_Surface *image = IMG_Load("USA.PNG");
+            SDL_Surface *image;
+            if(spritePick==1)
+            {
+                image = IMG_Load("USA.PNG");
+            }
+            else if(spritePick==2)
+            {
+                image = IMG_Load("spriteRussia.PNG");
+            }
+            else if(spritePick==3)
+            {
+                image = IMG_Load("spriteMurica.PNG");
+            }
+            else
+            {
+                image = IMG_Load("spriteChina.PNG");
+            }
             SDL_Texture *texture;
             texture = SDL_CreateTextureFromSurface(program.renderer,image);
             SDL_FreeSurface(image);
