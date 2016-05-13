@@ -4,6 +4,7 @@
 #include <SDL2/SDL_image.h>
 #include <SDL2/SDL_net.h>
 #elif _WIN32
+#include <stdlib.h>
 #include <stdio.h>
 #include <SDL.h>
 #include <SDL_image.h>

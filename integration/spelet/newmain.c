@@ -1,6 +1,6 @@
 #include "definition.h"
 
-extern void initPlayer(Player *player);
+extern void initPlayer(Player *player,int pick);
 extern void initLedges(Player *player);
 extern void doRender(Player *man,Bullet b[]); //, Enemy *enemies
 extern int processEvents(Player *man,Bullet b[],int *moved,int *type,int *direct);
@@ -23,7 +23,7 @@ extern void displayMenu(Menu menu);
 extern int handleMenu(int *exit);
 extern void initMenu(Menu *menu);
 extern void initPick(Menu *pick);
-extern int handlePick(int *pickCharacter);
+extern int handlePick(int *pickCharacter,int *pick);
 
 int global = 0;
 int main(int argc, char *argv[])
@@ -32,7 +32,7 @@ int main(int argc, char *argv[])
 //=======
 
 //>>>>>>> 4f04477192c6dc006aca1aae1c51b75987a36da2
-    int startMenu = 1,pickCharacter = 0,imageNo,exit = 0,ingame = 0;
+    int startMenu = 1,pickCharacter = 0,imageNo,exit = 0,ingame = 0,spritePick;
     const char *tmp = (const char*)malloc(100);
     int q = 0;
     int done = 0;
@@ -67,11 +67,6 @@ int main(int argc, char *argv[])
     }
     else
         connected = 0;
-<<<<<<< HEAD
-//=======
-//>>>>>>> 4f04477192c6dc006aca1aae1c51b75987a36da2
-=======
->>>>>>> ce318405f1a023c9993168b89fe3271e11162403
 
     //link(ammo);
     //Event loop
@@ -92,10 +87,10 @@ int main(int argc, char *argv[])
         while(pickCharacter) //PICK CHARACTER-MENYN
         {
             displayMenu(pick);
-            ingame = handlePick(&pickCharacter);
+            ingame = handlePick(&pickCharacter,&spritePick);
             if(ingame)
             {
-                initPlayer(&player);
+                initPlayer(&player,spritePick);
                 initLedges(&player);
                 if(connected && !(networkInit(&client,&player,tmp)))
                 {
@@ -112,7 +107,7 @@ int main(int argc, char *argv[])
                 done = processEvents(&player,ammo,&moved,&type,&direct);
                 //for (i = 0; i < 3; i++)
                 collisionDetect(&player, &direct);
-                if(moved && connected)
+                if(moved && connected )
                 {
                     send_data(&player,&client,type);
                     moved = 0;

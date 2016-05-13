@@ -1,9 +1,28 @@
 #include "init.h"
 #include <stdio.h>
 
-void initPlayer(Player *player)
+void initPlayer(Player *player,int pick)
 {
-    SDL_Surface *image = IMG_Load("USA.PNG");
+
+    SDL_Surface *image;
+    if(pick==1)
+    {
+        image = IMG_Load("USA.PNG");
+    }
+
+    else if(pick == 2)
+        {
+            image = IMG_Load("spriteRussia.PNG");
+        }
+    else if(pick == 3)
+        {
+            image = IMG_Load("spriteMurica.PNG");
+        }
+    else
+        {
+            image = IMG_Load("spriteChina.PNG");
+        }
+
     SDL_Texture *texture;
     texture = SDL_CreateTextureFromSurface(program.renderer,image);
     SDL_FreeSurface(image);
