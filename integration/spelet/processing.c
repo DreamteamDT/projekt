@@ -93,6 +93,8 @@ int processEvents(Player *man,Bullet b[],int *moved,int *type,int *direct)
         {
             man->frameX = 192;
         }
+        if(man->x < 0)
+            man->x = 0;
     }
     if(state[SDL_SCANCODE_RIGHT] || state[SDL_SCANCODE_D])
     {
@@ -108,6 +110,8 @@ int processEvents(Player *man,Bullet b[],int *moved,int *type,int *direct)
         {
             man->frameX = 128;
         }
+        if(man->x > 608)
+            man->x = 608;
 
     }
     if(state[SDL_SCANCODE_UP] || state[SDL_SCANCODE_W])
@@ -124,6 +128,8 @@ int processEvents(Player *man,Bullet b[],int *moved,int *type,int *direct)
         {
             man->frameX = 64;
         }
+        if(man->y<0)
+            man->y = 0;
     }
     if(state[SDL_SCANCODE_DOWN] || state[SDL_SCANCODE_S])
     {
@@ -139,6 +145,8 @@ int processEvents(Player *man,Bullet b[],int *moved,int *type,int *direct)
         {
             man->frameX = 0;
         }
+        if(man->y>328)
+            man->y = 328;
     }
     if(state[SDL_SCANCODE_SPACE])
     {
@@ -250,7 +258,9 @@ void doRender(Player *man,Bullet b[], Ledge *ledges) //, Enemy *enemies
     SDL_Rect rect = { man->x, man->y, 32, 32 };
     SDL_Rect src = {man->frameX,0,32,32};
     SDL_Rect bg = {0,0,640,480};
+    SDL_Rect scoreBg = {0,360,640,120};
     SDL_RenderCopy(program.renderer,man->background,NULL,&bg);
+    SDL_RenderCopy(program.renderer,man->scoreBackground,NULL,&scoreBg);
 
     //SDL_Rect rectE = {enemies->dstRect.x, enemies->dstRect.y, 32, 32};
     //SDL_Rect srcE = {enemies->srcRect.x, 0, 32, 32};

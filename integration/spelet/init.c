@@ -4,9 +4,13 @@
 void initPlayer(Player *player)
 {
 
-    SDL_Surface *image,*background;
+    SDL_Surface *image,*background,*scoreBg;
 
-    background = IMG_Load("spaceBackground.PNG");
+    background = IMG_Load("bhh.PNG");
+    if(!(scoreBg = IMG_Load("scoreBackground.PNG")))
+    {
+        printf("syntax error\n");
+    }
     if(player->spritePick==1)
     {
         image = IMG_Load("USA.PNG");
@@ -25,9 +29,11 @@ void initPlayer(Player *player)
             image = IMG_Load("spriteChina.PNG");
         }
 
-    SDL_Texture *texture,*bgtexture;
+    SDL_Texture *texture,*bgtexture,*scoreBgtext;
     bgtexture = SDL_CreateTextureFromSurface(program.renderer,background);
     texture = SDL_CreateTextureFromSurface(program.renderer,image);
+    scoreBgtext = SDL_CreateTextureFromSurface(program.renderer,scoreBg);
+    SDL_FreeSurface(scoreBg);
     SDL_FreeSurface(background);
     SDL_FreeSurface(image);
     player->x = 220;
@@ -36,6 +42,7 @@ void initPlayer(Player *player)
     player->frameY = 0;
     player->texture = texture;
     player->background = bgtexture;
+    player->scoreBackground = scoreBgtext;
 }
 void initLedges(Player *player)
 {

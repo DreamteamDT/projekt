@@ -67,7 +67,7 @@ typedef struct
    int x, y;
    int frameX,frameY;
 
-   SDL_Texture *texture,*background;
+   SDL_Texture *texture,*background,*scoreBackground;
    int thinkTime;
    int shot;
    int id;
