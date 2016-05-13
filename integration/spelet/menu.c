@@ -4,7 +4,7 @@
 void initMenu(Menu *menu)
 {
 
-    SDL_Init(SDL_INIT_VIDEO);
+    SDL_Init(SDL_INIT_EVERYTHING);
 
     program.window = SDL_CreateWindow("Game Window",                     // window title
                                       SDL_WINDOWPOS_UNDEFINED,           // initial x position

@@ -110,8 +110,8 @@ int processEvents(Player *man,Bullet b[],int *moved,int *type,int *direct)
         {
             man->frameX = 128;
         }
-        if(man->x > 608)
-            man->x = 608;
+        if(man->x > 992)
+            man->x = 992;
 
     }
     if(state[SDL_SCANCODE_UP] || state[SDL_SCANCODE_W])
@@ -145,8 +145,8 @@ int processEvents(Player *man,Bullet b[],int *moved,int *type,int *direct)
         {
             man->frameX = 0;
         }
-        if(man->y>328)
-            man->y = 328;
+        if(man->y>736)
+            man->y = 736;
     }
     if(state[SDL_SCANCODE_SPACE])
     {
@@ -325,7 +325,11 @@ void doRender(Player *man,Bullet b[]) //, Enemy *enemies
     SDL_Rect rect = { man->x, man->y, 32, 32 };
     SDL_Rect src = {man->frameX,0,32,32};
     SDL_Rect bg = {0,0,1024,768};
+<<<<<<< HEAD
     SDL_Rect scoreBg = {0,360,640,120};
+=======
+    SDL_Rect scoreBg = {0,630,1024,138};
+>>>>>>> 4a20475473ddc7945e56deb82714930d5bb29826
     SDL_RenderCopy(program.renderer,man->background,NULL,&bg);
     SDL_RenderCopy(program.renderer,man->scoreBackground,NULL,&scoreBg);
 
@@ -341,8 +345,14 @@ void doRender(Player *man,Bullet b[]) //, Enemy *enemies
     {
         if(b[i].active == 1)
         {
+<<<<<<< HEAD
             SDL_Rect faggot = {b[i].x , b[i].y,8,8};
             SDL_RenderCopy(program.renderer,bullet.texture,NULL,&faggot);
+=======
+            SDL_Rect faggot = {b[i].x , b[i].y,8,8 };
+          //  printf("faggot x: %d faggot y: %d\n",faggot.x,faggot.y);
+            SDL_RenderCopyEx(program.renderer,man->bullet,NULL,&faggot,0,NULL,0);
+>>>>>>> 4a20475473ddc7945e56deb82714930d5bb29826
         }
     }
     for(i=0; i<10; i++)

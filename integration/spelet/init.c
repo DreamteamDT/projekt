@@ -4,8 +4,9 @@
 void initPlayer(Player *player)
 {
 
-    SDL_Surface *image,*background,*scoreBg;
+    SDL_Surface *image,*background,*scoreBg,*bullet;
 
+    bullet = IMG_Load("kula.PNG");
     background = IMG_Load("bakgrund5.PNG");
     if(!(scoreBg = IMG_Load("scoreBackground.PNG")))
     {
@@ -17,32 +18,53 @@ void initPlayer(Player *player)
     }
 
     else if(player->spritePick == 2)
-        {
-            image = IMG_Load("spriteRussia.PNG");
-        }
+    {
+        image = IMG_Load("spriteRussia.PNG");
+    }
     else if(player->spritePick == 3)
-        {
-            image = IMG_Load("spriteMurica.PNG");
-        }
+    {
+        image = IMG_Load("spriteMurica.PNG");
+    }
     else
-        {
-            image = IMG_Load("spriteChina.PNG");
-        }
+    {
+        image = IMG_Load("spriteChina.PNG");
+    }
 
-    SDL_Texture *texture,*bgtexture,*scoreBgtext;
+    SDL_Texture *texture,*bgtexture,*scoreBgtext,*bullettxt;
     bgtexture = SDL_CreateTextureFromSurface(program.renderer,background);
     texture = SDL_CreateTextureFromSurface(program.renderer,image);
     scoreBgtext = SDL_CreateTextureFromSurface(program.renderer,scoreBg);
+    bullettxt = SDL_CreateTextureFromSurface(program.renderer,bullet);
+    SDL_FreeSurface(bullet);
     SDL_FreeSurface(scoreBg);
     SDL_FreeSurface(background);
     SDL_FreeSurface(image);
-    player->x = 220;
-    player->y = 140;
+    if(player->spritePick ==1)
+    {
+        player->x = 106;
+        player->y = 74;
+    }
+    else if(player->spritePick==2)
+    {
+        player->x = 939;
+        player->y = 55;
+    }
+    else if(player->spritePick==3)
+    {
+        player->x = 902;
+        player->y = 529;
+    }
+    else
+    {
+        player->x = 117;
+        player->y = 474;
+    }
     player->frameX = 0;
     player->frameY = 0;
     player->texture = texture;
     player->background = bgtexture;
     player->scoreBackground = scoreBgtext;
+    player->bullet = bullettxt;
 }
 void initLedges(Player *player)
 {
