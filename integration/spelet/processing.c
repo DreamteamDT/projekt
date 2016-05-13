@@ -10,8 +10,8 @@ void updateLogic(Player *p,Bullet b[])
     {
         if(b[i].active == 1)
         {
-            b[i].x +=b[i].vector_unitX*2;
-            b[i].y +=b[i].vector_unitY*2;
+            b[i].x +=b[i].vector_unitX*12;
+            b[i].y +=b[i].vector_unitY*12;
         }
     }
     global++;
@@ -79,7 +79,7 @@ int processEvents(Player *man,Bullet b[],int *moved,int *type,int *direct)
     }
 
     const Uint8 *state = SDL_GetKeyboardState(NULL);
-    if(state[SDL_SCANCODE_LEFT] || state[SDL_SCANCODE_A])
+    if(state[SDL_SCANCODE_LEFT] || state[SDL_SCANCODE_A] && man->alive)
     {
         man->x -= 5;
         *moved = 1;
@@ -96,7 +96,7 @@ int processEvents(Player *man,Bullet b[],int *moved,int *type,int *direct)
         if(man->x < 0)
             man->x = 0;
     }
-    if(state[SDL_SCANCODE_RIGHT] || state[SDL_SCANCODE_D])
+    if(state[SDL_SCANCODE_RIGHT] || state[SDL_SCANCODE_D] && man->alive)
     {
         man->x += 5;
         *moved = 1;
@@ -114,7 +114,7 @@ int processEvents(Player *man,Bullet b[],int *moved,int *type,int *direct)
             man->x = 992;
 
     }
-    if(state[SDL_SCANCODE_UP] || state[SDL_SCANCODE_W])
+    if(state[SDL_SCANCODE_UP] || state[SDL_SCANCODE_W] && man->alive)
     {
         man->y -= 5;
         *moved = 1;
@@ -131,7 +131,7 @@ int processEvents(Player *man,Bullet b[],int *moved,int *type,int *direct)
         if(man->y<0)
             man->y = 0;
     }
-    if(state[SDL_SCANCODE_DOWN] || state[SDL_SCANCODE_S])
+    if(state[SDL_SCANCODE_DOWN] || state[SDL_SCANCODE_S] && man->alive)
     {
         man->y += 5;
         *moved = 1;
@@ -145,10 +145,10 @@ int processEvents(Player *man,Bullet b[],int *moved,int *type,int *direct)
         {
             man->frameX = 0;
         }
-        if(man->y>736)
-            man->y = 736;
+        if(man->y>598)
+            man->y = 598;
     }
-    if(state[SDL_SCANCODE_SPACE])
+    if(state[SDL_SCANCODE_SPACE] && man->alive)
     {
         int blinkX,blinkY;
         SDL_GetMouseState(&blinkX, &blinkY);
@@ -162,7 +162,7 @@ int processEvents(Player *man,Bullet b[],int *moved,int *type,int *direct)
             addBullet(man->x,man->y,5,b,blinkX,blinkY);
         }
     }
-    if(state[SDL_SCANCODE_1])
+    if(state[SDL_SCANCODE_1] && man->alive)
     {
         printf("pressed 1\n");
         *direct = -1;
@@ -316,26 +316,21 @@ void collisionDetect(Player *man, int *direct)
 
 void doRender(Player *man,Bullet b[]) //, Enemy *enemies
 {
-    int i;
+    int i,j;
     //set the drawing color to blue
     SDL_SetRenderDrawColor(program.renderer, 0, 0, 255, 255);
     //Clear the screen (to blue)
     SDL_RenderClear(program.renderer);
 
-    SDL_Rect rect = { man->x, man->y, 32, 32 };
-    SDL_Rect src = {man->frameX,0,32,32};
-    SDL_Rect bg = {0,0,1024,768};
 
-    SDL_Rect scoreBg = {0,630,1024,138};
+    SDL_Rect bg = {0,0,1024,768};
     SDL_RenderCopy(program.renderer,man->background,NULL,&bg);
-    SDL_RenderCopy(program.renderer,man->scoreBackground,NULL,&scoreBg);
+
 
     //SDL_Rect rectE = {enemies->dstRect.x, enemies->dstRect.y, 32, 32};
     //SDL_Rect srcE = {enemies->srcRect.x, 0, 32, 32};
 
     //SDL_RenderFillRect(program.renderer, &rect);
-    SDL_RenderCopy(program.renderer,man->texture,&src,&rect);
-
 
 
     for(i=0; i<20; i++)
@@ -347,6 +342,27 @@ void doRender(Player *man,Bullet b[]) //, Enemy *enemies
             SDL_RenderCopyEx(program.renderer,man->bullet,NULL,&faggot,0,NULL,0);
         }
     }
+    for(i=0;i<5;i++)
+    {
+        for(j=0;j<20;j++)
+        {
+            if(man->enemies[i].bullet[j].active == 1)
+            {
+                SDL_Rect enemybullet = {man->enemies[i].bullet[j].x,
+                                        man->enemies[i].bullet[j].y,8,8};
+                printf("enemybullet x: %d, enemybullet y: %d\n",man->enemies[i].bullet[j].x,man->enemies[i].bullet[j].y);
+                SDL_RenderCopy(program.renderer,man->bullet,NULL,&enemybullet);
+            }
+        }
+    }
+
+    if(man->alive)
+    {
+        SDL_Rect rect = { man->x, man->y, 64, 64 };
+        SDL_Rect src = {man->frameX,0,32,32};
+        SDL_RenderCopy(program.renderer,man->texture,&src,&rect);
+    }
+
     for(i=0; i<10; i++)
     {
         if (man->enemies[i].exists)
@@ -354,6 +370,8 @@ void doRender(Player *man,Bullet b[]) //, Enemy *enemies
             SDL_RenderCopyEx(program.renderer,man->enemies[i].texture, &man->enemies[i].srcRect, &man->enemies[i].dstRect, 0, NULL, 0);
         }
     }
+    SDL_Rect scoreBg = {0,630,1024,138};
+    SDL_RenderCopy(program.renderer,man->scoreBackground,NULL,&scoreBg);
     /*for(i=0; i<3; i++)
     {
         //printf("| x: %d\n", man->ledges[i].x);

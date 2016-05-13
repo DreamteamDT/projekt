@@ -21,8 +21,8 @@ void initMenu(Menu *menu)
     SDL_FreeSurface(image);
     menu->rect.x = 0;
     menu->rect.y = 0;
-    menu->rect.w = 640;
-    menu->rect.h = 480;
+    menu->rect.w = 1024;
+    menu->rect.h = 768;
     menu->texture = texture;
 }
 
@@ -54,7 +54,7 @@ int handleMenu(int *exit)
             //*exit = 1;
             //}
             //Gå till menyn "Choose Character" om användaren trycker på "Play Game"
-            else if(x>141 && x<455 && y>172 && y<256 && e.type==SDL_MOUSEBUTTONDOWN)
+            else if(x>226 && x<728 && y>275 && y<410 && e.type==SDL_MOUSEBUTTONDOWN)
             {
                 if(e.button.button==SDL_BUTTON_LEFT)
                 {
@@ -66,7 +66,7 @@ int handleMenu(int *exit)
 
             }
             //Stäng fönstret & avsluta SDL om användaren trycker på "Exit"
-            else if(x>141 && x<455 && y>270 && y<349 && e.type==SDL_MOUSEBUTTONDOWN)
+            else if(x>226 && x<728 && y>432 && y<558 && e.type==SDL_MOUSEBUTTONDOWN)
             {
                 if(e.button.button==SDL_BUTTON_LEFT)
                 {
@@ -95,8 +95,8 @@ void initPick(Menu *pick)
     SDL_FreeSurface(image);
     pick->rect.x = 0;
     pick->rect.y = 0;
-    pick->rect.w = 640;
-    pick->rect.h = 480;
+    pick->rect.w = 1024;
+    pick->rect.h = 768;
     pick->texture = texture;
 }
 
@@ -127,7 +127,7 @@ int handlePick(int *pickCharacter,Player *man)
 
         }
         //Återgå till huvudmenyn om användaren trycker back-pilen genom ett vänsterklick
-        else if(x>250 && x<379 && y>391 && y<453 && e.type==SDL_MOUSEBUTTONDOWN)
+        else if(x>400 && x<606 && y>626 && y<725 && e.type==SDL_MOUSEBUTTONDOWN)
         {
             if(e.button.button==SDL_BUTTON_LEFT)
             {
@@ -137,7 +137,7 @@ int handlePick(int *pickCharacter,Player *man)
             }
         }
         //Användaren väljer första gubben
-        else if(x>82 && x<151 && y>223 && y<310 && e.type==SDL_MOUSEBUTTONDOWN)
+        else if(x>131 && x<242 && y>357 && y<496 && e.type==SDL_MOUSEBUTTONDOWN)
         {
             if(e.button.button==SDL_BUTTON_LEFT)
             {
@@ -147,7 +147,7 @@ int handlePick(int *pickCharacter,Player *man)
             }
         }
         //Användaren väljer andra gubben
-        else if(x>215 && x<273 && y>223 && y<310 && e.type==SDL_MOUSEBUTTONDOWN)
+        else if(x>344 && x<437 && y>357 && y<496 && e.type==SDL_MOUSEBUTTONDOWN)
         {
             if(e.button.button==SDL_BUTTON_LEFT)
             {
@@ -157,7 +157,7 @@ int handlePick(int *pickCharacter,Player *man)
             }
         }
         //Användaren väljer tredje gubben
-        else if(x>343 && x<418 && y>223 && y<310 && e.type==SDL_MOUSEBUTTONDOWN)
+        else if(x>549 && x<669 && y>357 && y<496 && e.type==SDL_MOUSEBUTTONDOWN)
         {
             if(e.button.button==SDL_BUTTON_LEFT)
             {
@@ -167,7 +167,7 @@ int handlePick(int *pickCharacter,Player *man)
             }
         }
         //Användaren väljer fjärde gubben
-        else if(x>482 && x<544 && y>223 && y<310 && e.type==SDL_MOUSEBUTTONDOWN)
+        else if(x>771 && x<870 && y>357 && y<496 && e.type==SDL_MOUSEBUTTONDOWN)
         {
             if(e.button.button==SDL_BUTTON_LEFT)
             {

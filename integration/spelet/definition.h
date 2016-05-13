@@ -5,6 +5,7 @@
 #include <SDL2/SDL_net.h>
 #define LINUX 1
 #elif _WIN32
+#include <string.h>
 #include <stdlib.h>
 #include <stdio.h>
 #include <SDL.h>
@@ -22,25 +23,25 @@ typedef struct
 
 typedef struct
 {
-  SDL_Window *window;
-  SDL_Renderer *renderer;
-}Program;
+    SDL_Window *window;
+    SDL_Renderer *renderer;
+} Program;
 
 typedef struct
 {
-   float x, y;
-   float dx;
-   float directionX,directionY;
-   float vector_unitX,vector_unitY;
-   float v_length;
-   SDL_Texture *texture;
-   int active;
-}Bullet;
+    float x, y;
+    float dx;
+    float directionX,directionY;
+    float vector_unitX,vector_unitY;
+    float v_length;
+    SDL_Texture *texture;
+    int active;
+} Bullet;
 
 typedef struct Vector2d
 {
-  float x, y;
-}Vector2d;
+    float x, y;
+} Vector2d;
 
 typedef struct
 {
@@ -50,7 +51,7 @@ typedef struct
     UDPpacket *sendpack,*rcvpack;
     int type;
 
-}Network;
+} Network;
 
 typedef struct
 {
@@ -60,28 +61,28 @@ typedef struct
     int exists;
     SDL_Rect srcRect,dstRect;
     Bullet bullet[20];
-}Enemy;
+} Enemy;
 
 typedef struct
 {
-   Enemy enemies[10];
-   Ledge ledges[4];
-   int x, y;
-   int frameX,frameY;
-   int x1, y1;
-
-   SDL_Texture *texture,*background,*scoreBackground,*bullet;
-   int thinkTime;
-   int shot;
-   int id;
-   int spritePick;
-}Player;
+    Enemy enemies[10];
+    Ledge ledges[4];
+    int x, y;
+    int frameX,frameY;
+    int x1, y1;
+    int hitid,alive;
+    SDL_Texture *texture,*background,*scoreBackground,*bullet;
+    int thinkTime;
+    int shot,recentHit;
+    int id;
+    int spritePick;
+} Player;
 
 typedef struct
 {
     SDL_Texture *texture;
     SDL_Rect rect;
-}Menu;
+} Menu;
 
 Bullet bullet;
 Program program;
