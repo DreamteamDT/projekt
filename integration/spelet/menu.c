@@ -100,7 +100,7 @@ void initPick(Menu *pick)
     pick->texture = texture;
 }
 
-int handlePick(int *pickCharacter,int *pick)
+int handlePick(int *pickCharacter,Player *man)
 {
     int x, y;
     SDL_Event e;
@@ -142,7 +142,7 @@ int handlePick(int *pickCharacter,int *pick)
             if(e.button.button==SDL_BUTTON_LEFT)
             {
                 ingame = 1;
-                *pick = 1;
+                man->spritePick = 1;
                 //character(1);
             }
         }
@@ -152,7 +152,7 @@ int handlePick(int *pickCharacter,int *pick)
             if(e.button.button==SDL_BUTTON_LEFT)
             {
                 ingame = 1;
-                *pick = 2;
+                man->spritePick = 2;
                 //character(2);
             }
         }
@@ -162,7 +162,7 @@ int handlePick(int *pickCharacter,int *pick)
             if(e.button.button==SDL_BUTTON_LEFT)
             {
                 ingame = 1;
-                *pick = 3;
+                man->spritePick = 3;
                 //character(3);
             }
         }
@@ -172,7 +172,7 @@ int handlePick(int *pickCharacter,int *pick)
             if(e.button.button==SDL_BUTTON_LEFT)
             {
                 ingame = 1;
-                *pick = 4;
+                man->spritePick = 4;
                 //character(4);
             }
         }

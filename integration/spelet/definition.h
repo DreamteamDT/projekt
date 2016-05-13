@@ -71,6 +71,7 @@ typedef struct
    int thinkTime;
    int shot;
    int id;
+   int spritePick;
 }Player;
 
 typedef struct

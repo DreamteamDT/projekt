@@ -1,20 +1,20 @@
 #include "init.h"
 #include <stdio.h>
 
-void initPlayer(Player *player,int pick)
+void initPlayer(Player *player)
 {
 
     SDL_Surface *image;
-    if(pick==1)
+    if(player->spritePick==1)
     {
         image = IMG_Load("USA.PNG");
     }
 
-    else if(pick == 2)
+    else if(player->spritePick == 2)
         {
             image = IMG_Load("spriteRussia.PNG");
         }
-    else if(pick == 3)
+    else if(player->spritePick == 3)
         {
             image = IMG_Load("spriteMurica.PNG");
         }

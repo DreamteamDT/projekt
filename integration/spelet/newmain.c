@@ -1,6 +1,6 @@
 #include "definition.h"
 
-extern void initPlayer(Player *player,int pick);
+extern void initPlayer(Player *player);
 extern void initLedges(Player *player);
 extern void doRender(Player *man,Bullet b[]); //, Enemy *enemies
 extern int processEvents(Player *man,Bullet b[],int *moved,int *type,int *direct);
@@ -23,7 +23,7 @@ extern void displayMenu(Menu menu);
 extern int handleMenu(int *exit);
 extern void initMenu(Menu *menu);
 extern void initPick(Menu *pick);
-extern int handlePick(int *pickCharacter,int *pick);
+extern int handlePick(int *pickCharacter,Player *man);
 
 int global = 0;
 int main(int argc, char *argv[])
@@ -87,10 +87,10 @@ int main(int argc, char *argv[])
         while(pickCharacter) //PICK CHARACTER-MENYN
         {
             displayMenu(pick);
-            ingame = handlePick(&pickCharacter,&spritePick);
+            ingame = handlePick(&pickCharacter,&player);
             if(ingame)
             {
-                initPlayer(&player,spritePick);
+                initPlayer(&player);
                 initLedges(&player);
                 if(connected && !(networkInit(&client,&player,tmp)))
                 {
