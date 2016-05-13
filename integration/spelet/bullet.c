@@ -73,3 +73,28 @@ void addBullet(int x, int y,int dx, Bullet b[],int b1,int b2)
      //b[i].dx = dx;
     // printf("b1 : %d\nb2 : %d\n",b1,b2);
 }
+
+int detectHit(Player *man,Bullet b[],int *hitid)
+{
+    int i,j,k;
+    for(i=0;i<5;i++)
+    {
+        if(man->enemies[i].exists)
+        for(j=0;j<20;j++)
+        {
+            if(b[j].active)
+            {
+
+              //  printf("manx: %d manx+32: %d",man->enemies[i].dstRect.x,man->enemies[i].dstRect.x+32);
+                if(b[j].x > (man->enemies[i].dstRect.x) && b[j].x <= (man->enemies[i].dstRect.x+32)
+                   && b[j].y >= (man->enemies[i].dstRect.y) && b[j].y <= (man->enemies[i].dstRect.y+32))
+                {
+                    *hitid = i;
+                    return 1;
+                }
+
+            }
+        }
+    }
+    return 0;
+}

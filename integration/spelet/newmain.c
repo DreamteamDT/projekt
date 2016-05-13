@@ -25,6 +25,8 @@ extern void initMenu(Menu *menu);
 extern void initPick(Menu *pick);
 extern int handlePick(int *pickCharacter,Player *man);
 
+extern int detectHit(Player *man,Bullet b[],int *hitid);
+
 int global = 0;
 int main(int argc, char *argv[])
 {
@@ -35,7 +37,7 @@ int main(int argc, char *argv[])
     int startMenu = 1,pickCharacter = 0,imageNo,exit = 0,ingame = 0;
     const char *tmp = (const char*)malloc(100);
     int q = 0;
-    int done = 0;
+    int done = 0,hitid;
     int connected, i;
     Player player;
     Network client;
@@ -105,6 +107,7 @@ int main(int argc, char *argv[])
                 done = processEvents(&player,ammo,&moved,&type,&direct);
                 //for (i = 0; i < 3; i++)
                 collisionDetect(&player, &direct);
+
                 if(moved && connected )
                 {
                     send_data(&player,&client,type);
@@ -117,6 +120,10 @@ int main(int argc, char *argv[])
                 updateLogic(&player,ammo);
                 //for (i = 0; i < 3; i++)
                 doRender(&player,ammo); //,&enemies[i]
+                if(detectHit(&player,ammo,&hitid))
+                {
+                    printf("enemy %d was hit\n",hitid);
+                }
                 //don't burn up the CPU
                 SDL_Delay(40);
                 if(done)

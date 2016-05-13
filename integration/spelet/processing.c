@@ -10,8 +10,8 @@ void updateLogic(Player *p,Bullet b[])
     {
         if(b[i].active == 1)
         {
-            b[i].x +=b[i].vector_unitX*3;
-            b[i].y +=b[i].vector_unitY*3;
+            b[i].x +=b[i].vector_unitX*2;
+            b[i].y +=b[i].vector_unitY*2;
         }
     }
     global++;
@@ -332,8 +332,13 @@ void doRender(Player *man,Bullet b[]) //, Enemy *enemies
     SDL_Rect rect = { man->x, man->y, 32, 32 };
     SDL_Rect src = {man->frameX,0,32,32};
     SDL_Rect bg = {0,0,1024,768};
+<<<<<<< HEAD
     SDL_Rect scoreBg = {0,630,1024,138};
 
+=======
+
+    SDL_Rect scoreBg = {0,630,1024,138};
+>>>>>>> fefdf193260d072e516cfeb3c537de044034d913
     SDL_RenderCopy(program.renderer,man->background,NULL,&bg);
     SDL_RenderCopy(program.renderer,man->scoreBackground,NULL,&scoreBg);
 
@@ -349,8 +354,14 @@ void doRender(Player *man,Bullet b[]) //, Enemy *enemies
     {
         if(b[i].active == 1)
         {
+<<<<<<< HEAD
             SDL_Rect faggot = {b[i].x , b[i].y,8,8};
             SDL_RenderCopy(program.renderer,bullet.texture,NULL,&faggot);
+=======
+            SDL_Rect faggot = {b[i].x , b[i].y,8,8 };
+          //  printf("faggot x: %d faggot y: %d\n",faggot.x,faggot.y);
+            SDL_RenderCopyEx(program.renderer,man->bullet,NULL,&faggot,0,NULL,0);
+>>>>>>> fefdf193260d072e516cfeb3c537de044034d913
         }
     }
     for(i=0; i<10; i++)
