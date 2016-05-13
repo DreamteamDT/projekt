@@ -110,7 +110,7 @@ int main(int argc, char *argv[])
                     send_data(&player,&client,type);
                     moved = 0;
                 }
-                if (connected)
+                if (connected && done != 1)
                 {
                     recv_data(&player,&client,&done);
                 }
