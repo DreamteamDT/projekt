@@ -77,7 +77,7 @@ int processEvents(Player *man,Bullet b[],int *moved,int *type,int *direct)
 
         }
     }
-    int canCol = 1;
+
     const Uint8 *state = SDL_GetKeyboardState(NULL);
     if(state[SDL_SCANCODE_LEFT] || state[SDL_SCANCODE_A])
     {
@@ -157,9 +157,13 @@ int processEvents(Player *man,Bullet b[],int *moved,int *type,int *direct)
     if(state[SDL_SCANCODE_1])
     {
         printf("pressed 1\n");
+        *direct = -1;
+        printf("|| dir %d\n", *direct);
         int bX,bY;
         if(spellOne > spellOne_False+1000)
         {
+            man->x1 = man->x;
+            man->y1 = man->y;
             spellOne_False=spellOne-1;
             SDL_GetMouseState(&bX, &bY);
             float v_length = sqrt(((bX- man->x)*(bX-man->x))+((bY-man->y)*(bY-man->y)));
@@ -183,14 +187,16 @@ void collisionDetect(Player *man, int *direct)
     if (*direct > 0)
     {
         int i, bpe = 0;
-        // check for collision with any ledges (brick blocks)
+        // check for collision with any ledges and enemies
         for (i = 0; i < 3; i++)
         {
-            //printf("direct: %d asd\n", direct);
             int mw = 32, mh = 32;
             int mx = man->x, my = man->y;
+
+            // ladda ledges
             int bx = man->ledges[i].x, by = man->ledges[i].y, bw = man->ledges[i].w, bh = man->ledges[i].h;
-            //if (mx > bx+bw && mx+mw < bx && my > by+bh && my+mh < by)
+
+            // kolla [i] för ledges och fiende
             while (bpe < 2)
             {
                 if (my+mh > by && mx < bx+bw && mx+mw > bx && my < by+bh)
@@ -230,16 +236,77 @@ void collisionDetect(Player *man, int *direct)
                     else if (*direct == 10 && my+mh < by+6)
                         man->y -= 5;
                 }
-                bpe++;
-                // ladda enemies
+                // ladda enemies istället för ledges
                 bx = man->enemies[i].dstRect.x, by = man->enemies[i].dstRect.y, bw = man->enemies[i].dstRect.w, bh = man->enemies[i].dstRect.h;
+                bpe++;
+            }
+            bpe = 0;
+        }
+    }
+    else if (*direct < 0)
+    {
+        int i, bpe = 0;
+        // check for collision with any ledges and enemies
+        for (i = 0; i < 3; i++)
+        {
+            int mw = 32, mh = 32;
+            int mx = man->x+mw/2, my = man->y+mh/2;
+            int ox = man->x1+mw/2, oy = man->y1+mh/2;
+            // ladda ledges
+            int bw = man->ledges[i].w, bh = man->ledges[i].h;
+            int bx = man->ledges[i].x+bw/2, by = man->ledges[i].y+bh/2;
+
+
+            // kolla [i] för ledges och fiende
+            while (bpe < 2)
+            {
+                if ((my-mh/2)+mh > (by-bh/2) && (mx-mw/2) < (bx-bw/2)+bw && (mx-mw/2)+mw > (bx-bw/2) && (my-mh/2) < (by-bh/2)+bh)
+                {
+                    // höger sida
+                    if (ox > bx)
+                    {
+                        if (abs(bx-ox) > abs(by-oy))
+                        {
+                            man->x = bx+bw/2;
+                        }
+                        else if (abs(oy+mh/2) < abs(by-bh/2))
+                        {
+                            man->y = by-bw/2-mh;
+                        }
+                        else
+                        {
+                            man->y = by+bh/2;
+                        }
+                    }
+                    // vänster sida
+                    else if (ox < bx)
+                    {
+                        if (abs(bx-ox) > abs(by-oy))
+                        {
+                            man->x = bx-bw/2-mw;
+                        }
+                        else if (abs(oy+mh/2) < abs(by-bh/2))
+                        {
+                            man->y = by-bw/2-mh;
+                        }
+                        else
+                        {
+                            man->y = by+bh/2;
+                        }
+                    }
+
+                }
+                // ladda enemies istället för ledges
+                bw = man->enemies[i].dstRect.w, bh = man->enemies[i].dstRect.h;
+                bx = man->enemies[i].dstRect.x+bw/2, by = man->enemies[i].dstRect.y+bh/2;
+                bpe++;
             }
             bpe = 0;
         }
     }
 }
 
-void doRender(Player *man,Bullet b[], Ledge *ledges) //, Enemy *enemies
+void doRender(Player *man,Bullet b[]) //, Enemy *enemies
 {
     int i;
     //set the drawing color to blue

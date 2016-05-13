@@ -65,7 +65,7 @@ typedef struct
    Ledge ledges[3];
    int x, y;
    int frameX,frameY;
-
+   int x1, y1;
    SDL_Texture *texture;
    int thinkTime;
    int shot;
