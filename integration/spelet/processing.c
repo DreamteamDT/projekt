@@ -10,8 +10,8 @@ void updateLogic(Player *p,Bullet b[])
     {
         if(b[i].active == 1)
         {
-            b[i].x +=b[i].vector_unitX*3;
-            b[i].y +=b[i].vector_unitY*3;
+            b[i].x +=b[i].vector_unitX*2;
+            b[i].y +=b[i].vector_unitY*2;
         }
     }
     global++;
