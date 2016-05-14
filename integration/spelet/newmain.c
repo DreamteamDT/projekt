@@ -144,7 +144,7 @@ int main(int argc, char *argv[])
                 }
 
                 //don't burn up the CPU
-                SDL_Delay(40);
+                SDL_Delay(20);
                 if(done)
                 {
                     if(connected)
