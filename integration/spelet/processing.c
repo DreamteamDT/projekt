@@ -171,16 +171,15 @@ int processEvents(Player *man,Bullet b[],int *moved,int *type,int *direct,Networ
         if(global%6==0)
         {
             shooting = 1;
-            if(bulletNo = addBullet(man->x,man->y,5,b,blinkX,blinkY))
+            if(((bulletNo = addBullet(man->x,man->y,5,b,blinkX,blinkY))>=0))
             {
                 man->blinkX = blinkX;
                 man->blinkY = blinkY;
                 man->bulletNo = bulletNo;
-                if (client->tcpsock)
+                if(man->connected)
                     sendBullet(*man,*client);
             }
             shooting = 0;
-
         }
     }
     int lastTime = 0;
@@ -188,12 +187,9 @@ int processEvents(Player *man,Bullet b[],int *moved,int *type,int *direct,Networ
     {
         printf("pressed 1\n");
         *direct = -1;
-        printf("|| dir %d\n", *direct);
         int bX,bY;
 
         man->currentTime = SDL_GetTicks();
-        printf("lasttime: %d\n", man->lastTime);
-        printf("currtime: %d\n", man->currentTime);
         if(spellOne > spellOne_False+1000 && man->currentTime > man->lastTime+5000)
         {
             man->x1 = man->x;
