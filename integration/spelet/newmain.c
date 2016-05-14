@@ -3,7 +3,7 @@
 extern void initPlayer(Player *player);
 extern void initLedges(Player *player);
 extern void doRender(Player *man,Bullet b[]); //, Enemy *enemies
-extern int processEvents(Player *man,Bullet b[],int *moved,int *type,int *direct);
+extern int processEvents(Player *man,Bullet b[],int *moved,int *type,int *direct,Network *client);
 extern void collisionDetect(Player *man, int *direct);
 
 extern void clearCartridge(Bullet ammo[]);
@@ -27,8 +27,8 @@ extern int handlePick(int *pickCharacter,Player *man);
 
 extern void bulletGone(Bullet b[],Player *man,Network *client,int con);
 extern int detectHit(Player *man,Bullet b[]);
-extern void sendBullets(Player *man,Bullet b[],Network *client);
 extern void bulletClear(Bullet b[],Player *man, Network *client);
+extern void updateEnemyBullet(Player *man);
 
 int global = 0;
 int main(int argc, char *argv[])
@@ -113,9 +113,8 @@ int main(int argc, char *argv[])
             {
                 direct = 0;
                 done = 0;
-                done = processEvents(&player,ammo,&moved,&type,&direct);
-
-                //for (i = 0; i < 3; i++)
+                done = processEvents(&player,ammo,&moved,&type,&direct,&client);
+                updateEnemyBullet(&player);
                 collisionDetect(&player, &direct);
                 bulletGone(ammo,&player,&client,connected);
                 if(moved && connected && player.alive)
@@ -130,18 +129,14 @@ int main(int argc, char *argv[])
                 updateLogic(&player,ammo);
                 //for (i = 0; i < 3; i++)
 
-                if(connected)
-                {
-                    sendBullets(&player,ammo,&client);
-                }
                 doRender(&player,ammo); //,&enemies[i]
-                if(connected && detectHit(&player,ammo))
-                {
-                    printf("enemy %d was hit\n",player.hitid);
-                    type = 7;
-                    send_data(&player,&client,type);
-                    bulletClear(ammo,&player,&client);
-                }
+               // if(connected && detectHit(&player,ammo))
+               // {
+                //    printf("enemy %d was hit\n",player.hitid);
+                //    type = 7;
+                //    send_data(&player,&client,type);
+                //    bulletClear(ammo,&player,&client);
+             //   }
 
                 //don't burn up the CPU
                 SDL_Delay(20);

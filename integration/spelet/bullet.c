@@ -53,13 +53,13 @@ void clearCartridge(Bullet a[])
         memset(&a[i],0,sizeof(Bullet));
     }
 }
-void addBullet(int x, int y,int dx, Bullet b[],int b1,int b2)
+int addBullet(int x, int y,int dx, Bullet b[],int b1,int b2)
 {
     int i = loadAmmo(b);
     if(i== -1)
     {
         printf("couldn't get a free slot for a bullet!\n");
-        return;
+        return 0;
     }
     b[i].x = x;
     b[i].y = y;
@@ -71,8 +71,21 @@ void addBullet(int x, int y,int dx, Bullet b[],int b1,int b2)
     b[i].vector_unitX = (b[i].directionX) / b[i].v_length;
     b[i].vector_unitY = (b[i].directionY) / b[i].v_length;
 
-    //b[i].dx = dx;
-    // printf("b1 : %d\nb2 : %d\n",b1,b2);
+    return i;
+}
+
+void addEnemyBullet(int x,int y,int dx,Bullet b[],int b1,int b2,int i)
+{
+    b[i].x = x;
+    b[i].y = y;
+    b[i].v_length = sqrt(((b1-b[i].x)*(b1-b[i].x)) + ((b2 - b[i].y)*(b2 - b[i].y)));
+
+    b[i].directionX = b1 - b[i].x;
+    b[i].directionY = b2 - b[i].y;
+
+    b[i].vector_unitX = (b[i].directionX) / b[i].v_length;
+    b[i].vector_unitY = (b[i].directionY) / b[i].v_length;
+    b[i].active = 1;
 }
 
 int detectHit(Player *man,Bullet b[])

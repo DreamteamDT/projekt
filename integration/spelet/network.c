@@ -1,5 +1,5 @@
 #include "definition.h"
-
+extern void addEnemyBullet(int x,int y,int dx,Bullet b[],int b1,int b2,int i);
 
 int uncomplete_string(char tmp[])
 {
@@ -117,27 +117,21 @@ void send_data(Player *man,Network *client,int type)
     }
 }
 
-void sendBullets(Player *man,Bullet b[],Network *client)
+void sendBullet(Player man,Network client)
 {
+    printf("skickar bullet!\n");
     int i,j,k;
     int type = 8;
-    for(i=0;i<20;i++)
-    {
-        if(b[i].active)
-        {
-            sprintf(client->sendpack->data,"%d %d %d %d %d",
-                                            type,man->id,(int)b[i].x,(int)b[i].y,i);
-            SDLNet_UDP_Send(client->udpsock,-1,client->sendpack);
-        }
-    }
-
+    sprintf(client.sendpack->data,"%d %d %d %d %d %d %d",
+                        type,man.id,man.x,man.y,man.blinkX,man.blinkY,man.bulletNo);
+    SDLNet_UDP_Send(client.udpsock,-1,client.sendpack);
 }
 
 void recv_data(Player *man, Network *client,int *done)
 {
 
     int type, enemyid, enemyDX, enemyDY, enemySX,spritePick,hitid;
-    int bulletX,bulletY,bulletid;
+    int bulletX,bulletY,blinkX,blinkY,bulletid;
     while(SDLNet_CheckSockets(client->udpset,0)>0)
     {
         SDLNet_UDP_Recv(client->udpsock,client->rcvpack);
@@ -199,12 +193,12 @@ void recv_data(Player *man, Network *client,int *done)
         }
         if (type == 8)
         {
-            sscanf(client->rcvpack->data,"%d %d %d %d %d %d",
-               &type,&enemyid,&bulletX,&bulletY,&bulletid);
-            man->enemies[enemyid].bullet[bulletid].x = bulletX;
-            printf("bullet x: %d\n",man->enemies[enemyid].bullet[bulletid].x);
-            man->enemies[enemyid].bullet[bulletid].y = bulletY;
-            man->enemies[enemyid].bullet[bulletid].active = 1;
+            printf("lagger till enemy bullet!\n");
+            sscanf(client->rcvpack->data,"%d %d %d %d %d %d %d",
+               &type,&enemyid,&bulletX,&bulletY,&blinkX,&blinkY,&bulletid);
+
+            addEnemyBullet(bulletX,bulletY,5,man->enemies[enemyid].bullet,blinkX,blinkY,bulletid);
+
         }
         if(type == 9)
         {

@@ -160,10 +160,11 @@ int main(int argc, char **argv)
         //check for incoming data
         while(SDLNet_CheckSockets(udpset,0)>0)
         {
+            printf("inkommande pa udp\n");
             SDLNet_UDP_Recv(rcvSock,rcvPack);
             sscanf(rcvPack->data,"%d %d",&type,&id);
             //printf("%s\n",rcvPack->data);
-
+            printf("%s\n",rcvPack->data);
 
             if(type == 2)
             {
