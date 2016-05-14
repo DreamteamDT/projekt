@@ -185,7 +185,7 @@ int main(int argc, char **argv)
                 printf("mottagit hit\n");
                 for(k=0; k<maxPlayers; k++)
                 {
-                    if(players[k].exists)
+                    if(players[k].exists && k!=id)
                     {
                         rcvPack->address = players[k].ip;
                         SDLNet_UDP_Send(rcvSock,-1,rcvPack);

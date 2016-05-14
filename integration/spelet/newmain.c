@@ -120,7 +120,8 @@ int main(int argc, char *argv[])
                 done = processEvents(&player,ammo,&moved,&type,&direct,&client);
                 updateEnemyBullet(&player);
                 updateLogic(&player,ammo);
-                collisionDetect(&player, &direct);
+                if(player.alive)
+                    collisionDetect(&player, &direct);
                 bulletGone(ammo,&player,&client);
 
                 if(moved && connected && player.alive)
@@ -143,7 +144,7 @@ int main(int argc, char *argv[])
 
                     {
                         moved = 0;
-                        send_data(&player,&client,type);
+                        send_data(&player,&client,3);
                         SDL_Delay(1000);
                         SDLNet_FreeSocketSet(client.udpset);
                         SDLNet_FreeSocketSet(client.tcpset);
