@@ -74,8 +74,8 @@ void initLedges(Player *player)
     texture = SDL_CreateTextureFromSurface(program.renderer,image);
     SDL_FreeSurface(image);*/
     int i, lx = 70, ly = 300;
-    int x = 222;
-    int y = 115;
+    int x = 221;
+    int y = 121;
     for (i = 0; i < 4; i++)
     {
         player->ledges[i].w = 124;
