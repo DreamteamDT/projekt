@@ -71,6 +71,7 @@ typedef struct
     int frameX,frameY;
     int x1, y1;
     int hitid,alive;
+    int currentTime, lastTime;
     SDL_Texture *texture,*background,*scoreBackground,*bullet;
     int thinkTime;
     int shot,bulletid,blinkX,blinkY,bulletNo;

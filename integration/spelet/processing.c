@@ -176,19 +176,25 @@ int processEvents(Player *man,Bullet b[],int *moved,int *type,int *direct,Networ
                 man->blinkX = blinkX;
                 man->blinkY = blinkY;
                 man->bulletNo = bulletNo;
-                sendBullet(*man,*client);
+                if (client->tcpsock)
+                    sendBullet(*man,*client);
             }
             shooting = 0;
 
         }
     }
+    int lastTime = 0;
     if(state[SDL_SCANCODE_1] && man->alive)
     {
         printf("pressed 1\n");
         *direct = -1;
         printf("|| dir %d\n", *direct);
         int bX,bY;
-        if(spellOne > spellOne_False+1000)
+
+        man->currentTime = SDL_GetTicks();
+        printf("lasttime: %d\n", man->lastTime);
+        printf("currtime: %d\n", man->currentTime);
+        if(spellOne > spellOne_False+1000 && man->currentTime > man->lastTime+5000)
         {
             man->x1 = man->x;
             man->y1 = man->y;
@@ -206,6 +212,7 @@ int processEvents(Player *man,Bullet b[],int *moved,int *type,int *direct,Networ
             man->y+=(unit_vector.y*100)-16;
             *moved = 1;
             *type = 2;
+            man->lastTime = man->currentTime;
         }
     }
     //printf("Thinktime : %d \n",man->thinkTime);
@@ -280,6 +287,7 @@ void collisionDetect(Player *man, int *direct)
         int mx = man->x+mw/2, my = man->y+mh/2;
         int ox = man->x1+mw/2, oy = man->y1+mh/2;
 
+        // spelaren kan inte blinka utanför kartan
         if ((mx-mw/2) < 0)
             man->x = 0;
         if ((mx+mw/2) > 1024)

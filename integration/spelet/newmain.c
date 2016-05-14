@@ -49,6 +49,7 @@ int main(int argc, char *argv[])
     int moved = 0;
     int type;
     int direct = 0;
+    player.lastTime = -5000;
     bullet.texture=initBullet();
     Bullet ammo[20];
 
