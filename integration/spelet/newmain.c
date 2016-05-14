@@ -77,7 +77,7 @@ int main(int argc, char *argv[])
     }
 
     Mix_OpenAudio(44100,MIX_DEFAULT_FORMAT,2,2048);
-    Mix_Music *backgroundSound = Mix_LoadMUS("testmusic.MP3")
+    Mix_Music *backgroundSound = Mix_LoadMUS("testmusic.MP3");
 
     //link(ammo);
     //Event loop
