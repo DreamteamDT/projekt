@@ -110,8 +110,8 @@ int processEvents(Player *man,Bullet b[],int *moved,int *type,int *direct)
         {
             man->frameX = 128;
         }
-        if(man->x > 992)
-            man->x = 992;
+        if(man->x > 960)
+            man->x = 960;
 
     }
     if(state[SDL_SCANCODE_UP] || state[SDL_SCANCODE_W] && man->alive)
@@ -145,8 +145,8 @@ int processEvents(Player *man,Bullet b[],int *moved,int *type,int *direct)
         {
             man->frameX = 0;
         }
-        if(man->y>598)
-            man->y = 598;
+        if(man->y>566)
+            man->y = 566;
     }
     if(state[SDL_SCANCODE_SPACE] && man->alive)
     {
@@ -200,7 +200,7 @@ void collisionDetect(Player *man, int *direct)
         // check for collision with any ledges and enemies
         for (i = 0; i < 4; i++)
         {
-            int mw = 32, mh = 32;
+            int mw = 64, mh = 64;
             int mx = man->x, my = man->y;
 
             // ladda ledges
@@ -256,12 +256,22 @@ void collisionDetect(Player *man, int *direct)
     else if (*direct < 0)
     {
         int i, bpe = 0;
+        int mw = 64, mh = 64;
+        int mx = man->x+mw/2, my = man->y+mh/2;
+        int ox = man->x1+mw/2, oy = man->y1+mh/2;
+
+        if ((mx-mw/2) < 0)
+            man->x = 0;
+        if ((mx+mw/2) > 1024)
+            man->x = 1024-mw;
+        if ((my-mh/2) < 0)
+            man->y = 0;
+        if ((my+mh/2) > 630)
+            man->y = 630-mh;
+
         // check for collision with any ledges and enemies
         for (i = 0; i < 4; i++)
         {
-            int mw = 32, mh = 32;
-            int mx = man->x+mw/2, my = man->y+mh/2;
-            int ox = man->x1+mw/2, oy = man->y1+mh/2;
             // ladda ledges
             int bw = man->ledges[i].w, bh = man->ledges[i].h;
             int bx = man->ledges[i].x+bw/2, by = man->ledges[i].y+bh/2;
@@ -329,21 +339,11 @@ void doRender(Player *man,Bullet b[]) //, Enemy *enemies
     //Clear the screen (to blue)
     SDL_RenderClear(program.renderer);
 
-<<<<<<< HEAD
     SDL_Rect rect = { man->x, man->y, 32, 32 };
     SDL_Rect src = {man->frameX,0,32,32};
     SDL_Rect bg = {0,0,1024,768};
-<<<<<<< HEAD
-    SDL_Rect scoreBg = {0,630,1024,138};
+    //SDL_Rect scoreBg = {0,630,1024,138};
 
-=======
-
-    SDL_Rect scoreBg = {0,630,1024,138};
->>>>>>> fefdf193260d072e516cfeb3c537de044034d913
-=======
-
-    SDL_Rect bg = {0,0,1024,768};
->>>>>>> 798390c19114bfadb98a4c443041a5d77613746c
     SDL_RenderCopy(program.renderer,man->background,NULL,&bg);
 
 
@@ -357,14 +357,14 @@ void doRender(Player *man,Bullet b[]) //, Enemy *enemies
     {
         if(b[i].active == 1)
         {
-<<<<<<< HEAD
+
             SDL_Rect faggot = {b[i].x , b[i].y,8,8};
             SDL_RenderCopy(program.renderer,bullet.texture,NULL,&faggot);
-=======
-            SDL_Rect faggot = {b[i].x , b[i].y,8,8 };
+
+           // SDL_Rect faggot = {b[i].x , b[i].y,8,8 };
           //  printf("faggot x: %d faggot y: %d\n",faggot.x,faggot.y);
-            SDL_RenderCopyEx(program.renderer,man->bullet,NULL,&faggot,0,NULL,0);
->>>>>>> fefdf193260d072e516cfeb3c537de044034d913
+           // SDL_RenderCopyEx(program.renderer,man->bullet,NULL,&faggot,0,NULL,0);
+
         }
     }
     for(i=0;i<5;i++)
