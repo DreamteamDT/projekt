@@ -39,6 +39,7 @@ int processEvents(Player *man,Bullet b[],int *moved,int *type,int *direct,Networ
     spellOne = SDL_GetTicks();
     SDL_Event event;
     int done = 0,shooting = 0;;
+    int mouse1 = 0;
 
     man->thinkTime--;
     if(man->thinkTime<=0)
@@ -87,10 +88,10 @@ int processEvents(Player *man,Bullet b[],int *moved,int *type,int *direct,Networ
             break;
         case SDL_MOUSEBUTTONDOWN :
             printf("clicked on mouse");
+            mouse1 = 1;
             int blinkX,blinkY;
             SDL_GetMouseState(&blinkX, &blinkY);
             printf("Cursor at %d x %d\n",blinkX,blinkY);
-
         }
     }
 
@@ -164,9 +165,10 @@ int processEvents(Player *man,Bullet b[],int *moved,int *type,int *direct,Networ
         if(man->y>566)
             man->y = 566;
     }
-    if(state[SDL_SCANCODE_SPACE] && man->alive && !shooting)
+    if(mouse1 == 1 || state[SDL_SCANCODE_SPACE] && man->alive && !shooting)
     {
         int blinkX,blinkY,bulletNo;
+        mouse1 = 0;
         SDL_GetMouseState(&blinkX, &blinkY);
         if(global%6==0)
         {
@@ -190,7 +192,7 @@ int processEvents(Player *man,Bullet b[],int *moved,int *type,int *direct,Networ
         int bX,bY;
 
         man->currentTime = SDL_GetTicks();
-        if(spellOne > spellOne_False+1000 && man->currentTime > man->lastTime+5000)
+        if(spellOne > spellOne_False+1000 && man->currentTime > man->lastTime+3000)
         {
             man->x1 = man->x;
             man->y1 = man->y;
@@ -300,42 +302,45 @@ void collisionDetect(Player *man, int *direct)
             int bw = man->ledges[i].w, bh = man->ledges[i].h;
             int bx = man->ledges[i].x+bw/2, by = man->ledges[i].y+bh/2;
 
-
             // kolla [i] för ledges och fiende
             while (bpe < 2)
             {
                 if ((my-mh/2)+mh > (by-bh/2) && (mx-mw/2) < (bx-bw/2)+bw && (mx-mw/2)+mw > (bx-bw/2) && (my-mh/2) < (by-bh/2)+bh)
                 {
                     // höger sida
-                    if (ox > bx)
+                    if (ox >= bx)
                     {
                         if (abs(bx-ox) > abs(by-oy))
                         {
                             man->x = bx+bw/2;
                         }
-                        else if (abs(oy+mh/2) < abs(by-bh/2))
+                        // över
+                        else if (abs(oy-mh/2) < abs(by-bh/2))
                         {
-                            man->y = by-bw/2-mh;
+                            man->y = by-bw/2-mh+8;
                         }
+                        // under
                         else
                         {
-                            man->y = by+bh/2;
+                            man->y = by+bh/2+4;
                         }
                     }
                     // vänster sida
-                    else if (ox < bx)
+                    else if (ox <= bx)
                     {
                         if (abs(bx-ox) > abs(by-oy))
                         {
                             man->x = bx-bw/2-mw;
                         }
-                        else if (abs(oy+mh/2) < abs(by-bh/2))
+                        // över
+                        else if (abs(oy-mh/2) < abs(by-bh/2))
                         {
-                            man->y = by-bw/2-mh;
+                            man->y = by-bw/2-mh+8;
                         }
+                        // under
                         else
                         {
-                            man->y = by+bh/2;
+                            man->y = by+bh/2+4;
                         }
                     }
 
