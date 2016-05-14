@@ -49,7 +49,7 @@ struct Program
 int main(int argc, char **argv)
 {
     int maxPlayers = 4;
-    int x,y,type,id,next=0,offset,max;
+    int x,y,type,id,next=0,offset,max,hitid;
     IPaddress ip;
     char tmp[1024];
     int curid=0;
@@ -162,7 +162,7 @@ int main(int argc, char **argv)
         {
             SDLNet_UDP_Recv(rcvSock,rcvPack);
             sscanf(rcvPack->data,"%d %d",&type,&id);
-            printf("%s\n",rcvPack->data);
+            //printf("%s\n",rcvPack->data);
 
 
             if(type == 2)
@@ -175,7 +175,24 @@ int main(int argc, char **argv)
 
                         if(i!=id)
                         {
-                            printf("paket skickat till klient %d\n",i);
+                            printf("position för klient %d skickat till klient %d\n",id,i);
+                            rcvPack->address = players[i].ip;
+                            SDLNet_UDP_Send(rcvSock,-1,rcvPack);
+                        }
+
+                    }
+                }
+            }
+            if(type == 8 || type == 9)
+            {
+                players[id].ip.port = rcvPack->address.port;
+                for(i=0; i<maxPlayers; i++)
+                {
+                    if(players[i].exists)
+                    {
+                        if(i!=id)
+                        {
+                            printf("kula skickat till klient %d\n",i);
                             rcvPack->address = players[i].ip;
                             SDLNet_UDP_Send(rcvSock,-1,rcvPack);
                         }
@@ -211,8 +228,6 @@ int main(int argc, char **argv)
                             sprintf(tmp,"%d %d \n",type,i);
                         }
 
-
-
                         if(type == 3)
                         {
                             for(k=0; k<maxPlayers; k++)
@@ -240,6 +255,21 @@ int main(int argc, char **argv)
                                     next = i;
                                     i = 10;
                                 }
+                            }
+                        }
+                        else if(type == 7)
+                        {
+                            for(k=0; k<maxPlayers; k++)
+                            {
+                                if(players[k].exists)
+                                    if(k!=i)
+                                    {
+                                        if(!SDLNet_TCP_Send(players[k].tcpsock,tmp,strlen(tmp)+1))
+                                        {
+                                            printf("SDLNet_TCP_Send: %s\n", SDLNet_GetError());
+                                            return 1;
+                                        }
+                                    }
                             }
                         }
                     }

@@ -68,14 +68,18 @@ int networkInit(Network *client,Player *man,const char *ipaddress)
         printf("Server is full.\n");
         return 0;
     }
+    man->alive = 1;
 
     SDLNet_TCP_AddSocket(client->tcpset,client->tcpsock);
     SDLNet_UDP_AddSocket(client->udpset,client->udpsock);
+    printf("efter addsocket\n");
 
-    for(i=0; i<10; i++)
-    {
-        man->enemies[i].exists = 0;
-    }
+  //  for(i=0; i<10; i++)
+   // {
+     //   man->enemies[i] = ;
+   // }
+    printf("efter enemies exists loop\n");
+
 
     return 1;
 }
@@ -83,7 +87,7 @@ int networkInit(Network *client,Player *man,const char *ipaddress)
 void send_data(Player *man,Network *client,int type)
 {
     char tmp[128];
-
+    int size,len;
     if(type == 2)
     {
         sprintf(client->sendpack->data,"%d %d %d %d %d %d",
@@ -93,34 +97,62 @@ void send_data(Player *man,Network *client,int type)
     if(type == 3)
     {
         sprintf(tmp,"%d %d \n",type,man->id);
-        int size=0;
-        int len=strlen(tmp)+1;
+        size=0;
+        len=strlen(tmp)+1;
         while(size<len)
         {
             size+=SDLNet_TCP_Send(client->tcpsock,tmp+size,len-size);
         }
         printf("Disconnected!\n");
     }
+    if(type == 7)
+    {
+        sprintf(tmp,"%d %d %d \n",type,man->id,man->hitid);
+        size=0;
+        len=strlen(tmp)+1;
+        while(size<len)
+        {
+            size+=SDLNet_TCP_Send(client->tcpsock,tmp+size,len-size);
+        }
+    }
+}
+
+void sendBullets(Player *man,Bullet b[],Network *client)
+{
+    int i,j,k;
+    int type = 8;
+    for(i=0;i<20;i++)
+    {
+        if(b[i].active)
+        {
+            sprintf(client->sendpack->data,"%d %d %d %d %d",
+                                            type,man->id,(int)b[i].x,(int)b[i].y,i);
+            SDLNet_UDP_Send(client->udpsock,-1,client->sendpack);
+        }
+    }
+
 }
 
 void recv_data(Player *man, Network *client,int *done)
 {
 
-    int type, enemyid, enemyDX, enemyDY, enemySX,spritePick;
+    int type, enemyid, enemyDX, enemyDY, enemySX,spritePick,hitid;
+    int bulletX,bulletY,bulletid;
     while(SDLNet_CheckSockets(client->udpset,0)>0)
     {
-
-
         SDLNet_UDP_Recv(client->udpsock,client->rcvpack);
+        sscanf(client->rcvpack->data,"%d %d",&type,&enemyid);
 
-        sscanf(client->rcvpack->data,"%d %d %d %d %d %d",
-               &type,&enemyid,&enemyDX,&enemyDY,&enemySX,&spritePick);
+
         //man->enemies[enemyid].x = enemyDX;
         //man->enemies[enemyid].y = enemyDY;
 
         //Om ny fiende
         if (!man->enemies[enemyid].exists)
         {
+            sscanf(client->rcvpack->data,"%d %d %d %d %d %d",
+               &type,&enemyid,&enemyDX,&enemyDY,&enemySX,&spritePick);
+
             SDL_Surface *image;
             if(spritePick==1)
             {
@@ -148,36 +180,44 @@ void recv_data(Player *man, Network *client,int *done)
             man->enemies[enemyid].srcRect.h = 32;
             man->enemies[enemyid].dstRect.x = enemyDX;
             man->enemies[enemyid].dstRect.y = enemyDY;
-            man->enemies[enemyid].dstRect.w = 32;
-            man->enemies[enemyid].dstRect.h = 32;
+            man->enemies[enemyid].dstRect.w = 64;
+            man->enemies[enemyid].dstRect.h = 64;
             man->enemies[enemyid].exists = 1;
-            send_data(&*man,&*client,2);
+            if(man->alive)
+            {
+                send_data(&*man,&*client,2);
+            }
+
         }
         if (type == 2)
         {
+            sscanf(client->rcvpack->data,"%d %d %d %d %d %d",
+               &type,&enemyid,&enemyDX,&enemyDY,&enemySX,&spritePick);
             man->enemies[enemyid].dstRect.x = enemyDX;
             man->enemies[enemyid].dstRect.y = enemyDY;
             man->enemies[enemyid].srcRect.x = enemySX;
         }
-        if(type == 3)
+        if (type == 8)
         {
-            // flyttar spelaren av skärmen
-            //man->enemies[enemyid].dstRect.x = 1000;
-            //man->enemies[enemyid].dstRect.y = 1000;
-            //doRender(renderer, &gameState);
+            sscanf(client->rcvpack->data,"%d %d %d %d %d %d",
+               &type,&enemyid,&bulletX,&bulletY,&bulletid);
+            man->enemies[enemyid].bullet[bulletid].x = bulletX;
+            printf("bullet x: %d\n",man->enemies[enemyid].bullet[bulletid].x);
+            man->enemies[enemyid].bullet[bulletid].y = bulletY;
+            man->enemies[enemyid].bullet[bulletid].active = 1;
         }
-        /*if(type == 4)
+        if(type == 9)
         {
-            gameState.enemies[enemyid].bul = 1;
-            gameState.enemies[enemyid].bulRect.x = enemyX + BAT_WIDTH + 4;
-            gameState.enemies[enemyid].bulRect.y = enemyY + BAT_HEIGHT/2;
-            gameState.enemies[enemyid].bulRect.w = BUL_WIDTH;
-            gameState.enemies[enemyid].bulRect.h = BUL_HEIGHT;
-            printf("type 4 recv\n");
-        }*/
+            sscanf(client->rcvpack->data,"%d %d %d %d %d",
+               &type,&enemyid,&bulletX,&bulletY,&bulletid);
+            man->enemies[enemyid].bullet[bulletid].active = 0;
+        }
+
     }
+
     while(SDLNet_CheckSockets(client->tcpset,0)>0)
     {
+        printf("incoming data on tcp socket\n");
         int offset = 0;
         char tmp[1024];
         do
@@ -186,7 +226,7 @@ void recv_data(Player *man, Network *client,int *done)
         }
         while(uncomplete_string(tmp));
 
-        sscanf(tmp,"%d %d",&type,&enemyid);
+        sscanf(tmp,"%d %d %d",&type,&enemyid,&hitid);
 
         if(type == 3)
         {
@@ -198,6 +238,17 @@ void recv_data(Player *man, Network *client,int *done)
         {
             printf("Server shut down!\n");
             *done = 1;
+        }
+        if(type == 7)
+        {
+            if(hitid == man->id)
+            {
+                man->alive = 0;
+            }
+            else
+            {
+                man->enemies[hitid].exists = 0;
+            }
         }
     }
 }

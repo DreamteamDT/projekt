@@ -25,7 +25,10 @@ extern void initMenu(Menu *menu);
 extern void initPick(Menu *pick);
 extern int handlePick(int *pickCharacter,Player *man);
 
-extern int detectHit(Player *man,Bullet b[],int *hitid);
+extern void bulletGone(Bullet b[],Player *man,Network *client,int con);
+extern int detectHit(Player *man,Bullet b[]);
+extern void sendBullets(Player *man,Bullet b[],Network *client);
+extern void bulletClear(Bullet b[],Player *man, Network *client);
 
 int global = 0;
 int main(int argc, char *argv[])
@@ -39,7 +42,7 @@ int main(int argc, char *argv[])
     int q = 0;
     int done = 0,hitid;
     int connected, i;
-    Player player;
+    Player player = {0};
     Network client;
     int choice;
     int newline;
@@ -99,16 +102,23 @@ int main(int argc, char *argv[])
                     pickCharacter = 0;
                 }
                 if(connected && exit!=1)
+                {
+                    printf("innan send data\n");
                     send_data(&player,&client,2);
+                    printf("efter send data\n");
+                }
+
             }
             while(ingame) //INGAME
             {
                 direct = 0;
+                done = 0;
                 done = processEvents(&player,ammo,&moved,&type,&direct);
+
                 //for (i = 0; i < 3; i++)
                 collisionDetect(&player, &direct);
-
-                if(moved && connected )
+                bulletGone(ammo,&player,&client,connected);
+                if(moved && connected && player.alive)
                 {
                     send_data(&player,&client,type);
                     moved = 0;
@@ -119,21 +129,39 @@ int main(int argc, char *argv[])
                 }
                 updateLogic(&player,ammo);
                 //for (i = 0; i < 3; i++)
-                doRender(&player,ammo); //,&enemies[i]
-                if(detectHit(&player,ammo,&hitid))
+
+                if(connected)
                 {
-                    printf("enemy %d was hit\n",hitid);
+                    sendBullets(&player,ammo,&client);
                 }
+                doRender(&player,ammo); //,&enemies[i]
+                if(connected && detectHit(&player,ammo))
+                {
+                    printf("enemy %d was hit\n",player.hitid);
+                    type = 7;
+                    send_data(&player,&client,type);
+                    bulletClear(ammo,&player,&client);
+                }
+
                 //don't burn up the CPU
                 SDL_Delay(40);
                 if(done)
                 {
+                    if(connected)
+
+                    {
+                        moved = 0;
+                        send_data(&player,&client,type);
+                        SDL_Delay(1000);
+                        SDLNet_FreeSocketSet(client.udpset);
+                        SDLNet_FreeSocketSet(client.tcpset);
+                        SDLNet_UDP_Close(client.udpsock);
+                        SDLNet_TCP_Close(client.tcpsock);
+                    }
+
                     pickCharacter = 0;
                     ingame = 0;
-                    SDLNet_FreeSocketSet(client.udpset);
-                    SDLNet_FreeSocketSet(client.tcpset);
-                    SDLNet_UDP_Close(client.udpsock);
-                    SDLNet_TCP_Close(client.tcpsock);
+
                 }
             }
             exit = 0;
