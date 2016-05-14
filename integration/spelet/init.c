@@ -6,13 +6,54 @@ void initPlayer(Player *player)
 
     SDL_Surface *image,*background,*scoreBg,*bullet;
 
-    bullet = IMG_Load("kula.PNG");
-    background = IMG_Load("grassBackground.PNG");
-    if(!(scoreBg = IMG_Load("scoreBackground.PNG")))
+    if(LINUX)
     {
-        printf("syntax error\n");
+        bullet = IMG_Load("kula.png");
+        background = IMG_Load("bakgrund5.png");
     }
-    if(player->spritePick==1)
+    else
+    {
+        bullet =IMG_Load("kula.PNG");
+        background = IMG_Load("bakgrund5.PNG");
+    }
+    if(LINUX)
+    {
+       if(!(scoreBg = IMG_Load("scoreBackground.png")))
+       {
+            printf("syntax error\n");
+       }
+
+    }
+    else
+    {
+       if(!(scoreBg = IMG_Load("scoreBackground.PNG")))
+       {
+            printf("syntax error\n");
+      }
+    }
+   if(LINUX)
+   {
+      if(player->spritePick==1)
+    {
+        image = IMG_Load("USA.png");
+    }
+
+    else if(player->spritePick == 2)
+    {
+        image = IMG_Load("spriteRussia.png");
+    }
+    else if(player->spritePick == 3)
+    {
+        image = IMG_Load("spriteMurica.png");
+    }
+    else
+    {
+        image = IMG_Load("spriteChina.png");
+    }
+   }
+   else
+   {
+       if(player->spritePick==1)
     {
         image = IMG_Load("USA.PNG");
     }
@@ -29,6 +70,9 @@ void initPlayer(Player *player)
     {
         image = IMG_Load("spriteChina.PNG");
     }
+
+   }
+
 
     SDL_Texture *texture,*bgtexture,*scoreBgtext,*bullettxt;
     bgtexture = SDL_CreateTextureFromSurface(program.renderer,background);
