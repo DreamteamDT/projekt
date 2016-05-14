@@ -100,13 +100,8 @@ void send_data(Player *man,Network *client,int type)
     }
     if(type == 7)
     {
-        sprintf(tmp,"%d %d %d %d\n",type,man->id,man->hitid,man->bulletid);
-        size=0;
-        len=strlen(tmp)+1;
-        while(size<len)
-        {
-            size+=SDLNet_TCP_Send(client->tcpsock,tmp+size,len-size);
-        }
+        sprintf(client->sendpack->data,"%d %d %d %d",type,man->id,man->hitid,man->bulletid);
+        SDLNet_UDP_Send(client->udpsock,-1,client->sendpack);
     }
 }
 
@@ -184,6 +179,27 @@ void recv_data(Player *man, Network *client,int *done,Bullet b[])
             man->enemies[enemyid].dstRect.y = enemyDY;
             man->enemies[enemyid].srcRect.x = enemySX;
         }
+        if(type == 7)
+        {
+            sscanf(client->rcvpack->data,"%d %d %d %d",&type,&enemyid,&hitid,&bulletid);
+            if(hitid == man->id)
+            {
+                man->alive = 0;
+                man->enemies[enemyid].bullet[bulletid].active = 0;
+            }
+            else if(enemyid == man->id)
+            {
+                man->enemies[hitid].exists = 0;
+                b[bulletid].active = 0;
+                man->enemies[hitid].texture = NULL;
+            }
+            else
+            {
+                man->enemies[hitid].exists = 0;
+                man->enemies[enemyid].bullet[bulletid].active = 0;
+                man->enemies[hitid].texture = NULL;
+            }
+        }
         if (type == 8)
         {
             sscanf(client->rcvpack->data,"%d %d %d %d %d %d %d",
@@ -225,26 +241,6 @@ void recv_data(Player *man, Network *client,int *done,Bullet b[])
             *done = 1;
             return;
         }
-        if(type == 7)
-        {
-            sscanf(tmp,"%d %d %d %d",&type,&enemyid,&hitid,&bulletid);
-            if(hitid == man->id)
-            {
-                man->alive = 0;
-                man->enemies[enemyid].bullet[bulletid].active = 0;
-            }
-            else if(enemyid == man->id)
-            {
-                man->enemies[hitid].exists = 0;
-                b[bulletid].active = 0;
-                man->enemies[hitid].texture = NULL;
-            }
-            else
-            {
-                man->enemies[hitid].exists = 0;
-                man->enemies[enemyid].bullet[bulletid].active = 0;
-                man->enemies[hitid].texture = NULL;
-            }
-        }
+
     }
 }

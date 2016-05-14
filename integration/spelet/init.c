@@ -7,7 +7,7 @@ void initPlayer(Player *player)
     SDL_Surface *image,*background,*scoreBg,*bullet;
 
     bullet = IMG_Load("kula.PNG");
-    background = IMG_Load("bakgrund5.PNG");
+    background = IMG_Load("grassBackground.PNG");
     if(!(scoreBg = IMG_Load("scoreBackground.PNG")))
     {
         printf("syntax error\n");
