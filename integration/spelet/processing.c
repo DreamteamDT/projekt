@@ -33,13 +33,12 @@ void updateEnemyBullet(Player *man)
         }
     }
 }
-
 int processEvents(Player *man,Bullet b[],int *moved,int *type,int *direct,Network *client)
 {
     unsigned int spellOne, spellOne_False=0;
     spellOne = SDL_GetTicks();
     SDL_Event event;
-    int done = 0;
+    int done = 0,shooting = 0;;
 
     man->thinkTime--;
     if(man->thinkTime<=0)
@@ -165,13 +164,13 @@ int processEvents(Player *man,Bullet b[],int *moved,int *type,int *direct,Networ
         if(man->y>566)
             man->y = 566;
     }
-    if(state[SDL_SCANCODE_SPACE] && man->alive)
+    if(state[SDL_SCANCODE_SPACE] && man->alive && !shooting)
     {
         int blinkX,blinkY,bulletNo;
         SDL_GetMouseState(&blinkX, &blinkY);
         if(global%6==0)
         {
-
+            shooting = 1;
             if(bulletNo = addBullet(man->x,man->y,5,b,blinkX,blinkY))
             {
                 man->blinkX = blinkX;
@@ -179,6 +178,7 @@ int processEvents(Player *man,Bullet b[],int *moved,int *type,int *direct,Networ
                 man->bulletNo = bulletNo;
                 sendBullet(*man,*client);
             }
+            shooting = 0;
 
         }
     }

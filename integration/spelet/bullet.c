@@ -1,5 +1,6 @@
 #include "bullet.h"
 extern void sendBullets(Player *man,Bullet b[],Network *client);
+extern void send_data(Player *man,Network *client,int type);
 
 SDL_Texture *getBulletSprite()
 {
@@ -88,7 +89,7 @@ void addEnemyBullet(int x,int y,int dx,Bullet b[],int b1,int b2,int i)
     b[i].active = 1;
 }
 
-int detectHit(Player *man,Bullet b[])
+int detectHit(Player *man,Bullet b[],Network *client)
 {
     int i,j,k;
     for(i=0; i<5; i++)
@@ -104,10 +105,9 @@ int detectHit(Player *man,Bullet b[])
                             && b[j].y >= (man->enemies[i].dstRect.y) && b[j].y <= (man->enemies[i].dstRect.y+64))
                     {
                         b[j].active = 0;
-                        man->recentHit = j;
+                        man->bulletid = j;
                         man->hitid = i;
-                        man->enemies[i].exists = 0;
-                        man->enemies[i].texture = NULL;
+                        send_data(&*man,&*client,7);
                         return 1;
                     }
 
@@ -117,9 +117,9 @@ int detectHit(Player *man,Bullet b[])
     return 0;
 }
 
-void bulletGone(Bullet b[],Player *man,Network *client,int con)
+void bulletGone(Bullet b[],Player *man,Network *client)
 {
-    int i, j;
+    int i, j,k;
     for(i=0; i<20; i++)
     {
         if(b[i].active)
@@ -127,31 +127,27 @@ void bulletGone(Bullet b[],Player *man,Network *client,int con)
             if(b[i].x < (0-8) || b[i].x > 1032 || b[i].y < (0-8) || b[i].y > 638)
             {
                 b[i].active = 0;
-
-                if(con)
-                {
-                    int type = 9;
-                    sprintf(client->sendpack->data,"%d %d %d %d %d",
-                            type,man->id,(int)b[i].x,(int)b[i].y,i);
-                    SDLNet_UDP_Send(client->udpsock,-1,client->sendpack);
-                }
-
-
             }
         }
     }
-
+    for(i=0; i<5; i++)
+    {
+        if(man->enemies[i].exists)
+        {
+            for(j=0; j<20; j++)
+            {
+                if(man->enemies[i].bullet[j].active)
+                {
+                    if(man->enemies[i].bullet[j].x < (0-8) || man->enemies[i].bullet[j].x > 1032
+                       || man->enemies[i].bullet[j].y < (0-8) || man->enemies[i].bullet[j].y > 638)
+                    {
+                        man->enemies[i].bullet[j].active = 0;
+                    }
+                }
+            }
+        }
+    }
 }
-
-void bulletClear(Bullet b[],Player *man, Network *client)
-{
-    int i = man->recentHit;
-    int type = 9;
-    sprintf(client->sendpack->data,"%d %d %d %d %d",
-            type,man->id,(int)b[i].x,(int)b[i].y,i);
-    SDLNet_UDP_Send(client->udpsock,-1,client->sendpack);
-}
-
 
 
 

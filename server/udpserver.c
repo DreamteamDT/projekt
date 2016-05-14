@@ -184,21 +184,17 @@ int main(int argc, char **argv)
                     }
                 }
             }
-            if(type == 8 || type == 9)
+            else if(type == 8)
             {
-                players[id].ip.port = rcvPack->address.port;
-                for(i=0; i<maxPlayers; i++)
+                for(k=0; k<maxPlayers; k++)
                 {
-                    if(players[i].exists)
-                    {
-                        if(i!=id)
+                    if(players[k].exists)
+                        if(k!=id)
                         {
-                            printf("kula skickat till klient %d\n",i);
-                            rcvPack->address = players[i].ip;
+                            printf("skickar bullet /server till klient %d\n", k);
+                            rcvPack->address = players[k].ip;
                             SDLNet_UDP_Send(rcvSock,-1,rcvPack);
                         }
-
-                    }
                 }
             }
 
@@ -263,14 +259,13 @@ int main(int argc, char **argv)
                             for(k=0; k<maxPlayers; k++)
                             {
                                 if(players[k].exists)
-                                    if(k!=i)
+                                {
+                                    if(!SDLNet_TCP_Send(players[k].tcpsock,tmp,strlen(tmp)+1))
                                     {
-                                        if(!SDLNet_TCP_Send(players[k].tcpsock,tmp,strlen(tmp)+1))
-                                        {
-                                            printf("SDLNet_TCP_Send: %s\n", SDLNet_GetError());
-                                            return 1;
-                                        }
+                                        printf("SDLNet_TCP_Send: %s\n", SDLNet_GetError());
+                                        return 1;
                                     }
+                                }
                             }
                         }
                     }

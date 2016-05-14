@@ -17,7 +17,7 @@ extern void updateLogic(Player *p, Bullet b[]);
 
 extern void send_data(Player *man,Network *client,int type);
 extern int networkInit(Network *client,Player *man,const char *ipaddress);
-extern void recv_data(Player *player,Network *client,int *done);
+extern void recv_data(Player *player,Network *client,int *done,Bullet b[]);
 
 extern void displayMenu(Menu menu);
 extern int handleMenu(int *exit);
@@ -25,8 +25,8 @@ extern void initMenu(Menu *menu);
 extern void initPick(Menu *pick);
 extern int handlePick(int *pickCharacter,Player *man);
 
-extern void bulletGone(Bullet b[],Player *man,Network *client,int con);
-extern int detectHit(Player *man,Bullet b[]);
+extern void bulletGone(Bullet b[],Player *man,Network *client);
+extern int detectHit(Player *man,Bullet b[],Network *client);
 extern void bulletClear(Bullet b[],Player *man, Network *client);
 extern void updateEnemyBullet(Player *man);
 
@@ -115,28 +115,23 @@ int main(int argc, char *argv[])
                 done = 0;
                 done = processEvents(&player,ammo,&moved,&type,&direct,&client);
                 updateEnemyBullet(&player);
+                updateLogic(&player,ammo);
                 collisionDetect(&player, &direct);
-                bulletGone(ammo,&player,&client,connected);
+                bulletGone(ammo,&player,&client);
+
                 if(moved && connected && player.alive)
                 {
                     send_data(&player,&client,type);
                     moved = 0;
                 }
+
                 if (connected && done != 1)
                 {
-                    recv_data(&player,&client,&done);
+                    recv_data(&player,&client,&done,ammo);
                 }
-                updateLogic(&player,ammo);
-                //for (i = 0; i < 3; i++)
 
                 doRender(&player,ammo); //,&enemies[i]
-               // if(connected && detectHit(&player,ammo))
-               // {
-                //    printf("enemy %d was hit\n",player.hitid);
-                //    type = 7;
-                //    send_data(&player,&client,type);
-                //    bulletClear(ammo,&player,&client);
-             //   }
+                detectHit(&player,ammo,&client);
 
                 //don't burn up the CPU
                 SDL_Delay(20);
