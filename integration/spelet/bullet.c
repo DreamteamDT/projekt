@@ -71,7 +71,6 @@ int addBullet(int x, int y,int dx, Bullet b[],int b1,int b2)
 
     b[i].vector_unitX = (b[i].directionX) / b[i].v_length;
     b[i].vector_unitY = (b[i].directionY) / b[i].v_length;
-
     return i;
 }
 

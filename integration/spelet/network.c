@@ -193,7 +193,6 @@ void recv_data(Player *man, Network *client,int *done,Bullet b[])
         }
         if (type == 8)
         {
-            printf("lagger till enemy bullet!\n");
             sscanf(client->rcvpack->data,"%d %d %d %d %d %d %d",
                    &type,&enemyid,&bulletX,&bulletY,&blinkX,&blinkY,&bulletid);
 
