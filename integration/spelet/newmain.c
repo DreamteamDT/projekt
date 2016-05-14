@@ -3,7 +3,7 @@
 extern void initPlayer(Player *player);
 extern void initLedges(Player *player);
 extern void doRender(Player *man,Bullet b[]); //, Enemy *enemies
-extern int processEvents(Player *man,Bullet b[],int *moved,int *type,int *direct);
+extern int processEvents(Player *man,Bullet b[],int *moved,int *type,int *direct,Network *client);
 extern void collisionDetect(Player *man, int *direct);
 
 extern void clearCartridge(Bullet ammo[]);
@@ -16,8 +16,8 @@ extern SDL_Texture *initBullet();
 extern void updateLogic(Player *p, Bullet b[]);
 
 extern void send_data(Player *man,Network *client,int type);
-extern int networkInit(Network *client,Player *man,const char *ipaddress);
-extern void recv_data(Player *player,Network *client,int *done);
+extern int networkInit(Network *client,Player *man,char *ipaddress);
+extern void recv_data(Player *player,Network *client,int *done,Bullet b[]);
 
 extern void displayMenu(Menu menu);
 extern int handleMenu(int *exit);
@@ -25,10 +25,10 @@ extern void initMenu(Menu *menu);
 extern void initPick(Menu *pick);
 extern int handlePick(int *pickCharacter,Player *man);
 
-extern void bulletGone(Bullet b[],Player *man,Network *client,int con);
-extern int detectHit(Player *man,Bullet b[]);
-extern void sendBullets(Player *man,Bullet b[],Network *client);
+extern void bulletGone(Bullet b[],Player *man,Network *client);
+extern int detectHit(Player *man,Bullet b[],Network *client);
 extern void bulletClear(Bullet b[],Player *man, Network *client);
+extern void updateEnemyBullet(Player *man);
 
 int global = 0;
 int main(int argc, char *argv[])
@@ -38,7 +38,7 @@ int main(int argc, char *argv[])
 
 //>>>>>>> 4f04477192c6dc006aca1aae1c51b75987a36da2
     int startMenu = 1,pickCharacter = 0,imageNo,exit = 0,ingame = 0;
-    const char *tmp = (const char*)malloc(100);
+    char *tmp = (char*)malloc(100);
     int q = 0;
     int done = 0,hitid;
     int connected, i;
@@ -67,9 +67,14 @@ int main(int argc, char *argv[])
         printf("Ange IP du vill connecta till: ");
         fgets(tmp,100,stdin);
         connected = 1;
+        player.connected = 1;
     }
     else
+    {
         connected = 0;
+        player.connected = 0;
+    }
+
 
     //link(ammo);
     //Event loop
@@ -81,12 +86,12 @@ int main(int argc, char *argv[])
     int testss = 0;
 
 
-    while(!exit) //HUVUDMENYN
+    while(!exit) ///**** MAIN MENU ****/
     {
         displayMenu(menu);
         pickCharacter = handleMenu(&exit);
 
-        while(pickCharacter) //PICK CHARACTER-MENYN
+        while(pickCharacter) /**** PICK CHARACTER ****/
         {
             displayMenu(pick);
             ingame = handlePick(&pickCharacter,&player);
@@ -103,48 +108,34 @@ int main(int argc, char *argv[])
                 }
                 if(connected && exit!=1)
                 {
-                    printf("innan send data\n");
                     send_data(&player,&client,2);
-                    printf("efter send data\n");
                 }
 
             }
-            while(ingame) //INGAME
+            while(ingame) /**** INGAME ****/
             {
                 direct = 0;
                 done = 0;
-                done = processEvents(&player,ammo,&moved,&type,&direct);
-
-                //for (i = 0; i < 3; i++)
+                done = processEvents(&player,ammo,&moved,&type,&direct,&client);
+                updateEnemyBullet(&player);
+                updateLogic(&player,ammo);
                 collisionDetect(&player, &direct);
-                bulletGone(ammo,&player,&client,connected);
+                bulletGone(ammo,&player,&client);
+
                 if(moved && connected && player.alive)
                 {
                     send_data(&player,&client,type);
                     moved = 0;
                 }
-                if (connected && done != 1)
-                {
-                    recv_data(&player,&client,&done);
-                }
-                updateLogic(&player,ammo);
-                //for (i = 0; i < 3; i++)
 
-                if(connected)
-                {
-                    sendBullets(&player,ammo,&client);
-                }
+                if (connected && done != 1)
+                    recv_data(&player,&client,&done,ammo);
+
                 doRender(&player,ammo); //,&enemies[i]
-                if(connected && detectHit(&player,ammo))
-                {
-                    printf("enemy %d was hit\n",player.hitid);
-                    type = 7;
-                    send_data(&player,&client,type);
-                    bulletClear(ammo,&player,&client);
-                }
+                detectHit(&player,ammo,&client);
 
                 //don't burn up the CPU
-                SDL_Delay(40);
+                SDL_Delay(20);
                 if(done)
                 {
                     if(connected)

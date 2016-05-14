@@ -1,6 +1,7 @@
 #include "processing.h"
 
-extern void addBullet(int,int,int,Bullet b[],int b1,int b2);
+extern int addBullet(int,int,int,Bullet b[],int b1,int b2);
+extern void sendBullet(Player man,Network client);
 
 void updateLogic(Player *p,Bullet b[])
 {
@@ -17,12 +18,27 @@ void updateLogic(Player *p,Bullet b[])
     global++;
 }
 
-int processEvents(Player *man,Bullet b[],int *moved,int *type,int *direct)
+void updateEnemyBullet(Player *man)
+{
+    int i,j;
+    for(i=0;i<5;i++)
+    {
+        for(j=0;j<20;j++)
+        {
+            if(man->enemies[i].bullet[j].active == 1)
+            {
+                man->enemies[i].bullet[j].x += man->enemies[i].bullet[j].vector_unitX*6;
+                man->enemies[i].bullet[j].y += man->enemies[i].bullet[j].vector_unitY*6;
+            }
+        }
+    }
+}
+int processEvents(Player *man,Bullet b[],int *moved,int *type,int *direct,Network *client)
 {
     unsigned int spellOne, spellOne_False=0;
     spellOne = SDL_GetTicks();
     SDL_Event event;
-    int done = 0;
+    int done = 0,shooting = 0;;
 
     man->thinkTime--;
     if(man->thinkTime<=0)
@@ -148,18 +164,23 @@ int processEvents(Player *man,Bullet b[],int *moved,int *type,int *direct)
         if(man->y>566)
             man->y = 566;
     }
-    if(state[SDL_SCANCODE_SPACE] && man->alive)
+    if(state[SDL_SCANCODE_SPACE] && man->alive && !shooting)
     {
-        int blinkX,blinkY;
+        int blinkX,blinkY,bulletNo;
         SDL_GetMouseState(&blinkX, &blinkY);
-        man->shot = 1;
         if(global%6==0)
         {
-            float dirX,dirY;
-            dirX = blinkX - man->x;
-            dirY = blinkY - man->y;
+            shooting = 1;
+            if(((bulletNo = addBullet(man->x,man->y,5,b,blinkX,blinkY))>=0))
+            {
+                man->blinkX = blinkX;
+                man->blinkY = blinkY;
+                man->bulletNo = bulletNo;
+                if(man->connected)
+                    sendBullet(*man,*client);
+            }
+            shooting = 0;
 
-            addBullet(man->x,man->y,5,b,blinkX,blinkY);
         }
     }
     if(state[SDL_SCANCODE_1] && man->alive)
@@ -359,7 +380,7 @@ void doRender(Player *man,Bullet b[]) //, Enemy *enemies
         {
 
             SDL_Rect faggot = {b[i].x , b[i].y,8,8};
-            SDL_RenderCopy(program.renderer,bullet.texture,NULL,&faggot);
+            SDL_RenderCopy(program.renderer,man->bullet,NULL,&faggot);
 
            // SDL_Rect faggot = {b[i].x , b[i].y,8,8 };
           //  printf("faggot x: %d faggot y: %d\n",faggot.x,faggot.y);
@@ -375,7 +396,7 @@ void doRender(Player *man,Bullet b[]) //, Enemy *enemies
             {
                 SDL_Rect enemybullet = {man->enemies[i].bullet[j].x,
                                         man->enemies[i].bullet[j].y,8,8};
-                printf("enemybullet x: %d, enemybullet y: %d\n",man->enemies[i].bullet[j].x,man->enemies[i].bullet[j].y);
+               // printf("enemybullet x: %d, enemybullet y: %d\n",man->enemies[i].bullet[j].x,man->enemies[i].bullet[j].y);
                 SDL_RenderCopy(program.renderer,man->bullet,NULL,&enemybullet);
             }
         }

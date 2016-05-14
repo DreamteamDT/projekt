@@ -1,5 +1,5 @@
 #include "definition.h"
-
+extern void addEnemyBullet(int x,int y,int dx,Bullet b[],int b1,int b2,int i);
 
 int uncomplete_string(char tmp[])
 {
@@ -13,7 +13,7 @@ int uncomplete_string(char tmp[])
     return 1;
 }
 
-int networkInit(Network *client,Player *man,const char *ipaddress)
+int networkInit(Network *client,Player *man,char *ipaddress)
 {
     int i,type;
     client->tcpset=SDLNet_AllocSocketSet(10);
@@ -72,13 +72,6 @@ int networkInit(Network *client,Player *man,const char *ipaddress)
 
     SDLNet_TCP_AddSocket(client->tcpset,client->tcpsock);
     SDLNet_UDP_AddSocket(client->udpset,client->udpsock);
-    printf("efter addsocket\n");
-
-  //  for(i=0; i<10; i++)
-   // {
-     //   man->enemies[i] = ;
-   // }
-    printf("efter enemies exists loop\n");
 
 
     return 1;
@@ -107,7 +100,7 @@ void send_data(Player *man,Network *client,int type)
     }
     if(type == 7)
     {
-        sprintf(tmp,"%d %d %d \n",type,man->id,man->hitid);
+        sprintf(tmp,"%d %d %d %d\n",type,man->id,man->hitid,man->bulletid);
         size=0;
         len=strlen(tmp)+1;
         while(size<len)
@@ -117,27 +110,21 @@ void send_data(Player *man,Network *client,int type)
     }
 }
 
-void sendBullets(Player *man,Bullet b[],Network *client)
+void sendBullet(Player man,Network client)
 {
-    int i,j,k;
+    printf("skickar bullet!\n");
+    int i,j,k,size,len;
     int type = 8;
-    for(i=0;i<20;i++)
-    {
-        if(b[i].active)
-        {
-            sprintf(client->sendpack->data,"%d %d %d %d %d",
-                                            type,man->id,(int)b[i].x,(int)b[i].y,i);
-            SDLNet_UDP_Send(client->udpsock,-1,client->sendpack);
-        }
-    }
-
+    sprintf(client.sendpack->data,"%d %d %d %d %d %d %d",
+            type,man.id,man.x,man.y, man.blinkX,man.blinkY,man.bulletNo);
+    SDLNet_UDP_Send(client.udpsock,-1,client.sendpack);
 }
 
-void recv_data(Player *man, Network *client,int *done)
+void recv_data(Player *man, Network *client,int *done,Bullet b[])
 {
 
     int type, enemyid, enemyDX, enemyDY, enemySX,spritePick,hitid;
-    int bulletX,bulletY,bulletid;
+    int bulletX,bulletY,blinkX,blinkY,bulletid;
     while(SDLNet_CheckSockets(client->udpset,0)>0)
     {
         SDLNet_UDP_Recv(client->udpsock,client->rcvpack);
@@ -151,7 +138,7 @@ void recv_data(Player *man, Network *client,int *done)
         if (!man->enemies[enemyid].exists)
         {
             sscanf(client->rcvpack->data,"%d %d %d %d %d %d",
-               &type,&enemyid,&enemyDX,&enemyDY,&enemySX,&spritePick);
+                   &type,&enemyid,&enemyDX,&enemyDY,&enemySX,&spritePick);
 
             SDL_Surface *image;
             if(spritePick==1)
@@ -192,25 +179,18 @@ void recv_data(Player *man, Network *client,int *done)
         if (type == 2)
         {
             sscanf(client->rcvpack->data,"%d %d %d %d %d %d",
-               &type,&enemyid,&enemyDX,&enemyDY,&enemySX,&spritePick);
+                   &type,&enemyid,&enemyDX,&enemyDY,&enemySX,&spritePick);
             man->enemies[enemyid].dstRect.x = enemyDX;
             man->enemies[enemyid].dstRect.y = enemyDY;
             man->enemies[enemyid].srcRect.x = enemySX;
         }
         if (type == 8)
         {
-            sscanf(client->rcvpack->data,"%d %d %d %d %d %d",
-               &type,&enemyid,&bulletX,&bulletY,&bulletid);
-            man->enemies[enemyid].bullet[bulletid].x = bulletX;
-            printf("bullet x: %d\n",man->enemies[enemyid].bullet[bulletid].x);
-            man->enemies[enemyid].bullet[bulletid].y = bulletY;
-            man->enemies[enemyid].bullet[bulletid].active = 1;
-        }
-        if(type == 9)
-        {
-            sscanf(client->rcvpack->data,"%d %d %d %d %d",
-               &type,&enemyid,&bulletX,&bulletY,&bulletid);
-            man->enemies[enemyid].bullet[bulletid].active = 0;
+            sscanf(client->rcvpack->data,"%d %d %d %d %d %d %d",
+                   &type,&enemyid,&bulletX,&bulletY,&blinkX,&blinkY,&bulletid);
+
+            addEnemyBullet(bulletX,bulletY,5,man->enemies[enemyid].bullet,blinkX,blinkY,bulletid);
+
         }
 
     }
@@ -219,14 +199,19 @@ void recv_data(Player *man, Network *client,int *done)
     {
         printf("incoming data on tcp socket\n");
         int offset = 0;
+        int max = 0;
         char tmp[1024];
         do
         {
             offset+=SDLNet_TCP_Recv(client->tcpsock,tmp+offset,1024);
+            max++;
         }
-        while(uncomplete_string(tmp));
-
-        sscanf(tmp,"%d %d %d",&type,&enemyid,&hitid);
+        while(uncomplete_string(tmp) && max<20);
+        sscanf(tmp,"%d %d",&type,&enemyid);
+        if(max>=20)
+        {
+            type = 6;
+        }
 
         if(type == 3)
         {
@@ -238,16 +223,27 @@ void recv_data(Player *man, Network *client,int *done)
         {
             printf("Server shut down!\n");
             *done = 1;
+            return;
         }
         if(type == 7)
         {
+            sscanf(tmp,"%d %d %d %d",&type,&enemyid,&hitid,&bulletid);
             if(hitid == man->id)
             {
                 man->alive = 0;
+                man->enemies[enemyid].bullet[bulletid].active = 0;
+            }
+            else if(enemyid == man->id)
+            {
+                man->enemies[hitid].exists = 0;
+                b[bulletid].active = 0;
+                man->enemies[hitid].texture = NULL;
             }
             else
             {
                 man->enemies[hitid].exists = 0;
+                man->enemies[enemyid].bullet[bulletid].active = 0;
+                man->enemies[hitid].texture = NULL;
             }
         }
     }
