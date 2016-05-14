@@ -176,7 +176,8 @@ int processEvents(Player *man,Bullet b[],int *moved,int *type,int *direct,Networ
                 man->blinkX = blinkX;
                 man->blinkY = blinkY;
                 man->bulletNo = bulletNo;
-                sendBullet(*man,*client);
+                if(man->connected)
+                    sendBullet(*man,*client);
             }
             shooting = 0;
 

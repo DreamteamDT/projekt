@@ -73,7 +73,7 @@ typedef struct
     int hitid,alive;
     SDL_Texture *texture,*background,*scoreBackground,*bullet;
     int thinkTime;
-    int shot,bulletid,blinkX,blinkY,bulletNo;
+    int shot,bulletid,blinkX,blinkY,bulletNo,connected;
     int id;
     int spritePick;
 } Player;

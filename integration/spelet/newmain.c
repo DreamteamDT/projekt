@@ -67,9 +67,14 @@ int main(int argc, char *argv[])
         printf("Ange IP du vill connecta till: ");
         fgets(tmp,100,stdin);
         connected = 1;
+        player.connected = 1;
     }
     else
+    {
         connected = 0;
+        player.connected = 0;
+    }
+
 
     //link(ammo);
     //Event loop
@@ -103,9 +108,7 @@ int main(int argc, char *argv[])
                 }
                 if(connected && exit!=1)
                 {
-                    printf("innan send data\n");
                     send_data(&player,&client,2);
-                    printf("efter send data\n");
                 }
 
             }
@@ -126,9 +129,7 @@ int main(int argc, char *argv[])
                 }
 
                 if (connected && done != 1)
-                {
                     recv_data(&player,&client,&done,ammo);
-                }
 
                 doRender(&player,ammo); //,&enemies[i]
                 detectHit(&player,ammo,&client);

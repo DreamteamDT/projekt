@@ -72,13 +72,6 @@ int networkInit(Network *client,Player *man,char *ipaddress)
 
     SDLNet_TCP_AddSocket(client->tcpset,client->tcpsock);
     SDLNet_UDP_AddSocket(client->udpset,client->udpsock);
-    printf("efter addsocket\n");
-
-    //  for(i=0; i<10; i++)
-    // {
-    //   man->enemies[i] = ;
-    // }
-    printf("efter enemies exists loop\n");
 
 
     return 1;
@@ -206,14 +199,19 @@ void recv_data(Player *man, Network *client,int *done,Bullet b[])
     {
         printf("incoming data on tcp socket\n");
         int offset = 0;
+        int max = 0;
         char tmp[1024];
         do
         {
             offset+=SDLNet_TCP_Recv(client->tcpsock,tmp+offset,1024);
+            max++;
         }
-        while(uncomplete_string(tmp));
-
+        while(uncomplete_string(tmp) && max<20);
         sscanf(tmp,"%d %d",&type,&enemyid);
+        if(max>=20)
+        {
+            type = 6;
+        }
 
         if(type == 3)
         {
@@ -225,6 +223,7 @@ void recv_data(Player *man, Network *client,int *done,Bullet b[])
         {
             printf("Server shut down!\n");
             *done = 1;
+            return;
         }
         if(type == 7)
         {
