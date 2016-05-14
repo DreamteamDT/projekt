@@ -270,7 +270,7 @@ void collisionDetect(Player *man, int *direct)
                         man->y -= 5;
                 }
                 // ladda enemies istället för ledges
-                bx = man->enemies[i].dstRect.x, by = man->enemies[i].dstRect.y, bw = man->enemies[i].dstRect.w, bh = man->enemies[i].dstRect.h;
+                //bx = man->enemies[i].dstRect.x, by = man->enemies[i].dstRect.y, bw = man->enemies[i].dstRect.w, bh = man->enemies[i].dstRect.h;
                 bpe++;
             }
             bpe = 0;
@@ -341,8 +341,12 @@ void collisionDetect(Player *man, int *direct)
 
                 }
                 // ladda enemies istället för ledges
-                bw = man->enemies[i].dstRect.w, bh = man->enemies[i].dstRect.h;
-                bx = man->enemies[i].dstRect.x+bw/2, by = man->enemies[i].dstRect.y+bh/2;
+               // if(man->enemies[i].alive)
+               // {
+                //    bw = man->enemies[i].dstRect.w, bh = man->enemies[i].dstRect.h;
+               //     bx = man->enemies[i].dstRect.x+bw/2, by = man->enemies[i].dstRect.y+bh/2;
+              //  }
+
                 bpe++;
             }
             bpe = 0;
@@ -415,7 +419,7 @@ void doRender(Player *man,Bullet b[]) //, Enemy *enemies
 
     for(i=0; i<10; i++)
     {
-        if (man->enemies[i].exists)
+        if (man->enemies[i].exists && man->enemies[i].alive)
         {
             SDL_RenderCopyEx(program.renderer,man->enemies[i].texture, &man->enemies[i].srcRect, &man->enemies[i].dstRect, 0, NULL, 0);
         }

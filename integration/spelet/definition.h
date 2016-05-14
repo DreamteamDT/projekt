@@ -61,6 +61,7 @@ typedef struct
     int exists;
     SDL_Rect srcRect,dstRect;
     Bullet bullet[20];
+    int alive;
 } Enemy;
 
 typedef struct
