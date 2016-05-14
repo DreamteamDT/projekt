@@ -76,6 +76,8 @@ int main(int argc, char *argv[])
         player.connected = 0;
     }
 
+    Mix_OpenAudio(44100,MIX_DEFAULT_FORMAT,2,2048);
+    Mix_Music *backgroundSound = Mix_LoadMUS("testmusic.MP3")
 
     //link(ammo);
     //Event loop
@@ -86,7 +88,7 @@ int main(int argc, char *argv[])
     SDLNet_Init();
     int testss = 0;
 
-
+    Mix_PlayMusic(backgroundSound,-1);
     while(!exit) ///**** MAIN MENU ****/
     {
         displayMenu(menu);
@@ -160,6 +162,8 @@ int main(int argc, char *argv[])
             exit = 0;
         }
     }
+    Mix_FreeMusic(backgroundSound);
+    Mix_CloseAudio();
     free(tmp);
     SDLNet_Quit();
     Quit();

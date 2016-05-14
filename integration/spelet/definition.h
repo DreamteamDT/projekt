@@ -11,6 +11,7 @@
 #include <SDL.h>
 #include <SDL_image.h>
 #include <SDL_net.h>
+#include <SDL_mixer.h>
 #define LINUX 0
 #endif // _WIN32
 
