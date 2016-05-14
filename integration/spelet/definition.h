@@ -13,6 +13,7 @@
 #include <SDL_net.h>
 #define LINUX 0
 #endif // _WIN32
+#include <SDL2_mixer.h>
 
 
 typedef struct
