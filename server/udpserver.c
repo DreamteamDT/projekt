@@ -48,7 +48,7 @@ struct Program
 
 int main(int argc, char **argv)
 {
-    int maxPlayers = 4;
+    int maxPlayers = 5;
     int x,y,type,id,next=0,offset,max,hitid;
     IPaddress ip;
     char tmp[1024];
@@ -182,6 +182,7 @@ int main(int argc, char **argv)
             }
             else if(type == 7)
             {
+                printf("mottagit hit\n");
                 for(k=0; k<maxPlayers; k++)
                 {
                     if(players[k].exists)
@@ -193,6 +194,7 @@ int main(int argc, char **argv)
             }
             else if(type == 8)
             {
+                printf("mottagit kula\n");
                 for(k=0; k<maxPlayers; k++)
                 {
                     if(players[k].exists)
