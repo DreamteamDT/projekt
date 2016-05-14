@@ -179,23 +179,23 @@ void bulletGone(Bullet b[],Player *man,Network *client)
             {
                 if(man->enemies[i].bullet[j].active)
                 {
-                    if(man->enemies[i].bullet[j].x < 220 && man->enemies[i].bullet[j].x > 346
-                       && man->enemies[i].bullet[j].y < 118 && man->enemies[i].bullet[j].y > 226)
+                    if(man->enemies[i].bullet[j].x > 220 && man->enemies[i].bullet[j].x < 346
+                       && man->enemies[i].bullet[j].y > 118 && man->enemies[i].bullet[j].y < 226)
                     {
                         man->enemies[i].bullet[j].active = 0;
                     }
-                    if(man->enemies[i].bullet[j].x < 672 && man->enemies[i].bullet[j].x > 801
-                       && man->enemies[i].bullet[j].y < 118 && man->enemies[i].bullet[j].y > 226)
+                    if(man->enemies[i].bullet[j].x > 672 && man->enemies[i].bullet[j].x < 801
+                       && man->enemies[i].bullet[j].y > 118 && man->enemies[i].bullet[j].y < 226)
                     {
                         man->enemies[i].bullet[j].active = 0;
                     }
-                    if(man->enemies[i].bullet[j].x < 220 && man->enemies[i].bullet[j].x > 346
-                       && man->enemies[i].bullet[j].y < 358 && man->enemies[i].bullet[j].y > 462)
+                    if(man->enemies[i].bullet[j].x > 220 && man->enemies[i].bullet[j].x < 346
+                       && man->enemies[i].bullet[j].y > 358 && man->enemies[i].bullet[j].y < 462)
                     {
                         man->enemies[i].bullet[j].active = 0;
                     }
-                    if(man->enemies[i].bullet[j].x < 672 && man->enemies[i].bullet[j].x > 801
-                       && man->enemies[i].bullet[j].y < 358 && man->enemies[i].bullet[j].y > 462)
+                    if(man->enemies[i].bullet[j].x > 672 && man->enemies[i].bullet[j].x < 801
+                       && man->enemies[i].bullet[j].y > 358 && man->enemies[i].bullet[j].y < 462)
                     {
                         man->enemies[i].bullet[j].active = 0;
                     }
