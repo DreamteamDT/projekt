@@ -141,7 +141,30 @@ void recv_data(Player *man, Network *client,int *done,Bullet b[])
                    &type,&enemyid,&enemyDX,&enemyDY,&enemySX,&spritePick);
 
             SDL_Surface *image;
-            if(spritePick==1)
+           if(LINUX)
+           {
+
+             if(spritePick==1)
+            {
+                image = IMG_Load("USA.png");
+            }
+            else if(spritePick==2)
+            {
+                image = IMG_Load("spriteRussia.png");
+            }
+            else if(spritePick==3)
+            {
+                image = IMG_Load("spriteMurica.png");
+            }
+            else
+            {
+                image = IMG_Load("spriteChina.png");
+            }
+
+           }
+           else
+           {
+             if(spritePick==1)
             {
                 image = IMG_Load("USA.PNG");
             }
@@ -157,6 +180,8 @@ void recv_data(Player *man, Network *client,int *done,Bullet b[])
             {
                 image = IMG_Load("spriteChina.PNG");
             }
+           }
+
             SDL_Texture *texture;
             texture = SDL_CreateTextureFromSurface(program.renderer,image);
             SDL_FreeSurface(image);
