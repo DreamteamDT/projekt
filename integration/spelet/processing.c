@@ -171,7 +171,7 @@ int processEvents(Player *man,Bullet b[],int *moved,int *type,int *direct,Networ
         if(global%6==0)
         {
             shooting = 1;
-            if(bulletNo = addBullet(man->x,man->y,5,b,blinkX,blinkY))
+            if((bulletNo = addBullet(man->x,man->y,5,b,blinkX,blinkY)>=0))
             {
                 man->blinkX = blinkX;
                 man->blinkY = blinkY;

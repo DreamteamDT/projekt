@@ -16,7 +16,7 @@ extern SDL_Texture *initBullet();
 extern void updateLogic(Player *p, Bullet b[]);
 
 extern void send_data(Player *man,Network *client,int type);
-extern int networkInit(Network *client,Player *man,const char *ipaddress);
+extern int networkInit(Network *client,Player *man,char *ipaddress);
 extern void recv_data(Player *player,Network *client,int *done,Bullet b[]);
 
 extern void displayMenu(Menu menu);
@@ -38,7 +38,7 @@ int main(int argc, char *argv[])
 
 //>>>>>>> 4f04477192c6dc006aca1aae1c51b75987a36da2
     int startMenu = 1,pickCharacter = 0,imageNo,exit = 0,ingame = 0;
-    const char *tmp = (const char*)malloc(100);
+    char *tmp = (char*)malloc(100);
     int q = 0;
     int done = 0,hitid;
     int connected, i;
@@ -81,12 +81,12 @@ int main(int argc, char *argv[])
     int testss = 0;
 
 
-    while(!exit) //HUVUDMENYN
+    while(!exit) ///**** MAIN MENU ****/
     {
         displayMenu(menu);
         pickCharacter = handleMenu(&exit);
 
-        while(pickCharacter) //PICK CHARACTER-MENYN
+        while(pickCharacter) /**** PICK CHARACTER ****/
         {
             displayMenu(pick);
             ingame = handlePick(&pickCharacter,&player);
@@ -109,7 +109,7 @@ int main(int argc, char *argv[])
                 }
 
             }
-            while(ingame) //INGAME
+            while(ingame) /**** INGAME ****/
             {
                 direct = 0;
                 done = 0;

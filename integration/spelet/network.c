@@ -13,7 +13,7 @@ int uncomplete_string(char tmp[])
     return 1;
 }
 
-int networkInit(Network *client,Player *man,const char *ipaddress)
+int networkInit(Network *client,Player *man,char *ipaddress)
 {
     int i,type;
     client->tcpset=SDLNet_AllocSocketSet(10);
@@ -229,7 +229,7 @@ void recv_data(Player *man, Network *client,int *done,Bullet b[])
         }
         if(type == 7)
         {
-            sscanf(tmp,"%d %d %d",&type,&enemyid,&hitid,&bulletid);
+            sscanf(tmp,"%d %d %d %d",&type,&enemyid,&hitid,&bulletid);
             if(hitid == man->id)
             {
                 man->alive = 0;
