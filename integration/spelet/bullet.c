@@ -88,7 +88,7 @@ void addEnemyBullet(int x,int y,int dx,Bullet b[],int b1,int b2,int i)
     b[i].active = 1;
 }
 
-int detectHit(Player *man,Bullet b[],Network *client)
+void detectHit(Player *man,Bullet b[],Network *client)
 {
     int i,j,k;
     for(i=0; i<5; i++)
@@ -107,12 +107,10 @@ int detectHit(Player *man,Bullet b[],Network *client)
                         man->hitid = i;
                         man->enemies[i].alive = 0;
                         send_data(&*man,&*client,7);
-                        return 1;
                     }
                 }
             }
     }
-    return 0;
 }
 
 void bulletGone(Bullet b[],Player *man,Network *client)

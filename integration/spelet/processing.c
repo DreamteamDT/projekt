@@ -620,7 +620,7 @@ void doRender(Player *man,Bullet b[]) //, Enemy *enemies
 
         }
     }
-    for(i=0; i<5; i++)
+    for(i=0; i<4; i++)
     {
         for(j=0; j<20; j++)
         {
@@ -643,7 +643,7 @@ void doRender(Player *man,Bullet b[]) //, Enemy *enemies
         SDL_RenderCopy(program.renderer,man->texture,&src,&rect);
     }
 
-    for(i=0; i<10; i++)
+    for(i=0; i<4; i++)
     {
         if (man->enemies[i].exists && man->enemies[i].alive)
         {

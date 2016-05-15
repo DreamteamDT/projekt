@@ -27,7 +27,7 @@ extern void initCd(Player *player);
 extern int handlePick(int *pickCharacter,Player *man);
 
 extern void bulletGone(Bullet b[],Player *man,Network *client);
-extern int detectHit(Player *man,Bullet b[],Network *client);
+extern void detectHit(Player *man,Bullet b[],Network *client);
 extern void bulletClear(Bullet b[],Player *man, Network *client);
 extern void updateEnemyBullet(Player *man);
 
@@ -56,6 +56,9 @@ int main(int argc, char *argv[])
     bullet.texture=initBullet();
     Bullet ammo[20];
     unsigned int lastTime,currentTime;
+    int frameRate = 30,startMs,endMs,delayMs;
+    int frameMs = 1000 / frameRate;
+
     int sekund,spawnTimer=4;
     srand(time(NULL));
 
@@ -130,6 +133,7 @@ int main(int argc, char *argv[])
 
             while(ingame) /**** INGAME ****/
             {
+                startMs = SDL_GetTicks();
                 direct = 0;
                 done = 0;
                 done = processEvents(&player,ammo,&moved,&type,&direct,&client);
@@ -169,8 +173,11 @@ int main(int argc, char *argv[])
                     }
                 }
 
-                //don't burn up the CPU
-                SDL_Delay(20);
+                //fixed 30 frames per second
+                endMs = SDL_GetTicks();
+                delayMs = frameMs -(endMs -startMs);
+                SDL_Delay(delayMs);
+
                 if(done)
                 {
                     if(connected)
