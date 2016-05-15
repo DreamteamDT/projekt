@@ -126,8 +126,8 @@ int main(int argc, char *argv[])
                 {
                     send_data(&player,&client,2);
                 }
-                lastTime = SDL_GetTicks();
-                lastTime = lastTime/1000;
+               // lastTime = SDL_GetTicks();
+               // lastTime = lastTime/1000;
 
             }
 
@@ -174,10 +174,10 @@ int main(int argc, char *argv[])
                 }
 
                 //fixed 30 frames per second
-                endMs = SDL_GetTicks();
-                delayMs = frameMs -(endMs -startMs);
-                SDL_Delay(delayMs);
-
+              //  endMs = SDL_GetTicks();
+                //delayMs = frameMs -(endMs -startMs);
+              //  SDL_Delay(delayMs);
+            SDL_Delay(20);
                 if(done)
                 {
                     if(connected)

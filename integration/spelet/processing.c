@@ -11,8 +11,8 @@ void updateLogic(Player *p,Bullet b[])
     {
         if(b[i].active == 1)
         {
-            b[i].x +=b[i].vector_unitX*12;
-            b[i].y +=b[i].vector_unitY*12;
+            b[i].x +=b[i].vector_unitX*6;
+            b[i].y +=b[i].vector_unitY*6;
         }
     }
     global++;
@@ -27,8 +27,8 @@ void updateEnemyBullet(Player *man)
         {
             if(man->enemies[i].bullet[j].active == 1)
             {
-                man->enemies[i].bullet[j].x += man->enemies[i].bullet[j].vector_unitX*12;
-                man->enemies[i].bullet[j].y += man->enemies[i].bullet[j].vector_unitY*12;
+                man->enemies[i].bullet[j].x += man->enemies[i].bullet[j].vector_unitX*6;
+                man->enemies[i].bullet[j].y += man->enemies[i].bullet[j].vector_unitY*6;
             }
         }
     }
@@ -97,7 +97,7 @@ int processEvents(Player *man,Bullet b[],int *moved,int *type,int *direct,Networ
     const Uint8 *state = SDL_GetKeyboardState(NULL);
     if(state[SDL_SCANCODE_LEFT] || state[SDL_SCANCODE_A] && man->alive)
     {
-        man->x -= 7;
+        man->x -= 5;
         *moved = 1;
         *type = 2;
         *direct += 1;
@@ -114,7 +114,7 @@ int processEvents(Player *man,Bullet b[],int *moved,int *type,int *direct,Networ
     }
     if(state[SDL_SCANCODE_RIGHT] || state[SDL_SCANCODE_D] && man->alive)
     {
-        man->x += 7;
+        man->x += 5;
         *moved = 1;
         *type = 2;
         *direct += 2;
@@ -132,7 +132,7 @@ int processEvents(Player *man,Bullet b[],int *moved,int *type,int *direct,Networ
     }
     if(state[SDL_SCANCODE_UP] || state[SDL_SCANCODE_W] && man->alive)
     {
-        man->y -= 7;
+        man->y -= 5;
         *moved = 1;
         *type = 2;
         *direct += 4;
@@ -149,7 +149,7 @@ int processEvents(Player *man,Bullet b[],int *moved,int *type,int *direct,Networ
     }
     if(state[SDL_SCANCODE_DOWN] || state[SDL_SCANCODE_S] && man->alive)
     {
-        man->y += 7;
+        man->y += 5;
         *moved = 1;
         *type = 2;
         *direct += 8;
