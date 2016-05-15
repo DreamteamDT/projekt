@@ -86,9 +86,10 @@ int main(int argc, char *argv[])
     initPick(&pick);
     SDLNet_Init();
     int testss = 0;
-    Mix_PlayMusic(backgroundSound,-1);
+
     while(!exit) ///**** MAIN MENU ****/
     {
+       // Mix_PlayMusic(backgroundSound,-1);
         displayMenu(menu);
         pickCharacter = handleMenu(&exit);
 
