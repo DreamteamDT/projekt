@@ -36,6 +36,7 @@ void initPlayer(Player *player)
       if(player->spritePick==1)
     {
         image = IMG_Load("USA.png");
+        Mix_Music *soundtrack1 = Mix_LoadMUS("America.mp3");
     }
 
     else if(player->spritePick == 2)
