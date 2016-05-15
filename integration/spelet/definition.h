@@ -23,6 +23,12 @@ typedef struct
 
 typedef struct
 {
+    SDL_Texture *cdTimer;
+    int x, y, w, h;
+} Timer;
+
+typedef struct
+{
     SDL_Window *window;
     SDL_Renderer *renderer;
 } Program;
@@ -71,12 +77,13 @@ typedef struct
     int frameX,frameY;
     int x1, y1;
     int hitid,alive;
-    int currentTime, lastTime;
-    SDL_Texture *texture,*background,*scoreBackground,*bullet;
+    int currentTime, cdTime, spellReady;
+    SDL_Texture *texture,*background,*scoreBackground,*bullet,*cdTimer;
     int thinkTime;
     int shot,bulletid,blinkX,blinkY,bulletNo,connected;
     int id;
     int spritePick;
+    SDL_Rect blinkRect;
 } Player;
 
 typedef struct

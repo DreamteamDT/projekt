@@ -24,6 +24,7 @@ extern int handleMenu(int *exit);
 extern void initMenu(Menu *menu);
 extern void initPick(Menu *pick);
 extern int handlePick(int *pickCharacter,Player *man);
+extern void initCd(Player *player);
 
 extern void bulletGone(Bullet b[],Player *man,Network *client);
 extern int detectHit(Player *man,Bullet b[],Network *client);
@@ -49,7 +50,7 @@ int main(int argc, char *argv[])
     int moved = 0;
     int type;
     int direct = 0;
-    player.lastTime = -5000;
+    player.spellReady = 1;
     bullet.texture=initBullet();
     Bullet ammo[20];
 
@@ -101,6 +102,7 @@ int main(int argc, char *argv[])
                 clearCartridge(ammo);
                 initPlayer(&player);
                 initLedges(&player);
+                initCd(&player);
                 if(connected && !(networkInit(&client,&player,tmp)))
                 {
                     exit = 1;
