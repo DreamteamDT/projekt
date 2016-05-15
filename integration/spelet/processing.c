@@ -40,6 +40,7 @@ int processEvents(Player *man,Bullet b[],int *moved,int *type,int *direct,Networ
     spellOne = SDL_GetTicks();
     SDL_Event event;
     int done = 0,shooting = 0;;
+    int mouse1 = 0;
 
     man->thinkTime--;
     if(man->thinkTime<=0)
@@ -88,10 +89,10 @@ int processEvents(Player *man,Bullet b[],int *moved,int *type,int *direct,Networ
             break;
         case SDL_MOUSEBUTTONDOWN :
             printf("clicked on mouse");
+            mouse1 = 1;
             int blinkX,blinkY;
             SDL_GetMouseState(&blinkX, &blinkY);
             printf("Cursor at %d x %d\n",blinkX,blinkY);
-
         }
     }
 
@@ -165,9 +166,10 @@ int processEvents(Player *man,Bullet b[],int *moved,int *type,int *direct,Networ
         if(man->y>566)
             man->y = 566;
     }
-    if(state[SDL_SCANCODE_SPACE] && man->alive && !shooting)
+    if(mouse1 == 1 || state[SDL_SCANCODE_SPACE] && man->alive && !shooting)
     {
         int blinkX,blinkY,bulletNo;
+        mouse1 = 0;
         SDL_GetMouseState(&blinkX, &blinkY);
         if(global%6==0)
         {
@@ -184,15 +186,15 @@ int processEvents(Player *man,Bullet b[],int *moved,int *type,int *direct,Networ
             shooting = 0;
         }
     }
-    int lastTime = 0;
+    checkCd(&*man);
     if(state[SDL_SCANCODE_1] && man->alive)
     {
         printf("pressed 1\n");
         *direct = -1;
         int bX,bY;
 
-        man->currentTime = SDL_GetTicks();
-        if(spellOne > spellOne_False+1000 && man->currentTime > man->lastTime+5000)
+        //man->currentTime = SDL_GetTicks();
+        if(spellOne > spellOne_False+1000 && man->spellReady) //man->currentTime > man->lastTime+3000
         {
             man->x1 = man->x;
             man->y1 = man->y;
@@ -210,11 +212,25 @@ int processEvents(Player *man,Bullet b[],int *moved,int *type,int *direct,Networ
             man->y+=(unit_vector.y*100)-16;
             *moved = 1;
             *type = 2;
-            man->lastTime = man->currentTime;
+            //man->lastTime = man->currentTime;
+            man->blinkRect.w = 0;
+            man->spellReady = 0;
         }
     }
     //printf("Thinktime : %d \n",man->thinkTime);
     return done;
+}
+
+void checkCd(Player *man)
+{
+    man->currentTime = SDL_GetTicks();
+    if (man->currentTime > man->cdTime+40 && man->blinkRect.w < 150)  // && man->currentTime+3000 < man->lastTime
+    {
+        man->blinkRect.w += 2;
+        man->cdTime = man->currentTime;
+    }
+    else if (man->blinkRect.w >= 150)
+        man->spellReady = 1;
 }
 
 void collisionDetect(Player *man, int *direct)
@@ -302,42 +318,45 @@ void collisionDetect(Player *man, int *direct)
             int bw = man->ledges[i].w, bh = man->ledges[i].h;
             int bx = man->ledges[i].x+bw/2, by = man->ledges[i].y+bh/2;
 
-
             // kolla [i] för ledges och fiende
             while (bpe < 2)
             {
                 if ((my-mh/2)+mh > (by-bh/2) && (mx-mw/2) < (bx-bw/2)+bw && (mx-mw/2)+mw > (bx-bw/2) && (my-mh/2) < (by-bh/2)+bh)
                 {
                     // höger sida
-                    if (ox > bx)
+                    if (ox >= bx)
                     {
                         if (abs(bx-ox) > abs(by-oy))
                         {
                             man->x = bx+bw/2;
                         }
-                        else if (abs(oy+mh/2) < abs(by-bh/2))
+                        // över
+                        else if (abs(oy-mh/2) < abs(by-bh/2))
                         {
-                            man->y = by-bw/2-mh;
+                            man->y = by-bw/2-mh+8;
                         }
+                        // under
                         else
                         {
-                            man->y = by+bh/2;
+                            man->y = by+bh/2+4;
                         }
                     }
                     // vänster sida
-                    else if (ox < bx)
+                    else if (ox <= bx)
                     {
                         if (abs(bx-ox) > abs(by-oy))
                         {
                             man->x = bx-bw/2-mw;
                         }
-                        else if (abs(oy+mh/2) < abs(by-bh/2))
+                        // över
+                        else if (abs(oy-mh/2) < abs(by-bh/2))
                         {
-                            man->y = by-bw/2-mh;
+                            man->y = by-bw/2-mh+8;
                         }
+                        // under
                         else
                         {
-                            man->y = by+bh/2;
+                            man->y = by+bh/2+4;
                         }
                     }
 
@@ -429,13 +448,16 @@ void doRender(Player *man,Bullet b[]) //, Enemy *enemies
     }
     SDL_Rect scoreBg = {0,630,1024,138};
     SDL_RenderCopy(program.renderer,man->scoreBackground,NULL,&scoreBg);
-    /*for(i=0; i<3; i++)
+
+    // cd bar för blink
+    SDL_Rect blinkRec = {man->blinkRect.x, man->blinkRect.y, man->blinkRect.w, man->blinkRect.h};
+    SDL_RenderCopy(program.renderer,man->cdTimer,NULL,&blinkRec);
+
+    for(i=0; i<3; i++)
     {
-        //printf("| x: %d\n", man->ledges[i].x);
         SDL_Rect ledgeRect = {man->ledges[i].x, man->ledges[i].y, man->ledges[i].w, man->ledges[i].h};
         SDL_RenderCopy(program.renderer, man->ledges[i].texture, NULL, &ledgeRect);
-        //printf("test\n");
-    }*/
+    }
 
 
     SDL_RenderPresent(program.renderer);

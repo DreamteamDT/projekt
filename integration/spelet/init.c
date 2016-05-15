@@ -92,7 +92,6 @@ void initPlayer(Player *player)
 
    }
 
-
     SDL_Texture *texture,*bgtexture,*scoreBgtext,*bullettxt;
     bgtexture = SDL_CreateTextureFromSurface(program.renderer,background);
     texture = SDL_CreateTextureFromSurface(program.renderer,image);
@@ -130,6 +129,7 @@ void initPlayer(Player *player)
     player->bullet = bullettxt;
     player->alive = 1;
 }
+
 void initLedges(Player *player)
 {
     /*SDL_Surface *image = IMG_Load("pelare.PNG");
@@ -152,6 +152,20 @@ void initLedges(Player *player)
         else if (i == 2)
             x -= 456;
     }
+}
+
+void initCd(Player *player)
+{
+    SDL_Surface *timer;
+    timer = IMG_Load("cdTimer.PNG");
+    SDL_Texture *cdTimer;
+    cdTimer = SDL_CreateTextureFromSurface(program.renderer,timer);
+    SDL_FreeSurface(timer);
+    player->cdTimer = cdTimer;
+    player->blinkRect.x = 100;
+    player->blinkRect.y = 600;
+    player->blinkRect.w = 150;
+    player->blinkRect.h = 30;
 }
 
 SDL_Texture *initBullet()
