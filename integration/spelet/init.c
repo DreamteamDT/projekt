@@ -36,7 +36,7 @@ void initPlayer(Player *player)
       if(player->spritePick==1)
     {
         image = IMG_Load("USA.png");
-        Mix_Music *soundtrack1 = Mix_LoadMUS("America.mp3");
+
     }
 
     else if(player->spritePick == 2)
@@ -46,6 +46,7 @@ void initPlayer(Player *player)
     else if(player->spritePick == 3)
     {
         image = IMG_Load("spriteMurica.png");
+
     }
     else
     {
@@ -57,6 +58,7 @@ void initPlayer(Player *player)
        if(player->spritePick==1)
     {
         image = IMG_Load("USA.PNG");
+
     }
 
     else if(player->spritePick == 2)
@@ -66,6 +68,8 @@ void initPlayer(Player *player)
     else if(player->spritePick == 3)
     {
         image = IMG_Load("spriteMurica.PNG");
+        Mix_Music *soundtrack1 = Mix_LoadMUS("America.MP3");
+        Mix_PlayMusic(soundtrack1,-1);
     }
     else
     {

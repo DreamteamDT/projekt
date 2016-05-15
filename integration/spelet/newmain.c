@@ -81,13 +81,11 @@ int main(int argc, char *argv[])
 
     //link(ammo);
     //Event loop
-
     Menu menu,pick;
     initMenu(&menu);
     initPick(&pick);
     SDLNet_Init();
     int testss = 0;
-
     Mix_PlayMusic(backgroundSound,-1);
     while(!exit) ///**** MAIN MENU ****/
     {
@@ -100,6 +98,8 @@ int main(int argc, char *argv[])
             ingame = handlePick(&pickCharacter,&player);
             if(ingame)
             {
+                if(player.spritePick == 3)
+
                 clearCartridge(ammo);
                 initPlayer(&player);
                 initLedges(&player);
