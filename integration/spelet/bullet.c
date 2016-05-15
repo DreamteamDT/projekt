@@ -93,7 +93,7 @@ int detectHit(Player *man,Bullet b[],Network *client)
     int i,j,k;
     for(i=0; i<5; i++)
     {
-        if(man->enemies[i].exists)
+        if(man->enemies[i].exists && man->enemies[i].alive)
             for(j=0; j<20; j++)
             {
                 if(b[j].active)
@@ -106,6 +106,7 @@ int detectHit(Player *man,Bullet b[],Network *client)
                         b[j].active = 0;
                         man->bulletid = j;
                         man->hitid = i;
+                        man->enemies[i].alive = 0;
                         send_data(&*man,&*client,7);
                         return 1;
                     }

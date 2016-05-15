@@ -36,19 +36,29 @@ void initPlayer(Player *player)
       if(player->spritePick==1)
     {
         image = IMG_Load("USA.png");
+        Mix_Music *soundtrack1 = Mix_LoadMUS("Backstreet.mp3");
+        Mix_PlayMusic(soundtrack1,-1);
+
     }
 
     else if(player->spritePick == 2)
     {
         image = IMG_Load("spriteRussia.png");
+        Mix_Music *soundtrack1 = Mix_LoadMUS("Moskau.mp3");
+        Mix_PlayMusic(soundtrack1,-1);
     }
     else if(player->spritePick == 3)
     {
         image = IMG_Load("spriteMurica.png");
+        Mix_Music *soundtrack1 = Mix_LoadMUS("America.mp3");
+        Mix_PlayMusic(soundtrack1,-1);
+
     }
     else
     {
         image = IMG_Load("spriteChina.png");
+        Mix_Music *soundtrack1 = Mix_LoadMUS("Chinese.mp3");
+        Mix_PlayMusic(soundtrack1,-1);
     }
    }
    else
@@ -56,19 +66,28 @@ void initPlayer(Player *player)
        if(player->spritePick==1)
     {
         image = IMG_Load("USA.PNG");
+        Mix_Music *soundtrack1 = Mix_LoadMUS("Backstreet.MP3");
+        Mix_PlayMusic(soundtrack1,-1);
+
     }
 
     else if(player->spritePick == 2)
     {
         image = IMG_Load("spriteRussia.PNG");
+        Mix_Music *soundtrack1 = Mix_LoadMUS("Moskau.MP3");
+        Mix_PlayMusic(soundtrack1,-1);
     }
     else if(player->spritePick == 3)
     {
         image = IMG_Load("spriteMurica.PNG");
+        Mix_Music *soundtrack1 = Mix_LoadMUS("America.MP3");
+        Mix_PlayMusic(soundtrack1,-1);
     }
     else
     {
         image = IMG_Load("spriteChina.PNG");
+        Mix_Music *soundtrack1 = Mix_LoadMUS("Chinese.MP3");
+        Mix_PlayMusic(soundtrack1,-1);
     }
 
    }

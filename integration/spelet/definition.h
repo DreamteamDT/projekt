@@ -11,6 +11,7 @@
 #include <SDL.h>
 #include <SDL_image.h>
 #include <SDL_net.h>
+#include <SDL_mixer.h>
 #define LINUX 0
 #endif // _WIN32
 
@@ -67,6 +68,7 @@ typedef struct
     int exists;
     SDL_Rect srcRect,dstRect;
     Bullet bullet[20];
+    int alive;
 } Enemy;
 
 typedef struct

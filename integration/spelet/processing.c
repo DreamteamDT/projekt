@@ -35,6 +35,7 @@ void updateEnemyBullet(Player *man)
 }
 int processEvents(Player *man,Bullet b[],int *moved,int *type,int *direct,Network *client)
 {
+    Mix_Chunk *bulletShot = Mix_LoadWAV("bulletPop.WAV");
     unsigned int spellOne, spellOne_False=0;
     spellOne = SDL_GetTicks();
     SDL_Event event;
@@ -175,6 +176,7 @@ int processEvents(Player *man,Bullet b[],int *moved,int *type,int *direct,Networ
             shooting = 1;
             if(((bulletNo = addBullet(man->x,man->y,5,b,blinkX,blinkY))>=0))
             {
+                Mix_PlayChannel(-1,bulletShot,0);
                 man->blinkX = blinkX;
                 man->blinkY = blinkY;
                 man->bulletNo = bulletNo;
@@ -286,7 +288,7 @@ void collisionDetect(Player *man, int *direct)
                         man->y -= 5;
                 }
                 // ladda enemies istället för ledges
-                bx = man->enemies[i].dstRect.x, by = man->enemies[i].dstRect.y, bw = man->enemies[i].dstRect.w, bh = man->enemies[i].dstRect.h;
+                //bx = man->enemies[i].dstRect.x, by = man->enemies[i].dstRect.y, bw = man->enemies[i].dstRect.w, bh = man->enemies[i].dstRect.h;
                 bpe++;
             }
             bpe = 0;
@@ -360,8 +362,12 @@ void collisionDetect(Player *man, int *direct)
 
                 }
                 // ladda enemies istället för ledges
-                bw = man->enemies[i].dstRect.w, bh = man->enemies[i].dstRect.h;
-                bx = man->enemies[i].dstRect.x+bw/2, by = man->enemies[i].dstRect.y+bh/2;
+               // if(man->enemies[i].alive)
+               // {
+                //    bw = man->enemies[i].dstRect.w, bh = man->enemies[i].dstRect.h;
+               //     bx = man->enemies[i].dstRect.x+bw/2, by = man->enemies[i].dstRect.y+bh/2;
+              //  }
+
                 bpe++;
             }
             bpe = 0;
@@ -434,7 +440,7 @@ void doRender(Player *man,Bullet b[]) //, Enemy *enemies
 
     for(i=0; i<10; i++)
     {
-        if (man->enemies[i].exists)
+        if (man->enemies[i].exists && man->enemies[i].alive)
         {
             SDL_RenderCopyEx(program.renderer,man->enemies[i].texture, &man->enemies[i].srcRect, &man->enemies[i].dstRect, 0, NULL, 0);
         }

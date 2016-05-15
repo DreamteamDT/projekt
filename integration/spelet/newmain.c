@@ -77,19 +77,23 @@ int main(int argc, char *argv[])
         player.connected = 0;
     }
 
+    Mix_OpenAudio(44100,MIX_DEFAULT_FORMAT,2,2048);
+    Mix_VolumeMusic(20);
+    Mix_Music *backgroundSound = Mix_LoadMUS("gta3.MP3");
+
 
     //link(ammo);
     //Event loop
-
     Menu menu,pick;
     initMenu(&menu);
     initPick(&pick);
     SDLNet_Init();
     int testss = 0;
 
-
     while(!exit) ///**** MAIN MENU ****/
     {
+        Mix_PlayMusic(backgroundSound,-1);
+       // Mix_PlayMusic(backgroundSound,-1);
         displayMenu(menu);
         pickCharacter = handleMenu(&exit);
 
@@ -99,6 +103,8 @@ int main(int argc, char *argv[])
             ingame = handlePick(&pickCharacter,&player);
             if(ingame)
             {
+                if(player.spritePick == 3)
+
                 clearCartridge(ammo);
                 initPlayer(&player);
                 initLedges(&player);
@@ -122,7 +128,8 @@ int main(int argc, char *argv[])
                 done = processEvents(&player,ammo,&moved,&type,&direct,&client);
                 updateEnemyBullet(&player);
                 updateLogic(&player,ammo);
-                collisionDetect(&player, &direct);
+                if(player.alive)
+                    collisionDetect(&player, &direct);
                 bulletGone(ammo,&player,&client);
 
                 if(moved && connected && player.alive)
@@ -145,7 +152,7 @@ int main(int argc, char *argv[])
 
                     {
                         moved = 0;
-                        send_data(&player,&client,type);
+                        send_data(&player,&client,3);
                         SDL_Delay(1000);
                         SDLNet_FreeSocketSet(client.udpset);
                         SDLNet_FreeSocketSet(client.tcpset);
@@ -161,6 +168,8 @@ int main(int argc, char *argv[])
             exit = 0;
         }
     }
+    Mix_FreeMusic(backgroundSound);
+    Mix_CloseAudio();
     free(tmp);
     SDLNet_Quit();
     Quit();

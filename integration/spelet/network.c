@@ -136,46 +136,46 @@ void recv_data(Player *man, Network *client,int *done,Bullet b[])
                    &type,&enemyid,&enemyDX,&enemyDY,&enemySX,&spritePick);
 
             SDL_Surface *image;
-           if(LINUX)
-           {
+            if(LINUX)
+            {
 
-             if(spritePick==1)
-            {
-                image = IMG_Load("USA.png");
-            }
-            else if(spritePick==2)
-            {
-                image = IMG_Load("spriteRussia.png");
-            }
-            else if(spritePick==3)
-            {
-                image = IMG_Load("spriteMurica.png");
+                if(spritePick==1)
+                {
+                    image = IMG_Load("USA.png");
+                }
+                else if(spritePick==2)
+                {
+                    image = IMG_Load("spriteRussia.png");
+                }
+                else if(spritePick==3)
+                {
+                    image = IMG_Load("spriteMurica.png");
+                }
+                else
+                {
+                    image = IMG_Load("spriteChina.png");
+                }
+
             }
             else
             {
-                image = IMG_Load("spriteChina.png");
+                if(spritePick==1)
+                {
+                    image = IMG_Load("USA.PNG");
+                }
+                else if(spritePick==2)
+                {
+                    image = IMG_Load("spriteRussia.PNG");
+                }
+                else if(spritePick==3)
+                {
+                    image = IMG_Load("spriteMurica.PNG");
+                }
+                else
+                {
+                    image = IMG_Load("spriteChina.PNG");
+                }
             }
-
-           }
-           else
-           {
-             if(spritePick==1)
-            {
-                image = IMG_Load("USA.PNG");
-            }
-            else if(spritePick==2)
-            {
-                image = IMG_Load("spriteRussia.PNG");
-            }
-            else if(spritePick==3)
-            {
-                image = IMG_Load("spriteMurica.PNG");
-            }
-            else
-            {
-                image = IMG_Load("spriteChina.PNG");
-            }
-           }
 
             SDL_Texture *texture;
             texture = SDL_CreateTextureFromSurface(program.renderer,image);
@@ -190,6 +190,7 @@ void recv_data(Player *man, Network *client,int *done,Bullet b[])
             man->enemies[enemyid].dstRect.w = 64;
             man->enemies[enemyid].dstRect.h = 64;
             man->enemies[enemyid].exists = 1;
+            man->enemies[enemyid].alive = 1;
             if(man->alive)
             {
                 send_data(&*man,&*client,2);
@@ -214,13 +215,13 @@ void recv_data(Player *man, Network *client,int *done,Bullet b[])
             }
             else if(enemyid == man->id)
             {
-                man->enemies[hitid].exists = 0;
+                man->enemies[hitid].alive = 0;
                 b[bulletid].active = 0;
                 man->enemies[hitid].texture = NULL;
             }
             else
             {
-                man->enemies[hitid].exists = 0;
+                man->enemies[hitid].alive = 0;
                 man->enemies[enemyid].bullet[bulletid].active = 0;
                 man->enemies[hitid].texture = NULL;
             }
