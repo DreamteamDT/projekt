@@ -329,19 +329,19 @@ void checkRunningEnemyDirection(Player *man, int *bulletX, int *bulletY, int id)
     if (man->enemies[id].sprite == 1)
     {
         // ner
-        if (man->frameX == 0 || man->frameX == 32)
+        if (man->enemies[id].srcRect.x == 0 || man->enemies[id].srcRect.x == 32)
         {
             *bulletX = *bulletX + 18;
             *bulletY = *bulletY + 40;
         }
         // upp
-        else if (man->frameX == 64 || man->frameX == 96)
+        else if (man->enemies[id].srcRect.x == 64 || man->enemies[id].srcRect.x == 96)
         {
             *bulletX = *bulletX + 44;
             *bulletY = *bulletY + 10;
         }
         // höger
-        else if (man->frameX == 128 || man->frameX == 160)
+        else if (man->enemies[id].srcRect.x == 128 || man->enemies[id].srcRect.x == 160)
         {
             *bulletX = *bulletX + 52;
             *bulletY = *bulletY + 38;
@@ -356,17 +356,17 @@ void checkRunningEnemyDirection(Player *man, int *bulletX, int *bulletY, int id)
     // russia
     else if (man->enemies[id].sprite == 2)
     {
-        if (man->frameX == 0 || man->frameX == 32)
+        if (man->enemies[id].srcRect.x == 0 || man->enemies[id].srcRect.x == 32)
         {
             *bulletX = *bulletX + 36;
             *bulletY = *bulletY + 52;
         }
-        else if (man->frameX == 64 || man->frameX == 96)
+        else if (man->enemies[id].srcRect.x == 64 || man->enemies[id].srcRect.x == 96)
         {
             *bulletX = *bulletX + 26;
             *bulletY = *bulletY + 52;
         }
-        else if (man->frameX == 128 || man->frameX == 160)
+        else if (man->enemies[id].srcRect.x == 128 || man->enemies[id].srcRect.x == 160)
         {
             *bulletX = *bulletX + 48;
             *bulletY = *bulletY + 50;
@@ -380,17 +380,17 @@ void checkRunningEnemyDirection(Player *man, int *bulletX, int *bulletY, int id)
     // murica
     else if (man->enemies[id].sprite == 3)
     {
-        if (man->frameX == 0 || man->frameX == 32)
+        if (man->enemies[id].srcRect.x == 0 || man->enemies[id].srcRect.x == 32)
         {
             *bulletX = *bulletX + 44;
             *bulletY = *bulletY + 44;
         }
-        else if (man->frameX == 64 || man->frameX == 96)
+        else if (man->enemies[id].srcRect.x == 64 || man->enemies[id].srcRect.x == 96)
         {
             *bulletX = *bulletX + 10;
             *bulletY = *bulletY + 44;
         }
-        else if (man->frameX == 128 || man->frameX == 160)
+        else if (man->enemies[id].srcRect.x == 128 || man->enemies[id].srcRect.x == 160)
         {
             *bulletX = *bulletX + 56;
             *bulletY = *bulletY + 44;
@@ -404,17 +404,17 @@ void checkRunningEnemyDirection(Player *man, int *bulletX, int *bulletY, int id)
     // china
     else if (man->enemies[id].sprite == 4)
     {
-        if (man->frameX == 0 || man->frameX == 32)
+        if (man->enemies[id].srcRect.x == 0 || man->enemies[id].srcRect.x == 32)
         {
             *bulletX = *bulletX + 12;
             *bulletY = *bulletY + 46;
         }
-        else if (man->frameX == 64 || man->frameX == 96)
+        else if (man->enemies[id].srcRect.x == 64 || man->enemies[id].srcRect.x == 96)
         {
             *bulletX = *bulletX + 50;
             *bulletY = *bulletY + 46;
         }
-        else if (man->frameX == 128 || man->frameX == 160)
+        else if (man->enemies[id].srcRect.x == 128 || man->enemies[id].srcRect.x == 160)
         {
             *bulletX = *bulletX + 60;
             *bulletY = *bulletY + 40;
