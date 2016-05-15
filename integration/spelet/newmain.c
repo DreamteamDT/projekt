@@ -53,6 +53,8 @@ int main(int argc, char *argv[])
     player.spellReady = 1;
     bullet.texture=initBullet();
     Bullet ammo[20];
+    unsigned int lastTime,currentTime;
+    int sekund,timer=30;
 
     printf("Vill du connecta till servern? 1=JA 0=NEJ: ");
     scanf("%d",&choice);
@@ -89,7 +91,6 @@ int main(int argc, char *argv[])
     initPick(&pick);
     SDLNet_Init();
     int testss = 0;
-
     while(!exit) ///**** MAIN MENU ****/
     {
         Mix_PlayMusic(backgroundSound,-1);
@@ -119,8 +120,11 @@ int main(int argc, char *argv[])
                 {
                     send_data(&player,&client,2);
                 }
+                lastTime = SDL_GetTicks();
+                lastTime = lastTime/1000;
 
             }
+
             while(ingame) /**** INGAME ****/
             {
                 direct = 0;
@@ -143,6 +147,16 @@ int main(int argc, char *argv[])
 
                 doRender(&player,ammo); //,&enemies[i]
                 detectHit(&player,ammo,&client);
+
+
+                currentTime = SDL_GetTicks();
+                currentTime = currentTime/1000;
+                if(currentTime>lastTime)
+                {
+                    printf("Timer: %d\n",timer);
+                    timer--;
+                }
+                lastTime = currentTime;
 
                 //don't burn up the CPU
                 SDL_Delay(20);

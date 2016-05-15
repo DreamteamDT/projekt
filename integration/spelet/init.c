@@ -44,7 +44,7 @@ void initPlayer(Player *player)
     else if(player->spritePick == 2)
     {
         image = IMG_Load("spriteRussia.png");
-        Mix_Music *soundtrack1 = Mix_LoadMUS("Moskau.mp3");
+        Mix_Music *soundtrack1 = Mix_LoadMUS("cykablyat.mp3");
         Mix_PlayMusic(soundtrack1,-1);
     }
     else if(player->spritePick == 3)
@@ -74,7 +74,7 @@ void initPlayer(Player *player)
     else if(player->spritePick == 2)
     {
         image = IMG_Load("spriteRussia.PNG");
-        Mix_Music *soundtrack1 = Mix_LoadMUS("Moskau.MP3");
+        Mix_Music *soundtrack1 = Mix_LoadMUS("cykablyat.MP3");
         Mix_PlayMusic(soundtrack1,-1);
     }
     else if(player->spritePick == 3)

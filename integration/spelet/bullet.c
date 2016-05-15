@@ -98,8 +98,14 @@ int detectHit(Player *man,Bullet b[],Network *client)
             {
                 if(b[j].active)
                 {
+<<<<<<< HEAD
                     //printf("manx: %d manx+32: %d",man->enemies[i].dstRect.x,man->enemies[i].dstRect.x+32);
                     if(b[j].x > (man->enemies[i].dstRect.x) && b[j].x <= (man->enemies[i].dstRect.x+52)
+=======
+
+                    //  printf("manx: %d manx+32: %d",man->enemies[i].dstRect.x,man->enemies[i].dstRect.x+32);
+                    if(b[j].x > (man->enemies[i].dstRect.x) && b[j].x <= (man->enemies[i].dstRect.x+50)
+>>>>>>> f3b3913677173cbfd490c7a1795e14aeb67102c5
                             && b[j].y >= (man->enemies[i].dstRect.y) && b[j].y <= (man->enemies[i].dstRect.y+64))
                     {
                         b[j].active = 0;
