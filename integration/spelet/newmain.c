@@ -23,8 +23,8 @@ extern void displayMenu(Menu menu);
 extern int handleMenu(int *exit);
 extern void initMenu(Menu *menu);
 extern void initPick(Menu *pick);
-extern int handlePick(int *pickCharacter,Player *man);
 extern void initCd(Player *player);
+extern int handlePick(int *pickCharacter,Player *man);
 
 extern void bulletGone(Bullet b[],Player *man,Network *client);
 extern int detectHit(Player *man,Bullet b[],Network *client);

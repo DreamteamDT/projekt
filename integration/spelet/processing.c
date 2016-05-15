@@ -40,7 +40,6 @@ int processEvents(Player *man,Bullet b[],int *moved,int *type,int *direct,Networ
     spellOne = SDL_GetTicks();
     SDL_Event event;
     int done = 0,shooting = 0;;
-    int mouse1 = 0;
 
     man->thinkTime--;
     if(man->thinkTime<=0)
@@ -89,7 +88,6 @@ int processEvents(Player *man,Bullet b[],int *moved,int *type,int *direct,Networ
             break;
         case SDL_MOUSEBUTTONDOWN :
             printf("clicked on mouse");
-            mouse1 = 1;
             int blinkX,blinkY;
             SDL_GetMouseState(&blinkX, &blinkY);
             printf("Cursor at %d x %d\n",blinkX,blinkY);
@@ -166,15 +164,15 @@ int processEvents(Player *man,Bullet b[],int *moved,int *type,int *direct,Networ
         if(man->y>566)
             man->y = 566;
     }
-    if(mouse1 == 1 || state[SDL_SCANCODE_SPACE] && man->alive && !shooting)
+    if(state[SDL_SCANCODE_SPACE] && man->alive && !shooting)
     {
-        int blinkX,blinkY,bulletNo;
-        mouse1 = 0;
+        int blinkX,blinkY,bulletNo,shotX,shotY;
+        checkRunningDirection(&*man, &shotX, &shotY);
         SDL_GetMouseState(&blinkX, &blinkY);
         if(global%6==0)
         {
             shooting = 1;
-            if(((bulletNo = addBullet(man->x,man->y,5,b,blinkX,blinkY))>=0))
+            if(((bulletNo = addBullet(shotX,shotY,5,b,blinkX,blinkY))>=0))
             {
                 Mix_PlayChannel(-1,bulletShot,0);
                 man->blinkX = blinkX;
@@ -219,6 +217,214 @@ int processEvents(Player *man,Bullet b[],int *moved,int *type,int *direct,Networ
     }
     //printf("Thinktime : %d \n",man->thinkTime);
     return done;
+}
+
+void checkRunningDirection(Player *man, int *shotX, int *shotY)
+{
+    // megafag
+    if (man->spritePick == 1)
+    {
+        // ner
+        if (man->frameX == 0 || man->frameX == 32)
+        {
+            *shotX = man->x + 18;
+            *shotY = man->y + 40;
+        }
+        // upp
+        else if (man->frameX == 64 || man->frameX == 96)
+        {
+            *shotX = man->x + 44;
+            *shotY = man->y + 10;
+        }
+        // höger
+        else if (man->frameX == 128 || man->frameX == 160)
+        {
+            *shotX = man->x + 52;
+            *shotY = man->y + 38;
+        }
+        // vänster
+        else
+        {
+            *shotX = man->x + 6;
+            *shotY = man->y + 36;
+        }
+    }
+    // russia
+    else if (man->spritePick == 2)
+    {
+        if (man->frameX == 0 || man->frameX == 32)
+        {
+            *shotX = man->x + 36;
+            *shotY = man->y + 52;
+        }
+        else if (man->frameX == 64 || man->frameX == 96)
+        {
+            *shotX = man->x + 26;
+            *shotY = man->y + 52;
+        }
+        else if (man->frameX == 128 || man->frameX == 160)
+        {
+            *shotX = man->x + 48;
+            *shotY = man->y + 50;
+        }
+        else
+        {
+            *shotX = man->x + 14;
+            *shotY = man->y + 50;
+        }
+    }
+    // murica
+    else if (man->spritePick == 3)
+    {
+        if (man->frameX == 0 || man->frameX == 32)
+        {
+            *shotX = man->x + 44;
+            *shotY = man->y + 44;
+        }
+        else if (man->frameX == 64 || man->frameX == 96)
+        {
+            *shotX = man->x + 10;
+            *shotY = man->y + 44;
+        }
+        else if (man->frameX == 128 || man->frameX == 160)
+        {
+            *shotX = man->x + 56;
+            *shotY = man->y + 44;
+        }
+        else
+        {
+            *shotX = man->x + 0;
+            *shotY = man->y + 44;
+        }
+    }
+    // china
+    else if (man->spritePick == 4)
+    {
+        if (man->frameX == 0 || man->frameX == 32)
+        {
+            *shotX = man->x + 12;
+            *shotY = man->y + 46;
+        }
+        else if (man->frameX == 64 || man->frameX == 96)
+        {
+            *shotX = man->x + 50;
+            *shotY = man->y + 46;
+        }
+        else if (man->frameX == 128 || man->frameX == 160)
+        {
+            *shotX = man->x + 60;
+            *shotY = man->y + 40;
+        }
+        else
+        {
+            *shotX = man->x + 0;
+            *shotY = man->y + 40;
+        }
+    }
+}
+
+void checkRunningEnemyDirection(Player *man, int *bulletX, int *bulletY, int id)
+{
+    // megafag
+    if (man->enemies[id].sprite == 1)
+    {
+        // ner
+        if (man->frameX == 0 || man->frameX == 32)
+        {
+            *bulletX = *bulletX + 18;
+            *bulletY = *bulletY + 40;
+        }
+        // upp
+        else if (man->frameX == 64 || man->frameX == 96)
+        {
+            *bulletX = *bulletX + 44;
+            *bulletY = *bulletY + 10;
+        }
+        // höger
+        else if (man->frameX == 128 || man->frameX == 160)
+        {
+            *bulletX = *bulletX + 52;
+            *bulletY = *bulletY + 38;
+        }
+        // vänster
+        else
+        {
+            *bulletX = *bulletX + 6;
+            *bulletY = *bulletY + 36;
+        }
+    }
+    // russia
+    else if (man->enemies[id].sprite == 2)
+    {
+        if (man->frameX == 0 || man->frameX == 32)
+        {
+            *bulletX = *bulletX + 36;
+            *bulletY = *bulletY + 52;
+        }
+        else if (man->frameX == 64 || man->frameX == 96)
+        {
+            *bulletX = *bulletX + 26;
+            *bulletY = *bulletY + 52;
+        }
+        else if (man->frameX == 128 || man->frameX == 160)
+        {
+            *bulletX = *bulletX + 48;
+            *bulletY = *bulletY + 50;
+        }
+        else
+        {
+            *bulletX = *bulletX + 14;
+            *bulletY = *bulletY + 50;
+        }
+    }
+    // murica
+    else if (man->enemies[id].sprite == 3)
+    {
+        if (man->frameX == 0 || man->frameX == 32)
+        {
+            *bulletX = *bulletX + 44;
+            *bulletY = *bulletY + 44;
+        }
+        else if (man->frameX == 64 || man->frameX == 96)
+        {
+            *bulletX = *bulletX + 10;
+            *bulletY = *bulletY + 44;
+        }
+        else if (man->frameX == 128 || man->frameX == 160)
+        {
+            *bulletX = *bulletX + 56;
+            *bulletY = *bulletY + 44;
+        }
+        else
+        {
+            *bulletX = *bulletX + 0;
+            *bulletY = *bulletY + 44;
+        }
+    }
+    // china
+    else if (man->enemies[id].sprite == 4)
+    {
+        if (man->frameX == 0 || man->frameX == 32)
+        {
+            *bulletX = *bulletX + 12;
+            *bulletY = *bulletY + 46;
+        }
+        else if (man->frameX == 64 || man->frameX == 96)
+        {
+            *bulletX = *bulletX + 50;
+            *bulletY = *bulletY + 46;
+        }
+        else if (man->frameX == 128 || man->frameX == 160)
+        {
+            *bulletX = *bulletX + 60;
+            *bulletY = *bulletY + 40;
+        }
+        else
+        {
+            *bulletX = *bulletX + 0;
+            *bulletY = *bulletY + 40;
+        }
+    }
 }
 
 void checkCd(Player *man)
@@ -288,7 +494,7 @@ void collisionDetect(Player *man, int *direct)
                         man->y -= 5;
                 }
                 // ladda enemies istället för ledges
-                //bx = man->enemies[i].dstRect.x, by = man->enemies[i].dstRect.y, bw = man->enemies[i].dstRect.w, bh = man->enemies[i].dstRect.h;
+                bx = man->enemies[i].dstRect.x, by = man->enemies[i].dstRect.y, bw = man->enemies[i].dstRect.w, bh = man->enemies[i].dstRect.h;
                 bpe++;
             }
             bpe = 0;
@@ -362,11 +568,11 @@ void collisionDetect(Player *man, int *direct)
 
                 }
                 // ladda enemies istället för ledges
-               // if(man->enemies[i].alive)
-               // {
-                //    bw = man->enemies[i].dstRect.w, bh = man->enemies[i].dstRect.h;
-               //     bx = man->enemies[i].dstRect.x+bw/2, by = man->enemies[i].dstRect.y+bh/2;
-              //  }
+                if(man->enemies[i].alive)
+                {
+                    bw = man->enemies[i].dstRect.w, bh = man->enemies[i].dstRect.h;
+                    bx = man->enemies[i].dstRect.x+bw/2, by = man->enemies[i].dstRect.y+bh/2;
+                }
 
                 bpe++;
             }
@@ -451,12 +657,6 @@ void doRender(Player *man,Bullet b[]) //, Enemy *enemies
     // cd bar för blink
     SDL_Rect blinkRec = {man->blinkRect.x, man->blinkRect.y, man->blinkRect.w, man->blinkRect.h};
     SDL_RenderCopy(program.renderer,man->cdTimer,NULL,&blinkRec);
-
-    for(i=0; i<3; i++)
-    {
-        SDL_Rect ledgeRect = {man->ledges[i].x, man->ledges[i].y, man->ledges[i].w, man->ledges[i].h};
-        SDL_RenderCopy(program.renderer, man->ledges[i].texture, NULL, &ledgeRect);
-    }
 
 
     SDL_RenderPresent(program.renderer);

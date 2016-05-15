@@ -98,9 +98,8 @@ int detectHit(Player *man,Bullet b[],Network *client)
             {
                 if(b[j].active)
                 {
-
-                    //  printf("manx: %d manx+32: %d",man->enemies[i].dstRect.x,man->enemies[i].dstRect.x+32);
-                    if(b[j].x > (man->enemies[i].dstRect.x) && b[j].x <= (man->enemies[i].dstRect.x+64)
+                    //printf("manx: %d manx+32: %d",man->enemies[i].dstRect.x,man->enemies[i].dstRect.x+32);
+                    if(b[j].x > (man->enemies[i].dstRect.x) && b[j].x <= (man->enemies[i].dstRect.x+52)
                             && b[j].y >= (man->enemies[i].dstRect.y) && b[j].y <= (man->enemies[i].dstRect.y+64))
                     {
                         b[j].active = 0;
@@ -110,7 +109,6 @@ int detectHit(Player *man,Bullet b[],Network *client)
                         send_data(&*man,&*client,7);
                         return 1;
                     }
-
                 }
             }
     }
@@ -203,7 +201,6 @@ void bulletGone(Bullet b[],Player *man,Network *client)
             }
         }
     }
-
 }
 
 

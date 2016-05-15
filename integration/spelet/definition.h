@@ -65,7 +65,7 @@ typedef struct
     int x,y;
     int frameX,frameY;
     SDL_Texture *texture;
-    int exists;
+    int exists, sprite;
     SDL_Rect srcRect,dstRect;
     Bullet bullet[20];
     int alive;

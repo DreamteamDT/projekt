@@ -142,18 +142,22 @@ void recv_data(Player *man, Network *client,int *done,Bullet b[])
                 if(spritePick==1)
                 {
                     image = IMG_Load("USA.png");
+                    man->enemies[enemyid].sprite = 1;
                 }
                 else if(spritePick==2)
                 {
                     image = IMG_Load("spriteRussia.png");
+                    man->enemies[enemyid].sprite = 2;
                 }
                 else if(spritePick==3)
                 {
                     image = IMG_Load("spriteMurica.png");
+                    man->enemies[enemyid].sprite = 3;
                 }
                 else
                 {
                     image = IMG_Load("spriteChina.png");
+                    man->enemies[enemyid].sprite = 4;
                 }
 
             }
@@ -162,18 +166,22 @@ void recv_data(Player *man, Network *client,int *done,Bullet b[])
                 if(spritePick==1)
                 {
                     image = IMG_Load("USA.PNG");
+                    man->enemies[enemyid].sprite = 1;
                 }
                 else if(spritePick==2)
                 {
                     image = IMG_Load("spriteRussia.PNG");
+                    man->enemies[enemyid].sprite = 2;
                 }
                 else if(spritePick==3)
                 {
                     image = IMG_Load("spriteMurica.PNG");
+                    man->enemies[enemyid].sprite = 3;
                 }
                 else
                 {
                     image = IMG_Load("spriteChina.PNG");
+                    man->enemies[enemyid].sprite = 4;
                 }
             }
 
@@ -230,11 +238,9 @@ void recv_data(Player *man, Network *client,int *done,Bullet b[])
         {
             sscanf(client->rcvpack->data,"%d %d %d %d %d %d %d",
                    &type,&enemyid,&bulletX,&bulletY,&blinkX,&blinkY,&bulletid);
-
+            checkRunningEnemyDirection(&*man, &bulletX, &bulletY, enemyid);
             addEnemyBullet(bulletX,bulletY,5,man->enemies[enemyid].bullet,blinkX,blinkY,bulletid);
-
         }
-
     }
 
     while(SDLNet_CheckSockets(client->tcpset,0)>0)
