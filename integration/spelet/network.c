@@ -60,7 +60,7 @@ int networkInit(Network *client,Player *man,char *ipaddress)
         return 0;
     }
     SDLNet_TCP_Recv(client->tcpsock,tmp,1024);
-    sscanf(tmp,"%d %d",&type,&(man->id));
+    sscanf(tmp,"%d %d %d %d",&type,&(man->id),&man->x,&man->y);
     if(type==0)
         printf("my ID: %d\n",man->id);
     else if (type == 4)
@@ -209,6 +209,7 @@ void recv_data(Player *man, Network *client,int *done,Bullet b[])
         {
             sscanf(client->rcvpack->data,"%d %d %d %d %d %d",
                    &type,&enemyid,&enemyDX,&enemyDY,&enemySX,&spritePick);
+            man->enemies[enemyid].alive = 1;
             man->enemies[enemyid].dstRect.x = enemyDX;
             man->enemies[enemyid].dstRect.y = enemyDY;
             man->enemies[enemyid].srcRect.x = enemySX;
@@ -225,13 +226,11 @@ void recv_data(Player *man, Network *client,int *done,Bullet b[])
             {
                 man->enemies[hitid].alive = 0;
                 b[bulletid].active = 0;
-                man->enemies[hitid].texture = NULL;
             }
             else
             {
                 man->enemies[hitid].alive = 0;
                 man->enemies[enemyid].bullet[bulletid].active = 0;
-                man->enemies[hitid].texture = NULL;
             }
         }
         if (type == 8)

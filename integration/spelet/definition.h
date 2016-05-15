@@ -14,6 +14,7 @@
 #include <SDL_mixer.h>
 #define LINUX 0
 #endif // _WIN32
+#include <time.h>
 
 
 typedef struct

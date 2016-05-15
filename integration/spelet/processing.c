@@ -21,9 +21,9 @@ void updateLogic(Player *p,Bullet b[])
 void updateEnemyBullet(Player *man)
 {
     int i,j;
-    for(i=0;i<5;i++)
+    for(i=0; i<5; i++)
     {
-        for(j=0;j<20;j++)
+        for(j=0; j<20; j++)
         {
             if(man->enemies[i].bullet[j].active == 1)
             {
@@ -205,7 +205,7 @@ int processEvents(Player *man,Bullet b[],int *moved,int *type,int *direct,Networ
             direction.y = bY-man->y;
             unit_vector.x = (direction.x)/ v_length;
             unit_vector.y = (direction.y)/ v_length;
-           // SDL_Delay(150);
+            // SDL_Delay(150);
             man->x+=(unit_vector.x*100)-16;
             man->y+=(unit_vector.y*100)-16;
             *moved = 1;
@@ -568,11 +568,9 @@ void collisionDetect(Player *man, int *direct)
 
                 }
                 // ladda enemies istället för ledges
-                if(man->enemies[i].alive)
-                {
-                    bw = man->enemies[i].dstRect.w, bh = man->enemies[i].dstRect.h;
-                    bx = man->enemies[i].dstRect.x+bw/2, by = man->enemies[i].dstRect.y+bh/2;
-                }
+
+                bw = man->enemies[i].dstRect.w, bh = man->enemies[i].dstRect.h;
+                bx = man->enemies[i].dstRect.x+bw/2, by = man->enemies[i].dstRect.y+bh/2;
 
                 bpe++;
             }
@@ -616,21 +614,22 @@ void doRender(Player *man,Bullet b[]) //, Enemy *enemies
             SDL_Rect faggot = {b[i].x , b[i].y,8,8};
             SDL_RenderCopy(program.renderer,man->bullet,NULL,&faggot);
 
-           // SDL_Rect faggot = {b[i].x , b[i].y,8,8 };
-          //  printf("faggot x: %d faggot y: %d\n",faggot.x,faggot.y);
-           // SDL_RenderCopyEx(program.renderer,man->bullet,NULL,&faggot,0,NULL,0);
+            // SDL_Rect faggot = {b[i].x , b[i].y,8,8 };
+            //  printf("faggot x: %d faggot y: %d\n",faggot.x,faggot.y);
+            // SDL_RenderCopyEx(program.renderer,man->bullet,NULL,&faggot,0,NULL,0);
 
         }
     }
-    for(i=0;i<5;i++)
+    for(i=0; i<5; i++)
     {
-        for(j=0;j<20;j++)
+        for(j=0; j<20; j++)
         {
             if(man->enemies[i].bullet[j].active == 1)
             {
                 SDL_Rect enemybullet = {man->enemies[i].bullet[j].x,
-                                        man->enemies[i].bullet[j].y,8,8};
-               // printf("enemybullet x: %d, enemybullet y: %d\n",man->enemies[i].bullet[j].x,man->enemies[i].bullet[j].y);
+                                        man->enemies[i].bullet[j].y,8,8
+                                       };
+                // printf("enemybullet x: %d, enemybullet y: %d\n",man->enemies[i].bullet[j].x,man->enemies[i].bullet[j].y);
                 SDL_RenderCopy(program.renderer,man->bullet,NULL,&enemybullet);
             }
         }
@@ -662,3 +661,63 @@ void doRender(Player *man,Bullet b[]) //, Enemy *enemies
 
     SDL_RenderPresent(program.renderer);
 }
+
+void respawn(Player *man)
+{
+    int i,j,k;
+    int busy = 0;
+    int spawn = rand()%9;
+
+    if(spawn == 0)
+    {
+        man->x = 113;
+        man->y = 79;
+    }
+    else if(spawn == 1)
+    {
+        man->x = 909;
+        man->y = 73;
+    }
+    else if(spawn == 2)
+    {
+        man->x = 918;
+        man->y = 550;
+    }
+    else if(spawn == 3)
+    {
+        man->x = 120;
+        man->y = 528;
+    }
+    else if(spawn == 4)
+    {
+        man->x = 502;
+        man->y = 300;
+    }
+    else if(spawn == 5)
+    {
+        man->x = 286;
+        man->y = 288;
+    }
+    else if(spawn == 6)
+    {
+        man->x = 511;
+        man->y = 121;
+    }
+    else if(spawn == 7)
+    {
+        man->x = 736;
+        man->y = 286;
+    }
+    else
+    {
+        man->x = 513;
+        man->y = 415;
+    }
+
+}
+
+
+
+
+
+

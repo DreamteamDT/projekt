@@ -101,26 +101,7 @@ void initPlayer(Player *player)
     SDL_FreeSurface(scoreBg);
     SDL_FreeSurface(background);
     SDL_FreeSurface(image);
-    if(player->spritePick ==1)
-    {
-        player->x = 106;
-        player->y = 74;
-    }
-    else if(player->spritePick==2)
-    {
-        player->x = 939;
-        player->y = 55;
-    }
-    else if(player->spritePick==3)
-    {
-        player->x = 902;
-        player->y = 529;
-    }
-    else
-    {
-        player->x = 117;
-        player->y = 474;
-    }
+
     player->frameX = 0;
     player->frameY = 0;
     player->texture = texture;
