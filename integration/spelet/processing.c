@@ -35,6 +35,7 @@ void updateEnemyBullet(Player *man)
 }
 int processEvents(Player *man,Bullet b[],int *moved,int *type,int *direct,Network *client)
 {
+    Mix_Chunk *bulletShot = Mix_LoadWAV("bulletPop.WAV");
     unsigned int spellOne, spellOne_False=0;
     spellOne = SDL_GetTicks();
     SDL_Event event;
@@ -173,6 +174,7 @@ int processEvents(Player *man,Bullet b[],int *moved,int *type,int *direct,Networ
             shooting = 1;
             if(((bulletNo = addBullet(man->x,man->y,5,b,blinkX,blinkY))>=0))
             {
+                Mix_PlayChannel(-1,bulletShot,0);
                 man->blinkX = blinkX;
                 man->blinkY = blinkY;
                 man->bulletNo = bulletNo;
