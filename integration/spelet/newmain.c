@@ -112,6 +112,7 @@ int main(int argc, char *argv[])
         {
             displayMenu(pick);
             ingame = handlePick(&pickCharacter,&player);
+            SDL_Delay(50);
             if(ingame)
             {
                 if(player.spritePick == 3)

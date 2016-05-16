@@ -2,6 +2,9 @@
 
 extern int addBullet(int,int,int,Bullet b[],int b1,int b2);
 extern void sendBullet(Player man,Network client);
+void checkRunningDirection(Player *man, int *shotX, int *shotY);
+void checkCd(Player *man);
+
 
 void updateLogic(Player *p,Bullet b[])
 {
@@ -171,7 +174,7 @@ int processEvents(Player *man,Bullet b[],int *moved,int *type,int *direct,Networ
         *type = 2;
         man->blinked = 0;
     }
-    if(state[SDL_SCANCODE_SPACE] && man->alive && !shooting)
+    if((SDL_GetMouseState(NULL,NULL) &&SDL_BUTTON_LEFT) && man->alive && !shooting )
     {
         int blinkX,blinkY,bulletNo,shotX,shotY;
         checkRunningDirection(&*man, &shotX, &shotY);
@@ -192,7 +195,7 @@ int processEvents(Player *man,Bullet b[],int *moved,int *type,int *direct,Networ
         }
     }
     checkCd(&*man);
-    if(state[SDL_SCANCODE_1] && man->alive)
+    if(state[SDL_SCANCODE_SPACE] && man->alive)
     {
         printf("pressed 1\n");
         *direct = -1;

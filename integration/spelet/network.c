@@ -1,5 +1,7 @@
 #include "definition.h"
 extern void addEnemyBullet(int x,int y,int dx,Bullet b[],int b1,int b2,int i);
+void checkRunningEnemyDirection(Player *man, int *bulletX, int *bulletY, int id);
+
 
 int uncomplete_string(char tmp[])
 {
