@@ -39,8 +39,9 @@ typedef struct
     TCPsocket tcpsock;
     IPaddress ip;
     int x,y;
+    int kills,deaths;
 
-}Player;
+} Player;
 
 struct Program
 {
@@ -91,7 +92,8 @@ int main(int argc, char **argv)
     Player players[maxPlayers];
     SDL_Init(SDL_INIT_EVERYTHING);
     SDLNet_Init();
-    int i,k;
+    int i,k,len,size;
+    int killed,died,scoreUpdate = 0;
 
     for(i=0; i<maxPlayers; i++) //initiera allt till 0
     {
@@ -156,6 +158,8 @@ int main(int argc, char **argv)
             {
                 SDLNet_TCP_AddSocket(tcpset,players[next].tcpsock);
                 players[next].exists = 1;
+                players[next].kills = 0;
+                players[next].deaths = 0;
                 type = 0;
                 getSpawn(next,&players[next]);
                 sprintf(tmp,"%d %d %d %d \n",type,next,players[next].x,players[next].y);
@@ -209,6 +213,9 @@ int main(int argc, char **argv)
             }
             else if(type == 7)
             {
+                sscanf(rcvPack->data,"%d %d %d %d",&type,&id,&killed,&died);
+                players[id].kills++;
+                players[killed].deaths++;
                 for(k=0; k<maxPlayers; k++)
                 {
                     if(players[k].exists && k!=id)
@@ -263,10 +270,11 @@ int main(int argc, char **argv)
                                 if(players[k].exists)
                                     if(k!=i)
                                     {
-                                        if(!SDLNet_TCP_Send(players[k].tcpsock,tmp,strlen(tmp)+1))
+                                        size=0;
+                                        len=strlen(tmp)+1;
+                                        while(size<len)
                                         {
-                                            printf("SDLNet_TCP_Send: %s\n", SDLNet_GetError());
-                                            return 1;
+                                            size+=SDLNet_TCP_Send(players[k].tcpsock,tmp+size,len-size);
                                         }
                                     }
 
@@ -312,10 +320,32 @@ int main(int argc, char **argv)
                 default:
                     break;
                 }
+            }
+        }
+        scoreUpdate++;
+        if(scoreUpdate > 200)
+        {
+            for(k=0; k<maxPlayers; k++)
+            {
+                if(players[k].exists)
+                {
+                    for(i=0; i<maxPlayers; i++)
+                    {
+                        if(players[i].exists)
+                        {
+                            type = 10;
+                            rcvPack->address = players[i].ip;
+                            sprintf(rcvPack->data,"%d %d %d %d",type,k,players[k].kills,players[k].deaths);
+                            SDLNet_UDP_Send(rcvSock,-1,rcvPack);
+                        }
+                    }
+                }
+
 
             }
-
+            scoreUpdate = 0;
         }
+
 
         SDL_Delay(1);
         if(running == 0)
