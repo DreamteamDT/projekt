@@ -32,6 +32,7 @@ extern void bulletClear(Bullet b[],Player *man, Network *client);
 extern void updateEnemyBullet(Player *man);
 
 extern void respawn(Player *man);
+extern void generateScoreboard(Player *man);
 
 int global = 0;
 int main(int argc, char *argv[])
@@ -58,6 +59,8 @@ int main(int argc, char *argv[])
     unsigned int lastTime,currentTime;
     int frameRate = 30,startMs,endMs,delayMs;
     int frameMs = 1000 / frameRate;
+
+    TTF_Init();
 
     int sekund,spawnTimer=4;
     srand(time(NULL));
@@ -100,7 +103,7 @@ int main(int argc, char *argv[])
     while(!exit) ///**** MAIN MENU ****/
     {
         Mix_PlayMusic(backgroundSound,-1);
-       // Mix_PlayMusic(backgroundSound,-1);
+        // Mix_PlayMusic(backgroundSound,-1);
         displayMenu(menu);
         pickCharacter = handleMenu(&exit);
 
@@ -112,7 +115,7 @@ int main(int argc, char *argv[])
             {
                 if(player.spritePick == 3)
 
-                clearCartridge(ammo);
+                    clearCartridge(ammo);
                 initPlayer(&player);
                 initLedges(&player);
                 initCd(&player);
@@ -126,8 +129,8 @@ int main(int argc, char *argv[])
                 {
                     send_data(&player,&client,2);
                 }
-               // lastTime = SDL_GetTicks();
-               // lastTime = lastTime/1000;
+                // lastTime = SDL_GetTicks();
+                // lastTime = lastTime/1000;
 
             }
 
@@ -152,6 +155,7 @@ int main(int argc, char *argv[])
                 if (connected && done != 1)
                     recv_data(&player,&client,&done,ammo);
 
+                generateScoreboard(&player);
                 doRender(&player,ammo); //,&enemies[i]
                 detectHit(&player,ammo,&client);
 
@@ -174,10 +178,10 @@ int main(int argc, char *argv[])
                 }
 
                 //fixed 30 frames per second
-              //  endMs = SDL_GetTicks();
+                //  endMs = SDL_GetTicks();
                 //delayMs = frameMs -(endMs -startMs);
-              //  SDL_Delay(delayMs);
-            SDL_Delay(20);
+                //  SDL_Delay(delayMs);
+                SDL_Delay(20);
                 if(done)
                 {
                     if(connected)
@@ -200,6 +204,7 @@ int main(int argc, char *argv[])
             exit = 0;
         }
     }
+    TTF_Quit();
     Mix_FreeMusic(backgroundSound);
     Mix_CloseAudio();
     free(tmp);

@@ -3,6 +3,7 @@
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_image.h>
 #include <SDL2/SDL_net.h>
+#include <SDL2/SDL_ttf.h>
 #define LINUX 1
 #elif _WIN32
 #include <string.h>
@@ -12,6 +13,7 @@
 #include <SDL_image.h>
 #include <SDL_net.h>
 #include <SDL_mixer.h>
+#include <SDL_ttf.h>
 #define LINUX 0
 #endif // _WIN32
 #include <time.h>
@@ -65,10 +67,11 @@ typedef struct
 {
     int x,y;
     int frameX,frameY;
-    SDL_Texture *texture;
+    SDL_Texture *texture,*score;
     int exists, sprite;
-    SDL_Rect srcRect,dstRect;
+    SDL_Rect srcRect,dstRect,scoreRect;
     Bullet bullet[20];
+    int kills,deaths;
     int alive;
 } Enemy;
 
@@ -79,14 +82,14 @@ typedef struct
     int x, y;
     int frameX,frameY;
     int x1, y1;
-    int hitid,alive;
+    int hitid,alive,kills,deaths;
     int currentTime, cdTime, spellReady;
-    SDL_Texture *texture,*background,*scoreBackground,*bullet,*cdTimer;
+    SDL_Texture *texture,*background,*scoreBackground,*bullet,*cdTimer,*score,*scoreHead;
     int thinkTime;
     int shot,bulletid,blinkX,blinkY,bulletNo,connected;
     int id;
     int spritePick;
-    SDL_Rect blinkRect;
+    SDL_Rect blinkRect,scoreRect;
 } Player;
 
 typedef struct

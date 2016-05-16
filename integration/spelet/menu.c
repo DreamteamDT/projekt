@@ -24,6 +24,7 @@ void initMenu(Menu *menu)
     menu->rect.w = 1024;
     menu->rect.h = 768;
     menu->texture = texture;
+
 }
 
 
@@ -179,4 +180,69 @@ int handlePick(int *pickCharacter,Player *man)
     }
 
     return ingame;
+}
+
+void generateScoreboard(Player *man)
+{
+    int i,j,k,scoreposition=657;
+    SDL_Surface* surfaceMessage;
+    SDL_Color black = {0, 0, 0};
+    char *score = (char*)malloc(100);
+    TTF_Font* arial = TTF_OpenFont("arialbd.ttf", 48);
+
+    /** FOR PLAYER **/
+    if(man->spritePick == 1)
+    {
+        sprintf(score,"Fag        %d      %d",man->kills,man->deaths);
+    }
+    else if(man->spritePick == 2)
+    {
+        sprintf(score,"Russia     %d      %d",man->kills,man->deaths);
+    }
+    else if(man->spritePick == 3)
+    {
+        sprintf(score,"America    %d      %d",man->kills,man->deaths);
+    }
+    else
+    {
+        sprintf(score,"China      %d      %d",man->kills,man->deaths);
+    }
+    surfaceMessage = TTF_RenderText_Blended(arial,score,black);
+    man->score = SDL_CreateTextureFromSurface(program.renderer,surfaceMessage);
+    SDL_Rect rect = {164,scoreposition,250,20};
+    man->scoreRect = rect;
+    SDL_FreeSurface(surfaceMessage);
+    scoreposition = scoreposition+20;
+
+    /** FOR ENEMIES **/
+    for(i=0; i<4; i++)
+    {
+        if(man->enemies[i].exists)
+        {
+            printf("printing enemy %d\n",i);
+            if(man->enemies[i].sprite == 1)
+            {
+                sprintf(score,"Fag        %d      %d",man->enemies[i].kills,man->enemies[i].deaths);
+            }
+            else if(man->enemies[i].sprite == 2)
+            {
+                sprintf(score,"Russia     %d      %d",man->enemies[i].kills,man->enemies[i].deaths);
+            }
+            else if(man->enemies[i].sprite == 3)
+            {
+                sprintf(score,"America    %d      %d",man->enemies[i].kills,man->enemies[i].deaths);
+            }
+            else
+            {
+                sprintf(score,"China      %d      %d",man->enemies[i].kills,man->enemies[i].deaths);
+            }
+
+            surfaceMessage = TTF_RenderText_Blended(arial,score,black);
+            man->enemies[i].score = SDL_CreateTextureFromSurface(program.renderer,surfaceMessage);
+            SDL_Rect rect = {164,scoreposition,250,20};
+            man->enemies[i].scoreRect = rect;
+            SDL_FreeSurface(surfaceMessage);
+            scoreposition = scoreposition+20;
+        }
+    }
 }

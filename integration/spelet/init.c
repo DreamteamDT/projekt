@@ -3,6 +3,12 @@
 
 void initPlayer(Player *player)
 {
+    SDL_Surface* surfaceMessage;
+    TTF_Font* arial = TTF_OpenFont("arialbd.ttf", 48);
+    SDL_Color black = {0, 0, 0};
+    surfaceMessage = TTF_RenderText_Blended(arial, "Player      Kills       Deaths", black);
+    player->scoreHead = SDL_CreateTextureFromSurface(program.renderer,surfaceMessage);
+    SDL_FreeSurface(surfaceMessage);
 
     SDL_Surface *image,*background,*scoreBg,*bullet;
 

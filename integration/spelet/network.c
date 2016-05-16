@@ -120,6 +120,7 @@ void recv_data(Player *man, Network *client,int *done,Bullet b[])
 
     int type, enemyid, enemyDX, enemyDY, enemySX,spritePick,hitid;
     int bulletX,bulletY,blinkX,blinkY,bulletid;
+    int kills,deaths;
     while(SDLNet_CheckSockets(client->udpset,0)>0)
     {
         SDLNet_UDP_Recv(client->udpsock,client->rcvpack);
@@ -130,7 +131,7 @@ void recv_data(Player *man, Network *client,int *done,Bullet b[])
         //man->enemies[enemyid].y = enemyDY;
 
         //Om ny fiende
-        if (!man->enemies[enemyid].exists)
+        if (!man->enemies[enemyid].exists && (man->id!=enemyid))
         {
             sscanf(client->rcvpack->data,"%d %d %d %d %d %d",
                    &type,&enemyid,&enemyDX,&enemyDY,&enemySX,&spritePick);
@@ -239,6 +240,22 @@ void recv_data(Player *man, Network *client,int *done,Bullet b[])
                    &type,&enemyid,&bulletX,&bulletY,&blinkX,&blinkY,&bulletid);
             checkRunningEnemyDirection(&*man, &bulletX, &bulletY, enemyid);
             addEnemyBullet(bulletX,bulletY,5,man->enemies[enemyid].bullet,blinkX,blinkY,bulletid);
+        }
+        if(type == 10)
+        {
+            sscanf(client->rcvpack->data,"%d %d %d %d",&type,&enemyid,&kills,&deaths);
+            printf("%d %d %d %d\n",type,enemyid,kills,deaths);
+            if(enemyid == man->id)
+            {
+                man->kills = kills;
+                man->deaths = deaths;
+            }
+            else
+            {
+                man->enemies[enemyid].kills = kills;
+                man->enemies[enemyid].deaths = deaths;
+            }
+
         }
     }
 

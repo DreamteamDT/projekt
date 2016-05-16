@@ -600,6 +600,7 @@ void doRender(Player *man,Bullet b[]) //, Enemy *enemies
     SDL_RenderCopy(program.renderer,man->background,NULL,&bg);
 
 
+
     //SDL_Rect rectE = {enemies->dstRect.x, enemies->dstRect.y, 32, 32};
     //SDL_Rect srcE = {enemies->srcRect.x, 0, 32, 32};
 
@@ -657,6 +658,18 @@ void doRender(Player *man,Bullet b[]) //, Enemy *enemies
     // cd bar för blink
     SDL_Rect blinkRec = {man->blinkRect.x, man->blinkRect.y, man->blinkRect.w, man->blinkRect.h};
     SDL_RenderCopy(program.renderer,man->cdTimer,NULL,&blinkRec);
+
+    SDL_Rect scoreHeadRect = {164,637,300,20};
+    SDL_RenderCopy(program.renderer,man->scoreHead,NULL,&scoreHeadRect);
+    SDL_RenderCopy(program.renderer,man->score,NULL,&man->scoreRect);
+
+    for(i=0; i<4; i++)
+    {
+        if(man->enemies[i].exists)
+        {
+            SDL_RenderCopy(program.renderer,man->enemies[i].score,NULL,&man->enemies[i].scoreRect);
+        }
+    }
 
 
     SDL_RenderPresent(program.renderer);
