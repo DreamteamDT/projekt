@@ -53,6 +53,7 @@ int main(int argc, char *argv[])
     int moved = 0;
     int type;
     int direct = 0;
+    player.blinked = 0;
     player.spellReady = 1;
     bullet.texture=initBullet();
     Bullet ammo[20];

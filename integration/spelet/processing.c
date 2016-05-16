@@ -164,6 +164,13 @@ int processEvents(Player *man,Bullet b[],int *moved,int *type,int *direct,Networ
         if(man->y>566)
             man->y = 566;
     }
+    if (*direct <= 0 && man->blinked == 1)
+    {
+        printf("fårporr\n");
+        *moved = 1;
+        *type = 2;
+        man->blinked = 0;
+    }
     if(state[SDL_SCANCODE_SPACE] && man->alive && !shooting)
     {
         int blinkX,blinkY,bulletNo,shotX,shotY;
@@ -205,14 +212,13 @@ int processEvents(Player *man,Bullet b[],int *moved,int *type,int *direct,Networ
             direction.y = bY-man->y;
             unit_vector.x = (direction.x)/ v_length;
             unit_vector.y = (direction.y)/ v_length;
-            // SDL_Delay(150);
             man->x+=(unit_vector.x*100)-16;
             man->y+=(unit_vector.y*100)-16;
             *moved = 1;
             *type = 2;
-            //man->lastTime = man->currentTime;
             man->blinkRect.w = 0;
             man->spellReady = 0;
+            man->blinked = 1;
         }
     }
     //printf("Thinktime : %d \n",man->thinkTime);
