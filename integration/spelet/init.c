@@ -16,11 +16,21 @@ void initPlayer(Player *player)
     {
         bullet = IMG_Load("kula.png");
         background = IMG_Load("bakgrund5.png");
+        if(background==NULL)
+        {
+            //Laddningen av bakgrunden misslyckades
+            printf("Unable to load background image!\n");
+        }
     }
     else
     {
         bullet =IMG_Load("kula.PNG");
         background = IMG_Load("bakgrund5.PNG");
+        if(background==NULL)
+        {
+            //Laddningen av bakgrunden misslyckades
+            printf("Unable to load background image!\n");
+        }
     }
     if(LINUX)
     {
