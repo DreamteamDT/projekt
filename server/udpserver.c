@@ -224,6 +224,24 @@ int main(int argc, char **argv)
                         SDLNet_UDP_Send(rcvSock,-1,rcvPack);
                     }
                 }
+                for(k=0; k<maxPlayers; k++)
+                {
+                    if(players[k].exists)
+                    {
+                        for(i=0; i<maxPlayers; i++)
+                        {
+                            if(players[i].exists)
+                            {
+                                type = 10;
+                                rcvPack->address = players[i].ip;
+                                sprintf(rcvPack->data,"%d %d %d %d",type,k,players[k].kills,players[k].deaths);
+                                SDLNet_UDP_Send(rcvSock,-1,rcvPack);
+                            }
+                        }
+                    }
+
+
+                }
             }
             else if(type == 8)
             {
@@ -252,7 +270,11 @@ int main(int argc, char **argv)
                         max = 0;
                         do
                         {
-                            offset+=SDLNet_TCP_Recv(players[i].tcpsock,tmp+offset,1024);
+                            if(!(offset+=SDLNet_TCP_Recv(players[i].tcpsock,tmp+offset,1024)))
+                            {
+                                printf("TCP Recv failed: %s\n",SDL_GetError());
+                                return 1;
+                            }
                             max++;
                         }
                         while(uncomplete_string(tmp) && max<20);
@@ -274,7 +296,11 @@ int main(int argc, char **argv)
                                         len=strlen(tmp)+1;
                                         while(size<len)
                                         {
-                                            size+=SDLNet_TCP_Send(players[k].tcpsock,tmp+size,len-size);
+                                            if(!(size+=SDLNet_TCP_Send(players[k].tcpsock,tmp+size,len-size)))
+                                            {
+                                                printf("TCP Send failed: %s\n",SDL_GetError());
+                                                return 1;
+                                            }
                                         }
                                     }
 
@@ -323,31 +349,10 @@ int main(int argc, char **argv)
             }
         }
         scoreUpdate++;
-        if(scoreUpdate > 200)
-        {
-            for(k=0; k<maxPlayers; k++)
-            {
-                if(players[k].exists)
-                {
-                    for(i=0; i<maxPlayers; i++)
-                    {
-                        if(players[i].exists)
-                        {
-                            type = 10;
-                            rcvPack->address = players[i].ip;
-                            sprintf(rcvPack->data,"%d %d %d %d",type,k,players[k].kills,players[k].deaths);
-                            SDLNet_UDP_Send(rcvSock,-1,rcvPack);
-                        }
-                    }
-                }
 
 
-            }
-            scoreUpdate = 0;
-        }
 
-
-        SDL_Delay(1);
+        SDL_Delay(20);
         if(running == 0)
         {
             for(i=5; i>0; i--)

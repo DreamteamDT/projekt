@@ -157,7 +157,6 @@ int main(int argc, char *argv[])
                 if (connected && done != 1)
                     recv_data(&player,&client,&done,ammo);
 
-                generateScoreboard(&player);
                 doRender(&player,ammo); //,&enemies[i]
                 detectHit(&player,ammo,&client);
 

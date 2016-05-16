@@ -246,7 +246,7 @@ void recv_data(Player *man, Network *client,int *done,Bullet b[])
         if(type == 10)
         {
             sscanf(client->rcvpack->data,"%d %d %d %d",&type,&enemyid,&kills,&deaths);
-            printf("%d %d %d %d\n",type,enemyid,kills,deaths);
+            //printf("%d %d %d %d\n",type,enemyid,kills,deaths);
             if(enemyid == man->id)
             {
                 man->kills = kills;
@@ -257,6 +257,7 @@ void recv_data(Player *man, Network *client,int *done,Bullet b[])
                 man->enemies[enemyid].kills = kills;
                 man->enemies[enemyid].deaths = deaths;
             }
+            generateScoreboard(&*man);
 
         }
     }
