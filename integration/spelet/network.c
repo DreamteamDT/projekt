@@ -117,6 +117,59 @@ void sendBullet(Player man,Network client)
     SDLNet_UDP_Send(client.udpsock,-1,client.sendpack);
 }
 
+void deathSound(Player *man)
+{
+     if(LINUX)
+     {
+         if(man->spritePick==1)
+        {
+           Mix_Chunk *deathsound = Mix_LoadWAV("death14.wav");
+           Mix_PlayMusic(deathsound,-1);
+        }
+        else if(man->spritePick==2)
+        {
+           Mix_Chunk *deathsound = Mix_LoadWAV("death4.wav");
+           Mix_PlayMusic(deathsound,-1);
+        }
+        else if(man->spritePick==3)
+        {
+           Mix_Chunk *deathsound = Mix_LoadWAV("death15.wav");
+           Mix_PlayMusic(deathsound,-1);
+        }
+        else if(man->spritePick==4)
+        {
+           Mix_Chunk *deathsound = Mix_LoadWAV("death8.wav");
+           Mix_PlayMusic(deathsound,-1);
+        }
+     }
+    else
+    {
+        if(man->spritePick==1)
+        {
+           Mix_Chunk *deathsound = Mix_LoadMUS("death14.MP3");
+           Mix_PlayMusic(deathsound,-1);
+        }
+        else if(man->spritePick==2)
+        {
+           Mix_Chunk *deathsound = Mix_LoadMUS("death4.MP3");
+           Mix_PlayMusic(deathsound,-1);
+        }
+        else if(man->spritePick==3)
+        {
+           Mix_Chunk *deathsound = Mix_LoadMUS("death15.MP3");
+           Mix_PlayMusic(deathsound,-1);
+        }
+        else if(man->spritePick==4)
+        {
+           Mix_Chunk *deathsound = Mix_LoadMUS("death8.MP3");
+           Mix_PlayMusic(deathsound,-1);
+        }
+
+    }
+
+}
+
+
 void recv_data(Player *man, Network *client,int *done,Bullet b[])
 {
 
@@ -224,16 +277,19 @@ void recv_data(Player *man, Network *client,int *done,Bullet b[])
             {
                 man->alive = 0;
                 man->enemies[enemyid].bullet[bulletid].active = 0;
+                deathSound(&*man);
             }
             else if(enemyid == man->id)
             {
                 man->enemies[hitid].alive = 0;
                 b[bulletid].active = 0;
+                deathSound(&*man);
             }
             else
             {
                 man->enemies[hitid].alive = 0;
                 man->enemies[enemyid].bullet[bulletid].active = 0;
+                deathSound(&*man);
             }
         }
         if (type == 8)
