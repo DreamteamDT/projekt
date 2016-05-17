@@ -65,7 +65,7 @@ typedef struct
 
 typedef struct
 {
-    int x,y;
+    float x,y;
     int frameX,frameY;
     SDL_Texture *texture,*score;
     int exists, sprite;
@@ -79,7 +79,7 @@ typedef struct
 {
     Enemy enemies[10];
     Ledge ledges[7];
-    int x, y;
+    float x, y;
     int frameX,frameY;
     int x1, y1;
     int hitid,alive,kills,deaths;
@@ -88,6 +88,9 @@ typedef struct
     int thinkTime;
     int shot,bulletid,blinkX,blinkY,bulletNo,connected;
     int id;
+    int justShot;
+    int deltaTimeMs;
+    float deltaTimeS;
     int spritePick;
     SDL_Rect blinkRect,scoreRect,ipRect;
     char *ip;
