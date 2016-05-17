@@ -3,6 +3,7 @@
 
 void initPlayer(Player *player)
 {
+    int i;
     SDL_Surface* surfaceMessage;
     TTF_Font* arial = TTF_OpenFont("arialbd.ttf", 48);
     SDL_Color black = {0, 0, 0};
@@ -52,7 +53,7 @@ void initPlayer(Player *player)
       if(player->spritePick==1)
     {
         image = IMG_Load("USA.png");
-        Mix_Music *soundtrack1 = Mix_LoadMUS("Backstreet.mp3");
+        Mix_Music *soundtrack1 = Mix_LoadMUS("Backstreet.wav");
         Mix_PlayMusic(soundtrack1,-1);
 
     }
@@ -60,20 +61,20 @@ void initPlayer(Player *player)
     else if(player->spritePick == 2)
     {
         image = IMG_Load("spriteRussia.png");
-        Mix_Music *soundtrack1 = Mix_LoadMUS("cykablyat.mp3");
+        Mix_Music *soundtrack1 = Mix_LoadMUS("cykablyat.wav");
         Mix_PlayMusic(soundtrack1,-1);
     }
     else if(player->spritePick == 3)
     {
         image = IMG_Load("spriteMurica.png");
-        Mix_Music *soundtrack1 = Mix_LoadMUS("America.mp3");
+        Mix_Music *soundtrack1 = Mix_LoadMUS("America.wav");
         Mix_PlayMusic(soundtrack1,-1);
 
     }
     else
     {
         image = IMG_Load("spriteChina.png");
-        Mix_Music *soundtrack1 = Mix_LoadMUS("Chinese.mp3");
+        Mix_Music *soundtrack1 = Mix_LoadMUS("Chinese.wav");
         Mix_PlayMusic(soundtrack1,-1);
     }
    }
@@ -125,15 +126,16 @@ void initPlayer(Player *player)
     player->scoreBackground = scoreBgtext;
     player->bullet = bullettxt;
     player->alive = 1;
+
+    for(i=0;i<4;i++)
+    {
+        player->enemies[i].justDied = 0;
+    }
 }
 
 void initLedges(Player *player)
 {
-    /*SDL_Surface *image = IMG_Load("pelare.PNG");
-    SDL_Texture *texture;
-    texture = SDL_CreateTextureFromSurface(program.renderer,image);
-    SDL_FreeSurface(image);*/
-    int i, lx = 70, ly = 300;
+    int i;
     //int x = 221;
     //int y = 121;
     int x = 361;
@@ -187,7 +189,15 @@ void initLedges(Player *player)
 void initCd(Player *player)
 {
     SDL_Surface *timer;
-    timer = IMG_Load("cdTimer.PNG");
+    if(LINUX)
+    {
+          timer = IMG_Load("cdTimer.png");
+
+    }
+    else
+    {
+          timer = IMG_Load("cdTimer.PNG");
+    }
     SDL_Texture *cdTimer;
     cdTimer = SDL_CreateTextureFromSurface(program.renderer,timer);
     SDL_FreeSurface(timer);

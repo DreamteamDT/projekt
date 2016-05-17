@@ -14,8 +14,8 @@ void updateLogic(Player *p,Bullet b[])
     {
         if(b[i].active == 1)
         {
-            b[i].x +=b[i].vector_unitX*6;
-            b[i].y +=b[i].vector_unitY*6;
+            b[i].x = b[i].x + (b[i].vector_unitX*300*p->deltaTimeS);
+            b[i].y = b[i].y + (b[i].vector_unitY*300*p->deltaTimeS);
         }
     }
     global++;
@@ -30,8 +30,10 @@ void updateEnemyBullet(Player *man)
         {
             if(man->enemies[i].bullet[j].active == 1)
             {
-                man->enemies[i].bullet[j].x += man->enemies[i].bullet[j].vector_unitX*6;
-                man->enemies[i].bullet[j].y += man->enemies[i].bullet[j].vector_unitY*6;
+                man->enemies[i].bullet[j].x = man->enemies[i].bullet[j].x +
+                                              (man->enemies[i].bullet[j].vector_unitX*300*man->deltaTimeS);
+                man->enemies[i].bullet[j].y = man->enemies[i].bullet[j].y +
+                                              (man->enemies[i].bullet[j].vector_unitY*300*man->deltaTimeS);
             }
         }
     }
@@ -42,7 +44,7 @@ int processEvents(Player *man,Bullet b[],int *moved,int *type,int *direct,Networ
     unsigned int spellOne, spellOne_False=0;
     spellOne = SDL_GetTicks();
     SDL_Event event;
-    int done = 0,shooting = 0;;
+    int done = 0,shooting;
 
     man->thinkTime--;
     if(man->thinkTime<=0)
@@ -83,6 +85,7 @@ int processEvents(Player *man,Bullet b[],int *moved,int *type,int *direct,Networ
             }
         }
         break;
+
         case SDL_QUIT:
             //quit out of the game
             done = 1;
@@ -94,13 +97,18 @@ int processEvents(Player *man,Bullet b[],int *moved,int *type,int *direct,Networ
             int blinkX,blinkY;
             SDL_GetMouseState(&blinkX, &blinkY);
             printf("Cursor at %d x %d\n",blinkX,blinkY);
+            break;
+
+        case SDL_MOUSEBUTTONUP:
+            man->justShot = 0;
+            break;
         }
     }
 
     const Uint8 *state = SDL_GetKeyboardState(NULL);
     if(state[SDL_SCANCODE_LEFT] || state[SDL_SCANCODE_A] && man->alive)
     {
-        man->x -= 5;
+        man->x = man->x - (200*(man->deltaTimeS));
         *moved = 1;
         *type = 2;
         *direct += 1;
@@ -117,7 +125,8 @@ int processEvents(Player *man,Bullet b[],int *moved,int *type,int *direct,Networ
     }
     if(state[SDL_SCANCODE_RIGHT] || state[SDL_SCANCODE_D] && man->alive)
     {
-        man->x += 5;
+        man->x = man->x + (200*(man->deltaTimeS));
+
         *moved = 1;
         *type = 2;
         *direct += 2;
@@ -135,7 +144,7 @@ int processEvents(Player *man,Bullet b[],int *moved,int *type,int *direct,Networ
     }
     if(state[SDL_SCANCODE_UP] || state[SDL_SCANCODE_W] && man->alive)
     {
-        man->y -= 5;
+        man->y = man->y - (200*(man->deltaTimeS));
         *moved = 1;
         *type = 2;
         *direct += 4;
@@ -152,7 +161,7 @@ int processEvents(Player *man,Bullet b[],int *moved,int *type,int *direct,Networ
     }
     if(state[SDL_SCANCODE_DOWN] || state[SDL_SCANCODE_S] && man->alive)
     {
-        man->y += 5;
+        man->y = man->y + (200*(man->deltaTimeS));
         *moved = 1;
         *type = 2;
         *direct += 8;
@@ -167,21 +176,22 @@ int processEvents(Player *man,Bullet b[],int *moved,int *type,int *direct,Networ
         if(man->y>566)
             man->y = 566;
     }
-    if (*direct <= 0 && man->blinked == 1)
+    if (man->blinked == 1)
     {
         printf("fårporr\n");
         *moved = 1;
         *type = 2;
+        *direct = -1;
         man->blinked = 0;
     }
-    if((SDL_GetMouseState(NULL,NULL) &&SDL_BUTTON_LEFT) && man->alive && !shooting )
+    if((SDL_GetMouseState(NULL,NULL) &&SDL_BUTTON_LEFT) && man->alive && !man->justShot)
     {
         int blinkX,blinkY,bulletNo,shotX,shotY;
         checkRunningDirection(&*man, &shotX, &shotY);
         SDL_GetMouseState(&blinkX, &blinkY);
         if(global%6==0)
         {
-            shooting = 1;
+            man->justShot = 1;
             if(((bulletNo = addBullet(shotX,shotY,5,b,blinkX,blinkY))>=0))
             {
                 Mix_PlayChannel(-1,bulletShot,0);
@@ -191,18 +201,17 @@ int processEvents(Player *man,Bullet b[],int *moved,int *type,int *direct,Networ
                 if(man->connected)
                     sendBullet(*man,*client);
             }
-            shooting = 0;
         }
     }
     checkCd(&*man);
-    if(state[SDL_SCANCODE_SPACE] && man->alive)
+    if(state[SDL_SCANCODE_SPACE] && man->alive) // kan inte ha  && man->spellReady här
     {
         printf("pressed 1\n");
-        *direct = -1;
+        if (man->spellReady == 0 && *direct <= 0)
+            *direct = -1;
         int bX,bY;
 
-        //man->currentTime = SDL_GetTicks();
-        if(spellOne > spellOne_False+1000 && man->spellReady) //man->currentTime > man->lastTime+3000
+        if(spellOne > spellOne_False+1000 && man->spellReady)
         {
             man->x1 = man->x;
             man->y1 = man->y;
@@ -215,10 +224,13 @@ int processEvents(Player *man,Bullet b[],int *moved,int *type,int *direct,Networ
             direction.y = bY-man->y;
             unit_vector.x = (direction.x)/ v_length;
             unit_vector.y = (direction.y)/ v_length;
-            man->x+=(unit_vector.x*100)-16;
-            man->y+=(unit_vector.y*100)-16;
+            //man->x+=(unit_vector.x*100)-16;
+            //man->y+=(unit_vector.y*100)-16;
+            man->x+=(unit_vector.x*100);
+            man->y+=(unit_vector.y*100);
             *moved = 1;
             *type = 2;
+            *direct = -1;
             man->blinkRect.w = 0;
             man->spellReady = 0;
             man->blinked = 1;
@@ -226,6 +238,171 @@ int processEvents(Player *man,Bullet b[],int *moved,int *type,int *direct,Networ
     }
     //printf("Thinktime : %d \n",man->thinkTime);
     return done;
+}
+
+void checkCd(Player *man)
+{
+    man->currentTime = SDL_GetTicks();
+    if (man->currentTime > man->cdTime+40 && man->blinkRect.w < 150)  // && man->currentTime+3000 < man->lastTime
+    {
+        man->blinkRect.w += 2;
+        man->cdTime = man->currentTime;
+    }
+    else if (man->blinkRect.w >= 150)
+    {
+        man->spellReady = 1;
+    }
+}
+
+void collisionDetect(Player *man, int *direct, int *moved, int *type)
+{
+    if (*direct > 0)
+    {
+        int i, bpe = 0;
+        // check for collision with any ledges and enemies
+        for (i = 0; i < 7; i++)
+        {
+            int mw = 64, mh = 64;
+            int mx = man->x, my = man->y;
+
+            // ladda ledges
+            int bx = man->ledges[i].x, by = man->ledges[i].y, bw = man->ledges[i].w, bh = man->ledges[i].h;
+
+            // kolla [i] för ledges och fiende
+            while (bpe < 2)
+            {
+                if (my+mh > by && mx < bx+bw && mx+mw > bx && my < by+bh)
+                {
+                    // man moving left
+                    if (*direct == 1 || *direct == 13)
+                        man->x = bx+bw;
+                    // man moving right
+                    else if (*direct == 2 || *direct == 14)
+                        man->x = bx-mw;
+                    // man moving up
+                    else if (*direct == 4 || *direct == 7)
+                        man->y = by+bh;
+                    // man moving down
+                    else if (*direct == 8 || *direct == 11)
+                        man->y = by-mh;
+
+                    /**** DIAGONALT ****/
+                    // man moving left up
+                    else if (*direct == 5 && my < by+bh-6)
+                        man->x = bx+bw;
+                    else if (*direct == 5 && my > by+bh-6)
+                        man->y = by+bh;
+                    // man moving right up
+                    else if (*direct == 6 && my < by+bh-6)
+                        man->x = bx-mw;
+                    else if (*direct == 6 && my > by+bh-6)
+                        man->y = by+bh;
+                    // man moving left down
+                    else if (*direct == 9 && my+mh > by+6)
+                        man->x = bx+bw;
+                    else if (*direct == 9 && my+mh < by+6)
+                        man->y = by-mh;
+                    // man moving right down
+                    else if (*direct == 10 && my+mh > by+6)
+                        man->x = bx-mw;
+                    else if (*direct == 10 && my+mh < by+6)
+                        man->y = by-mh;
+                }
+                // ladda enemies istället för ledges
+                bx = man->enemies[i].dstRect.x, by = man->enemies[i].dstRect.y, bw = man->enemies[i].dstRect.w, bh = man->enemies[i].dstRect.h;
+                bpe++;
+            }
+            bpe = 0;
+        }
+    }
+    else if (*direct < 0)
+    {
+        int i, bpe = 0;
+        int mw = 64, mh = 64;
+        int mx = man->x+mw/2, my = man->y+mh/2;
+        int ox = man->x1+mw/2, oy = man->y1+mh/2;
+
+        // spelaren kan inte blinka utanför kartan
+        if ((mx-mw/2) < 0)
+            man->x = 0;
+        if ((mx+mw/2) > 1024)
+            man->x = 1024-mw;
+        if ((my-mh/2) < 100)
+            man->y = 100;
+        if ((my+mh/2) > 630)
+            man->y = 630-mh;
+
+        // check for collision with any ledges and enemies
+        for (i = 0; i < 7; i++)
+        {
+            // ladda ledges
+            int bw = man->ledges[i].w, bh = man->ledges[i].h;
+            int bx = man->ledges[i].x+bw/2, by = man->ledges[i].y+bh/2;
+
+            // kolla [i] för ledges och fiende
+            while (bpe < 2)
+            {
+                if ((my-mh/2)+mh > (by-bh/2) && (mx-mw/2) < (bx-bw/2)+bw && (mx-mw/2)+mw > (bx-bw/2) && (my-mh/2) < (by-bh/2)+bh)
+                {
+                    // höger sida
+                    if (ox >= bx)
+                    {
+                        if (abs(bx-ox) > abs(by-oy))
+                        {
+                            man->x = bx+bw/2;
+                            *moved = 0;
+                            *type = 0;
+                        }
+                        // över
+                        else if (abs(oy-mh/2) < abs(by-bh/2))
+                        {
+                            man->y = by-bw/2-mh-14;
+                            *moved = 0;
+                            *type = 0;
+                        }
+                        // under
+                        else
+                        {
+                            man->y = by+bh/2;
+                            *moved = 0;
+                            *type = 0;
+                        }
+                    }
+                    // vänster sida
+                    else if (ox <= bx)
+                    {
+                        if (abs(bx-ox) > abs(by-oy))
+                        {
+                            man->x = bx-bw/2-mw;
+                            *moved = 0;
+                            *type = 0;
+                        }
+                        // över
+                        else if (abs(oy-mh/2) < abs(by-bh/2))
+                        {
+                            man->y = by-bw/2-mh-14;
+                            *moved = 0;
+                            *type = 0;
+                        }
+                        // under
+                        else
+                        {
+                            man->y = by+bh/2;
+                            *moved = 0;
+                            *type = 0;
+                        }
+                    }
+                }
+                // ladda enemies istället för ledges
+
+                bw = man->enemies[i].dstRect.w, bh = man->enemies[i].dstRect.h;
+                bx = man->enemies[i].dstRect.x+bw/2, by = man->enemies[i].dstRect.y+bh/2;
+
+                bpe++;
+            }
+            bpe = 0;
+        }
+    }
 }
 
 void checkRunningDirection(Player *man, int *shotX, int *shotY)
@@ -436,158 +613,6 @@ void checkRunningEnemyDirection(Player *man, int *bulletX, int *bulletY, int id)
     }
 }
 
-void checkCd(Player *man)
-{
-    man->currentTime = SDL_GetTicks();
-    if (man->currentTime > man->cdTime+40 && man->blinkRect.w < 150)  // && man->currentTime+3000 < man->lastTime
-    {
-        man->blinkRect.w += 2;
-        man->cdTime = man->currentTime;
-    }
-    else if (man->blinkRect.w >= 150)
-        man->spellReady = 1;
-}
-
-void collisionDetect(Player *man, int *direct)
-{
-    if (*direct > 0)
-    {
-        int i, bpe = 0;
-        // check for collision with any ledges and enemies
-        for (i = 0; i < 7; i++)
-        {
-            int mw = 64, mh = 64;
-            int mx = man->x, my = man->y;
-
-            // ladda ledges
-            int bx = man->ledges[i].x, by = man->ledges[i].y, bw = man->ledges[i].w, bh = man->ledges[i].h;
-
-            // kolla [i] för ledges och fiende
-            while (bpe < 2)
-            {
-                if (my+mh > by && mx < bx+bw && mx+mw > bx && my < by+bh)
-                {
-                    // man moving left
-                    if (*direct == 1 || *direct == 13)
-                        man->x += 5;
-                    // man moving right
-                    else if (*direct == 2 || *direct == 14)
-                        man->x -= 5;
-                    // man moving up
-                    else if (*direct == 4 || *direct == 7)
-                        man->y += 5;
-                    // man moving down
-                    else if (*direct == 8 || *direct == 11)
-                        man->y -= 5;
-
-                    /**** DIAGONALT ****/
-                    // man moving left up
-                    else if (*direct == 5 && my < by+bh-6)
-                        man->x += 5;
-                    else if (*direct == 5 && my > by+bh-6)
-                        man->y += 5;
-                    // man moving right up
-                    else if (*direct == 6 && my < by+bh-6)
-                        man->x -= 5;
-                    else if (*direct == 6 && my > by+bh-6)
-                        man->y += 5;
-                    // man moving left down
-                    else if (*direct == 9 && my+mh > by+6)
-                        man->x += 5;
-                    else if (*direct == 9 && my+mh < by+6)
-                        man->y -= 5;
-                    // man moving right down
-                    else if (*direct == 10 && my+mh > by+6)
-                        man->x -= 5;
-                    else if (*direct == 10 && my+mh < by+6)
-                        man->y -= 5;
-                }
-                // ladda enemies istället för ledges
-                bx = man->enemies[i].dstRect.x, by = man->enemies[i].dstRect.y, bw = man->enemies[i].dstRect.w, bh = man->enemies[i].dstRect.h;
-                bpe++;
-            }
-            bpe = 0;
-        }
-    }
-    else if (*direct < 0)
-    {
-        int i, bpe = 0;
-        int mw = 64, mh = 64;
-        int mx = man->x+mw/2, my = man->y+mh/2;
-        int ox = man->x1+mw/2, oy = man->y1+mh/2;
-
-        // spelaren kan inte blinka utanför kartan
-        if ((mx-mw/2) < 0)
-            man->x = 0;
-        if ((mx+mw/2) > 1024)
-            man->x = 1024-mw;
-        if ((my-mh/2) < 0)
-            man->y = 0;
-        if ((my+mh/2) > 630)
-            man->y = 630-mh;
-
-        // check for collision with any ledges and enemies
-        for (i = 0; i < 7; i++)
-        {
-            // ladda ledges
-            int bw = man->ledges[i].w, bh = man->ledges[i].h;
-            int bx = man->ledges[i].x+bw/2, by = man->ledges[i].y+bh/2;
-
-            // kolla [i] för ledges och fiende
-            while (bpe < 2)
-            {
-                if ((my-mh/2)+mh > (by-bh/2) && (mx-mw/2) < (bx-bw/2)+bw && (mx-mw/2)+mw > (bx-bw/2) && (my-mh/2) < (by-bh/2)+bh)
-                {
-                    // höger sida
-                    if (ox >= bx)
-                    {
-                        if (abs(bx-ox) > abs(by-oy))
-                        {
-                            man->x = bx+bw/2;
-                        }
-                        // över
-                        else if (abs(oy-mh/2) < abs(by-bh/2))
-                        {
-                            man->y = by-bw/2-mh+8;
-                        }
-                        // under
-                        else
-                        {
-                            man->y = by+bh/2+4;
-                        }
-                    }
-                    // vänster sida
-                    else if (ox <= bx)
-                    {
-                        if (abs(bx-ox) > abs(by-oy))
-                        {
-                            man->x = bx-bw/2-mw;
-                        }
-                        // över
-                        else if (abs(oy-mh/2) < abs(by-bh/2))
-                        {
-                            man->y = by-bw/2-mh+8;
-                        }
-                        // under
-                        else
-                        {
-                            man->y = by+bh/2+4;
-                        }
-                    }
-
-                }
-                // ladda enemies istället för ledges
-
-                bw = man->enemies[i].dstRect.w, bh = man->enemies[i].dstRect.h;
-                bx = man->enemies[i].dstRect.x+bw/2, by = man->enemies[i].dstRect.y+bh/2;
-
-                bpe++;
-            }
-            bpe = 0;
-        }
-    }
-}
-
 void bulletDetect(Player *man, Bullet b[])
 {
     printf("asd\n");
@@ -738,7 +763,6 @@ void respawn(Player *man)
         man->x = 513;
         man->y = 415;
     }
-
 }
 
 

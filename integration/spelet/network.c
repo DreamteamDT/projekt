@@ -1,6 +1,7 @@
 #include "definition.h"
 extern void addEnemyBullet(int x,int y,int dx,Bullet b[],int b1,int b2,int i);
 void checkRunningEnemyDirection(Player *man, int *bulletX, int *bulletY, int id);
+extern  void generateScoreboard(Player *man);
 
 
 int uncomplete_string(char tmp[])
@@ -62,7 +63,7 @@ int networkInit(Network *client,Player *man,char *ipaddress)
         return 0;
     }
     SDLNet_TCP_Recv(client->tcpsock,tmp,1024);
-    sscanf(tmp,"%d %d %d %d",&type,&(man->id),&man->x,&man->y);
+    sscanf(tmp,"%d %d %f %f",&type,&(man->id),&man->x,&man->y);
     if(type==0)
         printf("my ID: %d\n",man->id);
     else if (type == 4)
@@ -85,7 +86,7 @@ void send_data(Player *man,Network *client,int type)
     int size,len;
     if(type == 2)
     {
-        sprintf(client->sendpack->data,"%d %d %d %d %d %d",
+        sprintf(client->sendpack->data,"%d %d %f %f %d %d",
                 type,man->id,man->x,man->y, man->frameX,man->spritePick);
         SDLNet_UDP_Send(client->udpsock,-1,client->sendpack);
     }
@@ -113,7 +114,7 @@ void sendBullet(Player man,Network client)
     int i,j,k,size,len;
     int type = 8;
     sprintf(client.sendpack->data,"%d %d %d %d %d %d %d",
-            type,man.id,man.x,man.y, man.blinkX,man.blinkY,man.bulletNo);
+            type,man.id,(int)man.x,(int)man.y, man.blinkX,man.blinkY,man.bulletNo);
     SDLNet_UDP_Send(client.udpsock,-1,client.sendpack);
 }
 
@@ -173,8 +174,9 @@ void deathSound(Player *man)
 void recv_data(Player *man, Network *client,int *done,Bullet b[])
 {
 
-    int type, enemyid, enemyDX, enemyDY, enemySX,spritePick,hitid;
-    int bulletX,bulletY,blinkX,blinkY,bulletid;
+    int type, enemyid,enemySX,spritePick,hitid,bulletX,bulletY;
+    float enemyDX,enemyDY;
+    int blinkX,blinkY,bulletid;
     int kills,deaths;
     while(SDLNet_CheckSockets(client->udpset,0)>0)
     {
@@ -188,7 +190,7 @@ void recv_data(Player *man, Network *client,int *done,Bullet b[])
         //Om ny fiende
         if (!man->enemies[enemyid].exists && (man->id!=enemyid))
         {
-            sscanf(client->rcvpack->data,"%d %d %d %d %d %d",
+            sscanf(client->rcvpack->data,"%d %d %f %f %d %d",
                    &type,&enemyid,&enemyDX,&enemyDY,&enemySX,&spritePick);
 
             SDL_Surface *image;
@@ -261,9 +263,9 @@ void recv_data(Player *man, Network *client,int *done,Bullet b[])
             }
 
         }
-        if (type == 2)
+        if (type == 2 && (SDL_GetTicks() - man->enemies[enemyid].justDied > 1000))
         {
-            sscanf(client->rcvpack->data,"%d %d %d %d %d %d",
+            sscanf(client->rcvpack->data,"%d %d %f %f %d %d",
                    &type,&enemyid,&enemyDX,&enemyDY,&enemySX,&spritePick);
             man->enemies[enemyid].alive = 1;
             man->enemies[enemyid].dstRect.x = enemyDX;

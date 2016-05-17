@@ -34,16 +34,7 @@ void shotgun(Player *p)
         }
     }
 }
-/*
-void addBullet(Bullet a[])
-{
-    a[1].y = 21;
-    a[2].x = 9;
-    a[2].y = 23;
 
-}
-*/
-//void addBullet()
 
 void clearCartridge(Bullet a[])
 {
@@ -106,6 +97,7 @@ void detectHit(Player *man,Bullet b[],Network *client)
                         man->bulletid = j;
                         man->hitid = i;
                         man->enemies[i].alive = 0;
+                        man->enemies[i].justDied = SDL_GetTicks();
                         send_data(&*man,&*client,7);
                     }
                 }
@@ -152,56 +144,56 @@ void bulletGone(Bullet b[],Player *man,Network *client)
         }
     }
 
-//    for(i=0; i<5; i++) /**ENEMIES BULLETS **/
-//    {
-//        if(man->enemies[i].exists)
-//        {
-//            for(j=0; j<20; j++)
-//            {
-//                if(man->enemies[i].bullet[j].active)
-//                {
-//
-//                    if(man->enemies[i].bullet[j].x > 361 && man->enemies[i].bullet[j].x < 401
-//                       && man->enemies[i].bullet[j].y > 181 && man->enemies[i].bullet[j].y < 247)
-//                    {
-//                        man->enemies[i].bullet[j].active = 0;
-//                    }
-//                    if(man->enemies[i].bullet[j].x > 207 && man->enemies[i].bullet[j].x < 247
-//                       && man->enemies[i].bullet[j].y > 266 && man->enemies[i].bullet[j].y < 332)
-//                    {
-//                        man->enemies[i].bullet[j].active = 0;
-//                    }
-//                    if(man->enemies[i].bullet[j].x > 666 && man->enemies[i].bullet[j].x < 706
-//                       && man->enemies[i].bullet[j].y > 225 && man->enemies[i].bullet[j].y < 291)
-//                    {
-//                        man->enemies[i].bullet[j].active = 0;
-//                    }
-//                    if(man->enemies[i].bullet[j].x > 207 && man->enemies[i].bullet[j].x < 247
-//                       && man->enemies[i].bullet[j].y > 478 && man->enemies[i].bullet[j].y < 544)
-//                    {
-//                        man->enemies[i].bullet[j].active = 0;
-//                    }
-//                    if(man->enemies[i].bullet[j].x > 463 && man->enemies[i].bullet[j].x < 503
-//                       && man->enemies[i].bullet[j].y > 436 && man->enemies[i].bullet[j].y < 502)
-//                    {
-//                        man->enemies[i].bullet[j].active = 0;
-//                    }
-//                    if(man->enemies[i].bullet[j].x > 666 && man->enemies[i].bullet[j].x < 706
-//                       && man->enemies[i].bullet[j].y > 476 && man->enemies[i].bullet[j].y < 542)
-//                    {
-//                        man->enemies[i].bullet[j].active = 0;
-//                    }
-//
-//                    if(man->enemies[i].bullet[j].x < (0-8) || man->enemies[i].bullet[j].x > 1032
-//                            || man->enemies[i].bullet[j].y < 100 || man->enemies[i].bullet[j].y > 638)
-//                    {
-//                        man->enemies[i].bullet[j].active = 0;
-//                    }
-//
-//                }
-//            }
-//        }
-//    }
+    for(i=0; i<5; i++) /**ENEMIES BULLETS **/
+    {
+        if(man->enemies[i].exists)
+        {
+            for(j=0; j<20; j++)
+            {
+                if(man->enemies[i].bullet[j].active)
+                {
+
+                    if(man->enemies[i].bullet[j].x > 361 && man->enemies[i].bullet[j].x < 401
+                       && man->enemies[i].bullet[j].y > 181 && man->enemies[i].bullet[j].y < 247)
+                    {
+                        man->enemies[i].bullet[j].active = 0;
+                    }
+                    if(man->enemies[i].bullet[j].x > 207 && man->enemies[i].bullet[j].x < 247
+                       && man->enemies[i].bullet[j].y > 266 && man->enemies[i].bullet[j].y < 332)
+                    {
+                        man->enemies[i].bullet[j].active = 0;
+                    }
+                    if(man->enemies[i].bullet[j].x > 666 && man->enemies[i].bullet[j].x < 706
+                       && man->enemies[i].bullet[j].y > 225 && man->enemies[i].bullet[j].y < 291)
+                    {
+                        man->enemies[i].bullet[j].active = 0;
+                    }
+                    if(man->enemies[i].bullet[j].x > 207 && man->enemies[i].bullet[j].x < 247
+                       && man->enemies[i].bullet[j].y > 478 && man->enemies[i].bullet[j].y < 544)
+                    {
+                        man->enemies[i].bullet[j].active = 0;
+                    }
+                    if(man->enemies[i].bullet[j].x > 463 && man->enemies[i].bullet[j].x < 503
+                       && man->enemies[i].bullet[j].y > 436 && man->enemies[i].bullet[j].y < 502)
+                    {
+                        man->enemies[i].bullet[j].active = 0;
+                    }
+                    if(man->enemies[i].bullet[j].x > 666 && man->enemies[i].bullet[j].x < 706
+                       && man->enemies[i].bullet[j].y > 476 && man->enemies[i].bullet[j].y < 542)
+                    {
+                        man->enemies[i].bullet[j].active = 0;
+                    }
+
+                    if(man->enemies[i].bullet[j].x < (0-8) || man->enemies[i].bullet[j].x > 1032
+                            || man->enemies[i].bullet[j].y < 100 || man->enemies[i].bullet[j].y > 638)
+                    {
+                        man->enemies[i].bullet[j].active = 0;
+                    }
+
+                }
+            }
+        }
+    }
 }
 
 
