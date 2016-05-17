@@ -116,35 +116,8 @@ void detectHit(Player *man,Bullet b[],Network *client)
 void bulletGone(Bullet b[],Player *man,Network *client)
 {
     int i, j,k;
-    for(i=0; i<20; i++)
-    {
-        if(b[i].active)
-        {
-            if(b[i].x < (0-8) || b[i].x > 1032 || b[i].y < (0-8) || b[i].y > 638)
-            {
-                b[i].active = 0;
-            }
-        }
-    }
-    for(i=0; i<5; i++)
-    {
-        if(man->enemies[i].exists)
-        {
-            for(j=0; j<20; j++)
-            {
-                if(man->enemies[i].bullet[j].active)
-                {
-                    if(man->enemies[i].bullet[j].x < (0-8) || man->enemies[i].bullet[j].x > 1032
-                            || man->enemies[i].bullet[j].y < (0-8) || man->enemies[i].bullet[j].y > 638)
-                    {
-                        man->enemies[i].bullet[j].active = 0;
-                    }
-                }
-            }
-        }
-    }
 
-    for(i=0; i<20; i++)
+    for(i=0; i<20; i++) /**PLAYERS BULLETS **/
     {
         if(b[i].active)
         {
@@ -172,7 +145,7 @@ void bulletGone(Bullet b[],Player *man,Network *client)
             {
                 b[i].active = 0;
             }
-            if(b[i].x > 0 && b[i].x < 1024 && b[i].y > 0 && b[i].y < 100)
+            if(b[i].x < (0-8) || b[i].x > 1032 || b[i].y < 100 || b[i].y > 638)
             {
                 b[i].active = 0;
             }
@@ -195,7 +168,7 @@ void bulletGone(Bullet b[],Player *man,Network *client)
         }
     }
 
-    for(i=0; i<5; i++)
+    for(i=0; i<5; i++) /**ENEMIES BULLETS **/
     {
         if(man->enemies[i].exists)
         {
@@ -254,8 +227,9 @@ void bulletGone(Bullet b[],Player *man,Network *client)
                     {
                         man->enemies[i].bullet[j].active = 0;
                     }
-                    if(man->enemies[i].bullet[j].x > 0 && man->enemies[i].bullet[j].x < 1024
-                       && man->enemies[i].bullet[j].y > 0 && man->enemies[i].bullet[j].y < 100)
+
+                    if(man->enemies[i].bullet[j].x < (0-8) || man->enemies[i].bullet[j].x > 1032
+                            || man->enemies[i].bullet[j].y < 100 || man->enemies[i].bullet[j].y > 638)
                     {
                         man->enemies[i].bullet[j].active = 0;
                     }
