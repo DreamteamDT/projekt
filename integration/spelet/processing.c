@@ -655,7 +655,7 @@ void doRender(Player *man,Bullet b[]) //, Enemy *enemies
                 SDL_Rect enemybullet = {man->enemies[i].bullet[j].x,
                                         man->enemies[i].bullet[j].y,8,8
                                        };
-                // printf("enemybullet x: %d, enemybullet y: %d\n",man->enemies[i].bullet[j].x,man->enemies[i].bullet[j].y);
+
                 SDL_RenderCopy(program.renderer,man->bullet,NULL,&enemybullet);
             }
         }
