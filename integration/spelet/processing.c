@@ -195,14 +195,13 @@ int processEvents(Player *man,Bullet b[],int *moved,int *type,int *direct,Networ
         }
     }
     checkCd(&*man);
-    if(state[SDL_SCANCODE_SPACE] && man->alive)
+    if(state[SDL_SCANCODE_SPACE] && man->alive && man->spellReady)
     {
         printf("pressed 1\n");
         *direct = -1;
         int bX,bY;
 
-        //man->currentTime = SDL_GetTicks();
-        if(spellOne > spellOne_False+1000 && man->spellReady) //man->currentTime > man->lastTime+3000
+        if(spellOne > spellOne_False+1000)
         {
             man->x1 = man->x;
             man->y1 = man->y;
