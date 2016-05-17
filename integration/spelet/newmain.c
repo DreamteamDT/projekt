@@ -85,7 +85,7 @@ int main(int argc, char *argv[])
    //     printf("Ange IP du vill connecta till: ");
     //    fgets(tmp,100,stdin);
     //    connected = 1;
-    //    player.connected = 1;
+        player.connected = 1;
   //  }
   //  else
   //  {
