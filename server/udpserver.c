@@ -38,7 +38,7 @@ typedef struct
     int exists;
     TCPsocket tcpsock;
     IPaddress ip;
-    int x,y;
+    float x,y;
     int kills,deaths;
 
 } Player;
@@ -55,12 +55,12 @@ void getSpawn(int next,Player *player)
     if(next == 0)
     {
         player->x = 106;
-        player->y = 74;
+        player->y = 300;
     }
     else if(next == 1)
     {
         player->x = 939;
-        player->y = 55;
+        player->y = 300;
     }
     else if(next == 2)
     {
@@ -162,7 +162,7 @@ int main(int argc, char **argv)
                 players[next].deaths = 0;
                 type = 0;
                 getSpawn(next,&players[next]);
-                sprintf(tmp,"%d %d %d %d \n",type,next,players[next].x,players[next].y);
+                sprintf(tmp,"%d %d %f %f \n",type,next,players[next].x,players[next].y);
                 printf("New connection. ID for new player: %d\n",next);
                 SDLNet_TCP_Send(players[next].tcpsock,tmp,strlen(tmp)+1);
                 players[next].ip = *SDLNet_TCP_GetPeerAddress(players[next].tcpsock);

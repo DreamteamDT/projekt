@@ -14,8 +14,8 @@ void updateLogic(Player *p,Bullet b[])
     {
         if(b[i].active == 1)
         {
-            b[i].x +=b[i].vector_unitX*6;
-            b[i].y +=b[i].vector_unitY*6;
+            b[i].x = b[i].x + (b[i].vector_unitX*240*p->deltaTimeS);
+            b[i].y = b[i].y + (b[i].vector_unitY*240*p->deltaTimeS);
         }
     }
     global++;
@@ -30,8 +30,10 @@ void updateEnemyBullet(Player *man)
         {
             if(man->enemies[i].bullet[j].active == 1)
             {
-                man->enemies[i].bullet[j].x += man->enemies[i].bullet[j].vector_unitX*6;
-                man->enemies[i].bullet[j].y += man->enemies[i].bullet[j].vector_unitY*6;
+                man->enemies[i].bullet[j].x = man->enemies[i].bullet[j].x +
+                                              (man->enemies[i].bullet[j].vector_unitX*240*man->deltaTimeS);
+                man->enemies[i].bullet[j].y = man->enemies[i].bullet[j].y +
+                                              (man->enemies[i].bullet[j].vector_unitY*240*man->deltaTimeS);
             }
         }
     }
@@ -42,7 +44,7 @@ int processEvents(Player *man,Bullet b[],int *moved,int *type,int *direct,Networ
     unsigned int spellOne, spellOne_False=0;
     spellOne = SDL_GetTicks();
     SDL_Event event;
-    int done = 0,shooting = 0;;
+    int done = 0,shooting;
 
     man->thinkTime--;
     if(man->thinkTime<=0)
@@ -83,6 +85,7 @@ int processEvents(Player *man,Bullet b[],int *moved,int *type,int *direct,Networ
             }
         }
         break;
+
         case SDL_QUIT:
             //quit out of the game
             done = 1;
@@ -94,13 +97,18 @@ int processEvents(Player *man,Bullet b[],int *moved,int *type,int *direct,Networ
             int blinkX,blinkY;
             SDL_GetMouseState(&blinkX, &blinkY);
             printf("Cursor at %d x %d\n",blinkX,blinkY);
+            break;
+
+        case SDL_MOUSEBUTTONUP:
+            man->justShot = 0;
+            break;
         }
     }
 
     const Uint8 *state = SDL_GetKeyboardState(NULL);
     if(state[SDL_SCANCODE_LEFT] || state[SDL_SCANCODE_A] && man->alive)
     {
-        man->x -= 5;
+        man->x = man->x - (100*(man->deltaTimeS));
         *moved = 1;
         *type = 2;
         *direct += 1;
@@ -117,7 +125,8 @@ int processEvents(Player *man,Bullet b[],int *moved,int *type,int *direct,Networ
     }
     if(state[SDL_SCANCODE_RIGHT] || state[SDL_SCANCODE_D] && man->alive)
     {
-        man->x += 5;
+        man->x = man->x + (100*(man->deltaTimeS));
+
         *moved = 1;
         *type = 2;
         *direct += 2;
@@ -135,7 +144,7 @@ int processEvents(Player *man,Bullet b[],int *moved,int *type,int *direct,Networ
     }
     if(state[SDL_SCANCODE_UP] || state[SDL_SCANCODE_W] && man->alive)
     {
-        man->y -= 5;
+        man->y = man->y - (100*(man->deltaTimeS));
         *moved = 1;
         *type = 2;
         *direct += 4;
@@ -152,7 +161,7 @@ int processEvents(Player *man,Bullet b[],int *moved,int *type,int *direct,Networ
     }
     if(state[SDL_SCANCODE_DOWN] || state[SDL_SCANCODE_S] && man->alive)
     {
-        man->y += 5;
+        man->y = man->y + (100*(man->deltaTimeS));
         *moved = 1;
         *type = 2;
         *direct += 8;
@@ -174,14 +183,14 @@ int processEvents(Player *man,Bullet b[],int *moved,int *type,int *direct,Networ
         *type = 2;
         man->blinked = 0;
     }
-    if((SDL_GetMouseState(NULL,NULL) &&SDL_BUTTON_LEFT) && man->alive && !shooting )
+    if((SDL_GetMouseState(NULL,NULL) &&SDL_BUTTON_LEFT) && man->alive && !man->justShot)
     {
         int blinkX,blinkY,bulletNo,shotX,shotY;
         checkRunningDirection(&*man, &shotX, &shotY);
         SDL_GetMouseState(&blinkX, &blinkY);
         if(global%6==0)
         {
-            shooting = 1;
+            man->justShot = 1;
             if(((bulletNo = addBullet(shotX,shotY,5,b,blinkX,blinkY))>=0))
             {
                 Mix_PlayChannel(-1,bulletShot,0);
@@ -191,7 +200,6 @@ int processEvents(Player *man,Bullet b[],int *moved,int *type,int *direct,Networ
                 if(man->connected)
                     sendBullet(*man,*client);
             }
-            shooting = 0;
         }
     }
     checkCd(&*man);
