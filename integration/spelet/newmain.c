@@ -41,6 +41,8 @@ int main(int argc, char *argv[])
 //=======
 
 //>>>>>>> 4f04477192c6dc006aca1aae1c51b75987a36da2
+
+    //Meny
     int startMenu = 1,pickCharacter = 0,imageNo,exit = 0,ingame = 0;
     char *tmp = (char*)malloc(100);
     int q = 0;
