@@ -15,7 +15,7 @@ void initPlayer(Player *player)
     if(LINUX)
     {
         bullet = IMG_Load("kula.png");
-        background = IMG_Load("bakgrund5.png");
+        background = IMG_Load("Background6.png");
         if(background==NULL)
         {
             //Laddningen av bakgrunden misslyckades
@@ -25,7 +25,7 @@ void initPlayer(Player *player)
     else
     {
         bullet =IMG_Load("kula.PNG");
-        background = IMG_Load("bakgrund5.PNG");
+        background = IMG_Load("Background6.PNG");
         if(background==NULL)
         {
             //Laddningen av bakgrunden misslyckades
@@ -134,21 +134,54 @@ void initLedges(Player *player)
     texture = SDL_CreateTextureFromSurface(program.renderer,image);
     SDL_FreeSurface(image);*/
     int i, lx = 70, ly = 300;
-    int x = 221;
-    int y = 121;
-    for (i = 0; i < 4; i++)
+    //int x = 221;
+    //int y = 121;
+    int x = 361;
+    int y = 181;
+    for (i = 0; i < 6; i++)
     {
-        player->ledges[i].w = 124;
-        player->ledges[i].h = 103;
+        player->ledges[i].w = 40;
+        player->ledges[i].h = 66;
         player->ledges[i].x = x;
         player->ledges[i].y = y;
+        /*player->ledges[i].w = 124;
+        player->ledges[i].h = 103;
+        player->ledges[i].x = x;
+        player->ledges[i].y = y;*/
         if (i == 0)
-            x += 456;
+        {
+            x = 207;
+            y = 266;
+        }
         else if (i == 1)
-            y += 238;
+        {
+            x = 666;
+            y = 225;
+        }
         else if (i == 2)
-            x -= 456;
+        {
+            x = 207;
+            y = 478;
+        }
+        else if (i == 3)
+        {
+            x = 463;
+            y = 436;
+        }
+        else if (i == 4)
+        {
+            x = 666;
+            y = 476;
+        }
     }
+
+    x = 0;
+    y = 0;
+    player->ledges[6].w = 1024;
+    player->ledges[6].h = 100;
+    player->ledges[6].x = x;
+    player->ledges[6].y = y;
+
 }
 
 void initCd(Player *player)

@@ -454,7 +454,7 @@ void collisionDetect(Player *man, int *direct)
     {
         int i, bpe = 0;
         // check for collision with any ledges and enemies
-        for (i = 0; i < 4; i++)
+        for (i = 0; i < 7; i++)
         {
             int mw = 64, mh = 64;
             int mx = man->x, my = man->y;
@@ -527,7 +527,7 @@ void collisionDetect(Player *man, int *direct)
             man->y = 630-mh;
 
         // check for collision with any ledges and enemies
-        for (i = 0; i < 4; i++)
+        for (i = 0; i < 7; i++)
         {
             // ladda ledges
             int bw = man->ledges[i].w, bh = man->ledges[i].h;
@@ -601,7 +601,7 @@ void doRender(Player *man,Bullet b[]) //, Enemy *enemies
     //Clear the screen (to blue)
     SDL_RenderClear(program.renderer);
 
-    SDL_Rect rect = { man->x, man->y, 32, 32 };
+    SDL_Rect rect = { man->x, man->y , 32, 32 };
     SDL_Rect src = {man->frameX,0,32,32};
     SDL_Rect bg = {0,0,1024,768};
     //SDL_Rect scoreBg = {0,630,1024,138};
@@ -614,7 +614,6 @@ void doRender(Player *man,Bullet b[]) //, Enemy *enemies
     //SDL_Rect srcE = {enemies->srcRect.x, 0, 32, 32};
 
     //SDL_RenderFillRect(program.renderer, &rect);
-
 
     for(i=0; i<20; i++)
     {
@@ -692,13 +691,17 @@ void respawn(Player *man)
 
     if(spawn == 0)
     {
-        man->x = 113;
-        man->y = 79;
+        man->x = 70;
+        man->y = 212;
+        //man->x = 113;
+        //man->y = 79;
     }
     else if(spawn == 1)
     {
-        man->x = 909;
-        man->y = 73;
+        man->x = 942;
+        man->y = 212;
+        //man->x = 909;
+        //man->y = 73;
     }
     else if(spawn == 2)
     {
