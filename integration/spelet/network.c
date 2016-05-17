@@ -105,6 +105,7 @@ void send_data(Player *man,Network *client,int type)
         sprintf(client->sendpack->data,"%d %d %d %d",type,man->id,man->hitid,man->bulletid);
         SDLNet_UDP_Send(client->udpsock,-1,client->sendpack);
     }
+
 }
 
 void sendBullet(Player man,Network client)
