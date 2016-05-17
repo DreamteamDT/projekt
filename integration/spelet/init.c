@@ -52,7 +52,7 @@ void initPlayer(Player *player)
       if(player->spritePick==1)
     {
         image = IMG_Load("USA.png");
-        Mix_Music *soundtrack1 = Mix_LoadMUS("Backstreet.mp3");
+        Mix_Music *soundtrack1 = Mix_LoadMUS("Backstreet.wav");
         Mix_PlayMusic(soundtrack1,-1);
 
     }
@@ -60,20 +60,20 @@ void initPlayer(Player *player)
     else if(player->spritePick == 2)
     {
         image = IMG_Load("spriteRussia.png");
-        Mix_Music *soundtrack1 = Mix_LoadMUS("cykablyat.mp3");
+        Mix_Music *soundtrack1 = Mix_LoadMUS("cykablyat.wav");
         Mix_PlayMusic(soundtrack1,-1);
     }
     else if(player->spritePick == 3)
     {
         image = IMG_Load("spriteMurica.png");
-        Mix_Music *soundtrack1 = Mix_LoadMUS("America.mp3");
+        Mix_Music *soundtrack1 = Mix_LoadMUS("America.wav");
         Mix_PlayMusic(soundtrack1,-1);
 
     }
     else
     {
         image = IMG_Load("spriteChina.png");
-        Mix_Music *soundtrack1 = Mix_LoadMUS("Chinese.mp3");
+        Mix_Music *soundtrack1 = Mix_LoadMUS("Chinese.wav");
         Mix_PlayMusic(soundtrack1,-1);
     }
    }
