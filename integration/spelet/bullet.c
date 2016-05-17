@@ -34,16 +34,7 @@ void shotgun(Player *p)
         }
     }
 }
-/*
-void addBullet(Bullet a[])
-{
-    a[1].y = 21;
-    a[2].x = 9;
-    a[2].y = 23;
 
-}
-*/
-//void addBullet()
 
 void clearCartridge(Bullet a[])
 {

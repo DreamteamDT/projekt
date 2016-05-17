@@ -4,7 +4,7 @@ extern void initPlayer(Player *player);
 extern void initLedges(Player *player);
 extern void doRender(Player *man,Bullet b[]); //, Enemy *enemies
 extern int processEvents(Player *man,Bullet b[],int *moved,int *type,int *direct,Network *client);
-extern void collisionDetect(Player *man, int *direct);
+extern void collisionDetect(Player *man, int *direct, int *moved, int *type);
 
 extern void clearCartridge(Bullet ammo[]);
 extern void Quit();
@@ -60,6 +60,10 @@ int main(int argc, char *argv[])
     float lastSent = 0;
     int enterIPmenu;
 
+    Mix_Music *backgroundSound;
+    Mix_Music *backgroundLinux;
+
+
     TTF_Init();
 
     int sekund,spawnTimer=4;
@@ -79,9 +83,18 @@ int main(int argc, char *argv[])
     connected = 1;
 
 
-    Mix_OpenAudio(44100,MIX_DEFAULT_FORMAT,2,2048);
-    Mix_VolumeMusic(20);
-    Mix_Music *backgroundSound = Mix_LoadMUS("gta3.MP3");
+    if(LINUX)
+    {
+        Mix_OpenAudio(44100,MIX_DEFAULT_FORMAT,2,2048);
+        backgroundLinux = Mix_LoadMUS("gta3.wav");
+
+    }
+    else
+    {
+        Mix_OpenAudio(44100,MIX_DEFAULT_FORMAT,2,2048);
+        Mix_VolumeMusic(20);
+        backgroundSound = Mix_LoadMUS("gta3.MP3");
+    }
 
 
     //link(ammo);
@@ -93,7 +106,15 @@ int main(int argc, char *argv[])
     int testss = 0;
     while(!exit) ///**** MAIN MENU ****/
     {
-        Mix_PlayMusic(backgroundSound,-1);
+       if(LINUX)
+        {
+           	 Mix_PlayMusic(backgroundLinux, -1);
+        }
+        else
+        {
+            Mix_PlayMusic(backgroundSound,-1);
+
+        }
         // Mix_PlayMusic(backgroundSound,-1);
         displayMenu(menu);
         enterIPmenu = handleMenu(&exit);
@@ -153,7 +174,7 @@ int main(int argc, char *argv[])
                     updateEnemyBullet(&player);
                     updateLogic(&player,ammo);
                     if(player.alive)
-                        collisionDetect(&player, &direct);
+                        collisionDetect(&player, &direct, &moved, &type);
                     bulletGone(ammo,&player,&client);
 
                     if(moved && connected && player.alive && SDL_GetTicks()>lastSent+20)
@@ -216,7 +237,14 @@ int main(int argc, char *argv[])
         }
     }
     TTF_Quit();
-    Mix_FreeMusic(backgroundSound);
+    if(LINUX)
+    {
+       Mix_FreeMusic(backgroundLinux);
+    }
+    else
+    {
+       Mix_FreeMusic(backgroundSound);
+    }
     Mix_CloseAudio();
     free(tmp);
     SDLNet_Quit();
