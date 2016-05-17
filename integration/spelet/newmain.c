@@ -117,6 +117,8 @@ int main(int argc, char *argv[])
             pickCharacter = enterIP(&player);
             if(pickCharacter)
                 SDL_StopTextInput();
+            else
+                enterIPmenu = 0;
 
             while(pickCharacter) /**** PICK CHARACTER ****/
             {

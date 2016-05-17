@@ -7,6 +7,7 @@ int enterIP(Player *man)
     int i=0;
     int x,y;
     int length;
+    int rectlen = 30;
     int a,b;
 
     char *text = (char*)malloc(100);
@@ -26,12 +27,12 @@ int enterIP(Player *man)
         while(SDL_PollEvent(&e) !=0)
         {
             SDL_GetMouseState(&x, &y);
-            printf("%d %d\n",x,y);
 
             if(x>376 && x<645 && y>488 && y<587 && e.type==SDL_MOUSEBUTTONDOWN)
             {
                 if(e.button.button==SDL_BUTTON_LEFT)
                 {
+                    man->ip = text;
                     return 1;
                 }
 
@@ -52,7 +53,6 @@ int enterIP(Player *man)
                 else if (e.type==SDL_KEYDOWN && e.key.keysym.sym==SDLK_RETURN)
                 {
                     man->ip = text;
-                    printf("String: %s\n",man->ip);
                     return 1;
                 }
                 else if(e.type == SDL_TEXTINPUT)
@@ -78,7 +78,8 @@ int enterIP(Player *man)
         TTF_Font* arial = TTF_OpenFont("arialbd.ttf", 48);
         surfaceMessage = TTF_RenderText_Blended(arial,text,black);
         man->ipAddressText = SDL_CreateTextureFromSurface(program.renderer,surfaceMessage);
-        SDL_Rect rect = {350,323,300,40};
+        length = strlen(text);
+        SDL_Rect rect = {350,323,rectlen*length,40};
         man->ipRect = rect;
         SDL_FreeSurface(surfaceMessage);
         SDL_RenderCopy(program.renderer,man->ipAddressText,NULL,&man->ipRect);
