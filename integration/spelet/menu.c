@@ -263,4 +263,5 @@ void generateScoreboard(Player *man)
             scoreposition = scoreposition+20;
         }
     }
+    free(score);
 }

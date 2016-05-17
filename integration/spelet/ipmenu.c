@@ -6,9 +6,14 @@ int enterIP(Player *man)
     SDL_Rect textRect;
     int i=0;
     int x,y;
-    int length;
+    int length = 1;
     int rectlen = 20;
     int a,b;
+    TTF_Font* arial = TTF_OpenFont("arialbd.ttf", 48);
+    SDL_Color black = {0, 0, 0};
+    SDL_Surface* surfaceMessage;
+    SDL_Rect bg = {0,0,1024,768};
+    SDL_Rect rect = {350,323,rectlen*length,35};
 
     char *text = (char*)malloc(100);
     printf("%s\n",text);
@@ -70,16 +75,11 @@ int enterIP(Player *man)
 
         }
         SDL_RenderClear(program.renderer);
-
-        SDL_Rect bg = {0,0,1024,768};
         SDL_RenderCopy(program.renderer,man->ipTexture,NULL,&bg);
-        SDL_Surface* surfaceMessage;
-        SDL_Color black = {0, 0, 0};
-        TTF_Font* arial = TTF_OpenFont("arialbd.ttf", 48);
         surfaceMessage = TTF_RenderText_Blended(arial,text,black);
         man->ipAddressText = SDL_CreateTextureFromSurface(program.renderer,surfaceMessage);
         length = strlen(text);
-        SDL_Rect rect = {350,323,rectlen*length,35};
+        rect.w = rectlen*length;
         man->ipRect = rect;
         SDL_FreeSurface(surfaceMessage);
         SDL_RenderCopy(program.renderer,man->ipAddressText,NULL,&man->ipRect);

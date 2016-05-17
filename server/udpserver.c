@@ -40,7 +40,7 @@ typedef struct
     IPaddress ip;
     float x,y;
     int kills,deaths;
-    int justDied;
+    int justDied,lastData;
 
 } Player;
 
@@ -162,6 +162,7 @@ int main(int argc, char **argv)
                 players[next].kills = 0;
                 players[next].deaths = 0;
                 players[next].justDied = 0;
+                players[next].lastData = SDL_GetTicks();
                 type = 0;
                 getSpawn(next,&players[next]);
                 sprintf(tmp,"%d %d %f %f \n",type,next,players[next].x,players[next].y);
@@ -196,6 +197,7 @@ int main(int argc, char **argv)
             SDLNet_UDP_Recv(rcvSock,rcvPack);
             sscanf(rcvPack->data,"%d %d",&type,&id);
 
+            players[id].lastData = SDL_GetTicks();
             if(type == 2)
             {
                 if(!((SDL_GetTicks() - players[id].justDied) < 2000))
@@ -284,6 +286,7 @@ int main(int argc, char **argv)
                         }
                         while(uncomplete_string(tmp) && max<20);
                         sscanf(tmp,"%d %d",&type,&id);
+                        players[id].lastData = SDL_GetTicks();
                         if(max>=20)
                         {
                             type = 3;
@@ -326,6 +329,49 @@ int main(int argc, char **argv)
                         }
 
                     }
+            }
+        }
+
+        for(i=0; i<maxPlayers; i++)
+        {
+            if(players[i].exists)
+            {
+                if((SDL_GetTicks()-players[i].lastData > 30000)) /**IF AFK FOR >30 SECONDS **/
+                {
+                    type = 3;
+                    sprintf(tmp,"%d %d \n",type,i);
+                    for(k=0; k<maxPlayers; k++)
+                    {
+                        if(players[k].exists)
+                            if(k!=i)
+                            {
+                                size=0;
+                                len=strlen(tmp)+1;
+                                while(size<len)
+                                {
+                                    if(!(size+=SDLNet_TCP_Send(players[k].tcpsock,tmp+size,len-size)))
+                                    {
+                                        printf("TCP Send failed: %s\n",SDL_GetError());
+                                        return 1;
+                                    }
+                                }
+                            }
+
+                    }
+                    SDLNet_TCP_DelSocket(tcpset,players[i].tcpsock);
+                    SDLNet_TCP_Close(players[i].tcpsock);
+                    players[i].exists = 0;
+                    playernum--;
+                    printf("Player %d has been kicked for being AFK.\n",i);
+                    for(i=0; i<maxPlayers; i++) //Hittar första bästa lediga spot
+                    {
+                        if(!players[i].exists)
+                        {
+                            next = i;
+                            i = 10;
+                        }
+                    }
+                }
             }
         }
 
