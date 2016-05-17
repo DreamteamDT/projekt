@@ -148,7 +148,35 @@ void bulletGone(Bullet b[],Player *man,Network *client)
     {
         if(b[i].active)
         {
-            if(b[i].x > 220 && b[i].x < 346 && b[i].y > 118 && b[i].y < 226)
+            if(b[i].x > 361 && b[i].x < 401 && b[i].y > 181 && b[i].y < 247)
+            {
+                b[i].active = 0;
+            }
+            if(b[i].x > 207 && b[i].x < 247 && b[i].y > 266 && b[i].y < 332)
+            {
+                b[i].active = 0;
+            }
+            if(b[i].x > 666 && b[i].x < 706 && b[i].y > 225 && b[i].y < 291)
+            {
+                b[i].active = 0;
+            }
+            if(b[i].x > 207 && b[i].x < 247 && b[i].y > 478 && b[i].y < 544)
+            {
+                b[i].active = 0;
+            }
+            if(b[i].x > 463 && b[i].x < 503 && b[i].y > 436 && b[i].y < 502)
+            {
+                b[i].active = 0;
+            }
+            if(b[i].x > 666 && b[i].x < 706 && b[i].y > 476 && b[i].y < 542)
+            {
+                b[i].active = 0;
+            }
+            if(b[i].x > 0 && b[i].x < 1024 && b[i].y > 0 && b[i].y < 100)
+            {
+                b[i].active = 0;
+            }
+            /*if(b[i].x > 220 && b[i].x < 346 && b[i].y > 118 && b[i].y < 226)
             {
                 b[i].active = 0;
             }
@@ -163,7 +191,7 @@ void bulletGone(Bullet b[],Player *man,Network *client)
             if(b[i].x > 220 && b[i].x < 346 && b[i].y > 358 && b[i].y < 462)
             {
                 b[i].active = 0;
-            }
+            }*/
         }
     }
 

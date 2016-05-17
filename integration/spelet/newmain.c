@@ -4,7 +4,7 @@ extern void initPlayer(Player *player);
 extern void initLedges(Player *player);
 extern void doRender(Player *man,Bullet b[]); //, Enemy *enemies
 extern int processEvents(Player *man,Bullet b[],int *moved,int *type,int *direct,Network *client);
-extern void collisionDetect(Player *man, int *direct);
+extern void collisionDetect(Player *man, int *direct, int *moved, int *type);
 
 extern void clearCartridge(Bullet ammo[]);
 extern void Quit();
@@ -41,6 +41,8 @@ int main(int argc, char *argv[])
 //=======
 
 //>>>>>>> 4f04477192c6dc006aca1aae1c51b75987a36da2
+
+    //Meny
     int startMenu = 1,pickCharacter = 0,imageNo,exit = 0,ingame = 0;
     char *tmp = (char*)malloc(100);
     int q = 0;
@@ -145,7 +147,7 @@ int main(int argc, char *argv[])
                 updateEnemyBullet(&player);
                 updateLogic(&player,ammo);
                 if(player.alive)
-                    collisionDetect(&player, &direct);
+                    collisionDetect(&player, &direct, &moved, &type);
                 bulletGone(ammo,&player,&client);
 
                 if(moved && connected && player.alive)

@@ -79,7 +79,7 @@ typedef struct
 typedef struct
 {
     Enemy enemies[10];
-    Ledge ledges[4];
+    Ledge ledges[7];
     int x, y;
     int frameX,frameY;
     int x1, y1;
