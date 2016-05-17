@@ -275,38 +275,38 @@ void collisionDetect(Player *man, int *direct, int *moved, int *type)
                 {
                     // man moving left
                     if (*direct == 1 || *direct == 13)
-                        man->x += 5;
+                        man->x = bx+bw;
                     // man moving right
                     else if (*direct == 2 || *direct == 14)
-                        man->x -= 5;
+                        man->x = bx-mw;
                     // man moving up
                     else if (*direct == 4 || *direct == 7)
-                        man->y += 5;
+                        man->y = by+bh;
                     // man moving down
                     else if (*direct == 8 || *direct == 11)
-                        man->y -= 5;
+                        man->y = by-mh;
 
                     /**** DIAGONALT ****/
                     // man moving left up
                     else if (*direct == 5 && my < by+bh-6)
-                        man->x += 5;
+                        man->x = bx+bw;
                     else if (*direct == 5 && my > by+bh-6)
-                        man->y += 5;
+                        man->y = by+bh;
                     // man moving right up
                     else if (*direct == 6 && my < by+bh-6)
-                        man->x -= 5;
+                        man->x = bx-mw;
                     else if (*direct == 6 && my > by+bh-6)
-                        man->y += 5;
+                        man->y = by+bh;
                     // man moving left down
                     else if (*direct == 9 && my+mh > by+6)
-                        man->x += 5;
+                        man->x = bx+bw;
                     else if (*direct == 9 && my+mh < by+6)
-                        man->y -= 5;
+                        man->y = by-mh;
                     // man moving right down
                     else if (*direct == 10 && my+mh > by+6)
-                        man->x -= 5;
+                        man->x = bx-mw;
                     else if (*direct == 10 && my+mh < by+6)
-                        man->y -= 5;
+                        man->y = by-mh;
                 }
                 // ladda enemies istället för ledges
                 bx = man->enemies[i].dstRect.x, by = man->enemies[i].dstRect.y, bw = man->enemies[i].dstRect.w, bh = man->enemies[i].dstRect.h;
@@ -327,8 +327,8 @@ void collisionDetect(Player *man, int *direct, int *moved, int *type)
             man->x = 0;
         if ((mx+mw/2) > 1024)
             man->x = 1024-mw;
-        if ((my-mh/2) < 0)
-            man->y = 0;
+        if ((my-mh/2) < 100)
+            man->y = 100;
         if ((my+mh/2) > 630)
             man->y = 630-mh;
 
