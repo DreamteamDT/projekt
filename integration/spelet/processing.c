@@ -14,8 +14,8 @@ void updateLogic(Player *p,Bullet b[])
     {
         if(b[i].active == 1)
         {
-            b[i].x = b[i].x + (b[i].vector_unitX*240*p->deltaTimeS);
-            b[i].y = b[i].y + (b[i].vector_unitY*240*p->deltaTimeS);
+            b[i].x = b[i].x + (b[i].vector_unitX*300*p->deltaTimeS);
+            b[i].y = b[i].y + (b[i].vector_unitY*300*p->deltaTimeS);
         }
     }
     global++;
@@ -31,9 +31,9 @@ void updateEnemyBullet(Player *man)
             if(man->enemies[i].bullet[j].active == 1)
             {
                 man->enemies[i].bullet[j].x = man->enemies[i].bullet[j].x +
-                                              (man->enemies[i].bullet[j].vector_unitX*240*man->deltaTimeS);
+                                              (man->enemies[i].bullet[j].vector_unitX*300*man->deltaTimeS);
                 man->enemies[i].bullet[j].y = man->enemies[i].bullet[j].y +
-                                              (man->enemies[i].bullet[j].vector_unitY*240*man->deltaTimeS);
+                                              (man->enemies[i].bullet[j].vector_unitY*300*man->deltaTimeS);
             }
         }
     }
@@ -108,7 +108,7 @@ int processEvents(Player *man,Bullet b[],int *moved,int *type,int *direct,Networ
     const Uint8 *state = SDL_GetKeyboardState(NULL);
     if(state[SDL_SCANCODE_LEFT] || state[SDL_SCANCODE_A] && man->alive)
     {
-        man->x = man->x - (100*(man->deltaTimeS));
+        man->x = man->x - (200*(man->deltaTimeS));
         *moved = 1;
         *type = 2;
         *direct += 1;
@@ -125,7 +125,7 @@ int processEvents(Player *man,Bullet b[],int *moved,int *type,int *direct,Networ
     }
     if(state[SDL_SCANCODE_RIGHT] || state[SDL_SCANCODE_D] && man->alive)
     {
-        man->x = man->x + (100*(man->deltaTimeS));
+        man->x = man->x + (200*(man->deltaTimeS));
 
         *moved = 1;
         *type = 2;
@@ -144,7 +144,7 @@ int processEvents(Player *man,Bullet b[],int *moved,int *type,int *direct,Networ
     }
     if(state[SDL_SCANCODE_UP] || state[SDL_SCANCODE_W] && man->alive)
     {
-        man->y = man->y - (100*(man->deltaTimeS));
+        man->y = man->y - (200*(man->deltaTimeS));
         *moved = 1;
         *type = 2;
         *direct += 4;
@@ -161,7 +161,7 @@ int processEvents(Player *man,Bullet b[],int *moved,int *type,int *direct,Networ
     }
     if(state[SDL_SCANCODE_DOWN] || state[SDL_SCANCODE_S] && man->alive)
     {
-        man->y = man->y + (100*(man->deltaTimeS));
+        man->y = man->y + (200*(man->deltaTimeS));
         *moved = 1;
         *type = 2;
         *direct += 8;
