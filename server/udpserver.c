@@ -40,6 +40,7 @@ typedef struct
     IPaddress ip;
     float x,y;
     int kills,deaths;
+    int justDied;
 
 } Player;
 
@@ -160,6 +161,7 @@ int main(int argc, char **argv)
                 players[next].exists = 1;
                 players[next].kills = 0;
                 players[next].deaths = 0;
+                players[next].justDied = 0;
                 type = 0;
                 getSpawn(next,&players[next]);
                 sprintf(tmp,"%d %d %f %f \n",type,next,players[next].x,players[next].y);
@@ -196,18 +198,21 @@ int main(int argc, char **argv)
 
             if(type == 2)
             {
-                players[id].ip.port = rcvPack->address.port;
-                for(i=0; i<maxPlayers; i++)
+                if(!((SDL_GetTicks() - players[id].justDied) < 2000))
                 {
-                    if(players[i].exists)
+                    players[id].ip.port = rcvPack->address.port;
+                    for(i=0; i<maxPlayers; i++)
                     {
-
-                        if(i!=id)
+                        if(players[i].exists)
                         {
-                            rcvPack->address = players[i].ip;
-                            SDLNet_UDP_Send(rcvSock,-1,rcvPack);
-                        }
 
+                            if(i!=id)
+                            {
+                                rcvPack->address = players[i].ip;
+                                SDLNet_UDP_Send(rcvSock,-1,rcvPack);
+                            }
+
+                        }
                     }
                 }
             }
@@ -224,6 +229,7 @@ int main(int argc, char **argv)
                         SDLNet_UDP_Send(rcvSock,-1,rcvPack);
                     }
                 }
+                players[killed].justDied = SDL_GetTicks();
                 for(k=0; k<maxPlayers; k++)
                 {
                     if(players[k].exists)

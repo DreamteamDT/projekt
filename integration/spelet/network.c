@@ -210,7 +210,7 @@ void recv_data(Player *man, Network *client,int *done,Bullet b[])
             }
 
         }
-        if (type == 2)
+        if (type == 2 && (SDL_GetTicks() - man->enemies[enemyid].justDied > 1000))
         {
             sscanf(client->rcvpack->data,"%d %d %f %f %d %d",
                    &type,&enemyid,&enemyDX,&enemyDY,&enemySX,&spritePick);

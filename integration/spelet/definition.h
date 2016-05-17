@@ -73,6 +73,7 @@ typedef struct
     Bullet bullet[20];
     int kills,deaths;
     int alive;
+    int justDied;
 } Enemy;
 
 typedef struct

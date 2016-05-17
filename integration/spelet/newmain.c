@@ -177,7 +177,7 @@ int main(int argc, char *argv[])
                         collisionDetect(&player, &direct, &moved, &type);
                     bulletGone(ammo,&player,&client);
 
-                    if(moved && connected && player.alive && SDL_GetTicks()>lastSent+20)
+                    if(moved && connected && player.alive && SDL_GetTicks()>lastSent+5)
                     {
                         printf("sending data \n");
                         send_data(&player,&client,type);

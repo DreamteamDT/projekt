@@ -3,6 +3,7 @@
 
 void initPlayer(Player *player)
 {
+    int i;
     SDL_Surface* surfaceMessage;
     TTF_Font* arial = TTF_OpenFont("arialbd.ttf", 48);
     SDL_Color black = {0, 0, 0};
@@ -125,6 +126,11 @@ void initPlayer(Player *player)
     player->scoreBackground = scoreBgtext;
     player->bullet = bullettxt;
     player->alive = 1;
+
+    for(i=0;i<4;i++)
+    {
+        player->enemies[i].justDied = 0;
+    }
 }
 
 void initLedges(Player *player)
