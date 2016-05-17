@@ -319,8 +319,8 @@ void collisionDetect(Player *man, int *direct, int *moved, int *type)
             man->x = 0;
         if ((mx+mw/2) > 1024)
             man->x = 1024-mw;
-        if ((my-mh/2) < 0)
-            man->y = 0;
+        if ((my-mh/2) < 100)
+            man->y = 100;
         if ((my+mh/2) > 630)
             man->y = 630-mh;
 
