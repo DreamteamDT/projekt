@@ -219,7 +219,7 @@ void generateScoreboard(Player *man)
     }
     else if(man->spritePick == 3)
     {
-        sprintf(score,"America    %d      %d",man->kills,man->deaths);
+        sprintf(score,"Murica    %d      %d",man->kills,man->deaths);
     }
     else
     {
@@ -248,7 +248,7 @@ void generateScoreboard(Player *man)
             }
             else if(man->enemies[i].sprite == 3)
             {
-                sprintf(score,"America    %d      %d",man->enemies[i].kills,man->enemies[i].deaths);
+                sprintf(score,"Murica    %d      %d",man->enemies[i].kills,man->enemies[i].deaths);
             }
             else
             {
