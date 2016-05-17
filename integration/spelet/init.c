@@ -187,7 +187,15 @@ void initLedges(Player *player)
 void initCd(Player *player)
 {
     SDL_Surface *timer;
-    timer = IMG_Load("cdTimer.PNG");
+    if(LINUX)
+    {
+          timer = IMG_Load("cdTimer.png");
+
+    }
+    else
+    {
+          timer = IMG_Load("cdTimer.PNG");
+    }
     SDL_Texture *cdTimer;
     cdTimer = SDL_CreateTextureFromSurface(program.renderer,timer);
     SDL_FreeSurface(timer);
