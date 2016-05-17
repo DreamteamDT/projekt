@@ -109,7 +109,6 @@ void send_data(Player *man,Network *client,int type)
 
 void sendBullet(Player man,Network client)
 {
-    printf("skickar bullet!\n");
     int i,j,k,size,len;
     int type = 8;
     sprintf(client.sendpack->data,"%d %d %d %d %d %d %d",

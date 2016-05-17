@@ -7,7 +7,7 @@ int enterIP(Player *man)
     int i=0;
     int x,y;
     int length;
-    int rectlen = 30;
+    int rectlen = 20;
     int a,b;
 
     char *text = (char*)malloc(100);
@@ -79,7 +79,7 @@ int enterIP(Player *man)
         surfaceMessage = TTF_RenderText_Blended(arial,text,black);
         man->ipAddressText = SDL_CreateTextureFromSurface(program.renderer,surfaceMessage);
         length = strlen(text);
-        SDL_Rect rect = {350,323,rectlen*length,40};
+        SDL_Rect rect = {350,323,rectlen*length,35};
         man->ipRect = rect;
         SDL_FreeSurface(surfaceMessage);
         SDL_RenderCopy(program.renderer,man->ipAddressText,NULL,&man->ipRect);
