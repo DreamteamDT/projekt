@@ -1,7 +1,7 @@
 #include "definition.h"
 
 
-void initMenu(Menu *menu)
+void initMenu(Menu *menu,Player *man)
 {
 
     SDL_Init(SDL_INIT_EVERYTHING);
@@ -19,11 +19,16 @@ void initMenu(Menu *menu)
     SDL_Texture *texture;
     texture = SDL_CreateTextureFromSurface(program.renderer,image);
     SDL_FreeSurface(image);
+    SDL_Surface *ipImage = IMG_Load("enterip.PNG");
+    SDL_Texture *ipText;
+    ipText = SDL_CreateTextureFromSurface(program.renderer,ipImage);
+    SDL_FreeSurface(ipImage);
     menu->rect.x = 0;
     menu->rect.y = 0;
     menu->rect.w = 1024;
     menu->rect.h = 768;
     menu->texture = texture;
+    man->ipTexture = ipText;
 
 }
 

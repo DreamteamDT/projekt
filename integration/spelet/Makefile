@@ -1,5 +1,5 @@
 #OBJS specifies which files to compile
-OBJS = newmain.c init.c menu.c processing.c bullet.c network.c
+OBJS = newmain.c init.c menu.c ipmenu.c processing.c bullet.c network.c
 
 #CC specifies which compiler we're using
 CC = gcc
