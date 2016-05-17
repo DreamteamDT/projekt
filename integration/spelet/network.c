@@ -124,46 +124,46 @@ void deathSound(Player *man)
      {
          if(man->spritePick==1)
         {
-           Mix_Chunk *deathsound = Mix_LoadWAV("death14.wav");
-           Mix_PlayMusic(deathsound,-1);
+           Mix_Chunk *deathsound = Mix_LoadWAV("Soundeffects\death14.wav");
+           Mix_PlayChannel(-1,deathsound,0);
         }
         else if(man->spritePick==2)
         {
-           Mix_Chunk *deathsound = Mix_LoadWAV("death4.wav");
-           Mix_PlayMusic(deathsound,-1);
+           Mix_Chunk *deathsound = Mix_LoadWAV("Soundeffects\death4.wav");
+           Mix_PlayChannel(-1,deathsound,0);
         }
         else if(man->spritePick==3)
         {
-           Mix_Chunk *deathsound = Mix_LoadWAV("death15.wav");
-           Mix_PlayMusic(deathsound,-1);
+           Mix_Chunk *deathsound = Mix_LoadWAV("Soundeffects\death15.wav");
+           Mix_PlayChannel(-1,deathsound,0);
         }
         else if(man->spritePick==4)
         {
-           Mix_Chunk *deathsound = Mix_LoadWAV("death8.wav");
-           Mix_PlayMusic(deathsound,-1);
+           Mix_Chunk *deathsound = Mix_LoadWAV("Soundeffects\death8.wav");
+           Mix_PlayChannel(-1,deathsound,0);
         }
      }
     else
     {
         if(man->spritePick==1)
         {
-           Mix_Chunk *deathsound = Mix_LoadMUS("death14.MP3");
-           Mix_PlayMusic(deathsound,-1);
+           Mix_Chunk *deathsound = Mix_LoadWAV("Soundeffects\death14.WAV");
+           Mix_PlayChannel(-1,deathsound,0);
         }
         else if(man->spritePick==2)
         {
-           Mix_Chunk *deathsound = Mix_LoadMUS("death4.MP3");
-           Mix_PlayMusic(deathsound,-1);
+           Mix_Chunk *deathsound = Mix_LoadWAV("Soundeffects\death4.WAV");
+           Mix_PlayChannel(-1,deathsound,0);
         }
         else if(man->spritePick==3)
         {
-           Mix_Chunk *deathsound = Mix_LoadMUS("death15.MP3");
-           Mix_PlayMusic(deathsound,-1);
+           Mix_Chunk *deathsound = Mix_LoadWAV("Soundeffects\death15.WAV");
+           Mix_PlayChannel(-1,deathsound,0);
         }
         else if(man->spritePick==4)
         {
-           Mix_Chunk *deathsound = Mix_LoadMUS("death8.MP3");
-           Mix_PlayMusic(deathsound,-1);
+           Mix_Chunk *deathsound = Mix_LoadWAV("Soundeffects\death8.WAV");
+           Mix_PlayChannel(-1,deathsound,0);
         }
 
     }
