@@ -120,30 +120,30 @@ void sendBullet(Player man,Network client)
 
 void deathSound(Player *man)
 {
-    Mix_Chunk *deathsound1 = Mix_LoadWAV("Soundeffects\death14.WAV");
-    Mix_Chunk *deathsound2 = Mix_LoadWAV("Soundeffects\death4.WAV");
-    Mix_Chunk *deathsound3 = Mix_LoadWAV("Soundeffects\death15.WAV");
-    Mix_Chunk *deathsound4 = Mix_LoadWAV("Soundeffects\death8.WAV");
+    Mix_Chunk *deathsound1 = Mix_LoadWAV("Soundeffects/death14.WAV");
+    Mix_Chunk *deathsound2 = Mix_LoadWAV("Soundeffects/death4.WAV");
+    Mix_Chunk *deathsound3 = Mix_LoadWAV("Soundeffects/death15.WAV");
+    Mix_Chunk *deathsound4 = Mix_LoadWAV("Soundeffects/death8.WAV");
      if(LINUX)
      {
          if(man->spritePick==1)
         {
-           Mix_Chunk *deathsound = Mix_LoadWAV("Soundeffects\death14.wav");
+           Mix_Chunk *deathsound = Mix_LoadWAV("Soundeffects/death14.wav");
            Mix_PlayChannel(-1,deathsound,0);
         }
         else if(man->spritePick==2)
         {
-           Mix_Chunk *deathsound = Mix_LoadWAV("Soundeffects\death4.wav");
+           Mix_Chunk *deathsound = Mix_LoadWAV("Soundeffects/death4.wav");
            Mix_PlayChannel(-1,deathsound,0);
         }
         else if(man->spritePick==3)
         {
-           Mix_Chunk *deathsound = Mix_LoadWAV("Soundeffects\death15.wav");
+           Mix_Chunk *deathsound = Mix_LoadWAV("Soundeffects/death15.wav");
            Mix_PlayChannel(-1,deathsound,0);
         }
         else if(man->spritePick==4)
         {
-           Mix_Chunk *deathsound = Mix_LoadWAV("Soundeffects\death8.wav");
+           Mix_Chunk *deathsound = Mix_LoadWAV("Soundeffects/death8.wav");
            Mix_PlayChannel(-1,deathsound,0);
         }
      }
