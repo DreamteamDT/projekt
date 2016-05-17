@@ -1,6 +1,7 @@
 #include "definition.h"
 extern void addEnemyBullet(int x,int y,int dx,Bullet b[],int b1,int b2,int i);
 void checkRunningEnemyDirection(Player *man, int *bulletX, int *bulletY, int id);
+extern  void generateScoreboard(Player *man);
 
 
 int uncomplete_string(char tmp[])
@@ -23,12 +24,12 @@ int networkInit(Network *client,Player *man,char *ipaddress)
     IPaddress ip,tcpip;
     char tmp[1024];
 
-    if((SDLNet_ResolveHost(&ip,ipaddress,5000))==-1)
+    if((SDLNet_ResolveHost(&ip,man->ip,5000))==-1)
     {
         printf("Couldnt resolve udp host\n");
         return 0;
     }
-    if((SDLNet_ResolveHost(&tcpip,ipaddress,4000))==-1)
+    if((SDLNet_ResolveHost(&tcpip,man->ip,4000))==-1)
     {
         printf("Couldnt resolve tcp host\n");
         return 0;
@@ -105,11 +106,11 @@ void send_data(Player *man,Network *client,int type)
         sprintf(client->sendpack->data,"%d %d %d %d",type,man->id,man->hitid,man->bulletid);
         SDLNet_UDP_Send(client->udpsock,-1,client->sendpack);
     }
+
 }
 
 void sendBullet(Player man,Network client)
 {
-    printf("skickar bullet!\n");
     int i,j,k,size,len;
     int type = 8;
     sprintf(client.sendpack->data,"%d %d %d %d %d %d %d",

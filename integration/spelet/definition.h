@@ -19,7 +19,6 @@
 #endif // _WIN32
 #include <time.h>
 
-
 typedef struct
 {
     SDL_Texture *texture;
@@ -85,12 +84,13 @@ typedef struct
     int x1, y1;
     int hitid,alive,kills,deaths;
     int currentTime, cdTime, spellReady, blinked;
-    SDL_Texture *texture,*background,*scoreBackground,*bullet,*cdTimer,*score,*scoreHead;
+    SDL_Texture *texture,*background,*scoreBackground,*bullet,*cdTimer,*score,*scoreHead,*ipTexture,*ipAddressText;
     int thinkTime;
     int shot,bulletid,blinkX,blinkY,bulletNo,connected;
     int id;
     int spritePick;
-    SDL_Rect blinkRect,scoreRect;
+    SDL_Rect blinkRect,scoreRect,ipRect;
+    char *ip;
 } Player;
 
 typedef struct
