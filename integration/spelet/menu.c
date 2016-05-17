@@ -19,9 +19,22 @@ void initMenu(Menu *menu,Player *man)
     SDL_Texture *texture;
     texture = SDL_CreateTextureFromSurface(program.renderer,image);
     SDL_FreeSurface(image);
-    SDL_Surface *ipImage = IMG_Load("enterip.PNG");
-    SDL_Texture *ipText;
+
+     SDL_Surface *ipImage;
+     SDL_Texture *ipText;
+
+    if(LINUX)
+    {
+    ipImage = IMG_Load("enterIP.png");
     ipText = SDL_CreateTextureFromSurface(program.renderer,ipImage);
+    }
+    else
+    {
+    ipImage = IMG_Load("enterip.PNG");
+    ipText = SDL_CreateTextureFromSurface(program.renderer,ipImage);
+    }
+
+
     SDL_FreeSurface(ipImage);
     menu->rect.x = 0;
     menu->rect.y = 0;
