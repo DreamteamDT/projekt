@@ -177,7 +177,6 @@ int processEvents(Player *man,Bullet b[],int *moved,int *type,int *direct,Networ
     }
     if (man->blinked == 1)
     {
-        printf("fårporr\n");
         *moved = 1;
         *type = 2;
         *direct = -1;
@@ -205,7 +204,6 @@ int processEvents(Player *man,Bullet b[],int *moved,int *type,int *direct,Networ
     checkCd(&*man);
     if(state[SDL_SCANCODE_SPACE] && man->alive) // kan inte ha  && man->spellReady här
     {
-        printf("pressed 1\n");
         if (man->spellReady == 0 && *direct <= 0)
             *direct = -1;
         int bX,bY;
@@ -253,7 +251,8 @@ int processEvents(Player *man,Bullet b[],int *moved,int *type,int *direct,Networ
 void checkCd(Player *man)
 {
     man->currentTime = SDL_GetTicks();
-    if (man->currentTime > man->cdTime+40 && man->blinkRect.w < 150)  // && man->currentTime+3000 < man->lastTime
+    // +40 och man->blinkRect.w+=2 bestämmer CD för blink
+    if (man->currentTime > man->cdTime+40 && man->blinkRect.w < 150)
     {
         man->blinkRect.w += 2;
         man->cdTime = man->currentTime;
@@ -266,6 +265,7 @@ void checkCd(Player *man)
 
 void collisionDetect(Player *man, int *direct, int *moved, int *type)
 {
+    // collision när man går (wasd)
     if (*direct > 0)
     {
         int i, bpe = 0;
@@ -325,6 +325,7 @@ void collisionDetect(Player *man, int *direct, int *moved, int *type)
             bpe = 0;
         }
     }
+    // för blink (space)
     else if (*direct < 0)
     {
         int i, bpe = 0;
@@ -621,11 +622,6 @@ void checkRunningEnemyDirection(Player *man, int *bulletX, int *bulletY, int id)
             *bulletY = *bulletY + 40;
         }
     }
-}
-
-void bulletDetect(Player *man, Bullet b[])
-{
-    printf("asd\n");
 }
 
 void doRender(Player *man,Bullet b[]) //, Enemy *enemies
