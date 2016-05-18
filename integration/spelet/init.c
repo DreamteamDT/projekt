@@ -221,11 +221,6 @@ SDL_Texture *initBullet()
     return texture;
 }
 
-void initSounds(Player *man)
-{
-    man->sounds.bulletShot = Mix_LoadWAV("bulletPop.WAV");
-}
-
 
 void Quit()
 {

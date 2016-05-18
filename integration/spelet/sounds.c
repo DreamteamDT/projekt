@@ -32,7 +32,7 @@ void loadSounds(Player *man)
 
     }
 
-
+    man->sounds.bulletShot = Mix_LoadWAV("bulletPop.WAV");
 }
 
 void enemyDeathSound(Player *man, int hitid)
