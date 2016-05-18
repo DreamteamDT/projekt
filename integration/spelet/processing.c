@@ -1,9 +1,9 @@
 #include "processing.h"
 
-extern int addBullet(int,int,int,Bullet b[],int b1,int b2);
-extern void sendBullet(Player man,Network client);
-void checkRunningDirection(Player *man, int *shotX, int *shotY);
-void checkCd(Player *man);
+//extern int addBullet(int,int,int,Bullet b[],int b1,int b2);
+//extern void sendBullet(Player man,Network client);
+//void checkRunningDirection(Player *man, int *shotX, int *shotY);
+//void checkCd(Player *man);
 
 
 void updateLogic(Player *p,Bullet b[])
@@ -40,11 +40,11 @@ void updateEnemyBullet(Player *man)
 }
 int processEvents(Player *man,Bullet b[],int *moved,int *type,int *direct,Network *client)
 {
-    Mix_Chunk *bulletShot = Mix_LoadWAV("bulletPop.WAV");
     unsigned int spellOne, spellOne_False=0;
+    int blinkX,blinkY;
     spellOne = SDL_GetTicks();
     SDL_Event event;
-    int done = 0,shooting;
+    int done = 0;
 
     man->thinkTime--;
     if(man->thinkTime<=0)
@@ -64,7 +64,7 @@ int processEvents(Player *man,Bullet b[],int *moved,int *type,int *direct,Networ
                 program.window = NULL;
                 done = 1;
                 *moved = 1;
-                *type = 3;
+                *type = 11;
             }
         }
         break;
@@ -75,12 +75,12 @@ int processEvents(Player *man,Bullet b[],int *moved,int *type,int *direct,Networ
             case SDLK_ESCAPE:
                 done = 1;
                 *moved = 1;
-                *type = 3;
+                *type = 11;
                 break;
             case SDLK_RETURN:
                 done = 1;
                 *moved = 1;
-                *type = 3;
+                *type = 11;
                 break;
             }
         }
@@ -90,13 +90,10 @@ int processEvents(Player *man,Bullet b[],int *moved,int *type,int *direct,Networ
             //quit out of the game
             done = 1;
             *moved = 1;
-            *type = 3;
+            *type = 11;
             break;
         case SDL_MOUSEBUTTONDOWN :
-            printf("clicked on mouse");
-            int blinkX,blinkY;
             SDL_GetMouseState(&blinkX, &blinkY);
-            printf("Cursor at %d x %d\n",blinkX,blinkY);
             break;
 
         case SDL_MOUSEBUTTONUP:
@@ -106,7 +103,7 @@ int processEvents(Player *man,Bullet b[],int *moved,int *type,int *direct,Networ
     }
 
     const Uint8 *state = SDL_GetKeyboardState(NULL);
-    if(state[SDL_SCANCODE_LEFT] || state[SDL_SCANCODE_A] && man->alive)
+    if((state[SDL_SCANCODE_LEFT] || state[SDL_SCANCODE_A]) && man->alive)
     {
         man->x = man->x - (200*(man->deltaTimeS));
         *moved = 1;
@@ -123,7 +120,7 @@ int processEvents(Player *man,Bullet b[],int *moved,int *type,int *direct,Networ
         if(man->x < 0)
             man->x = 0;
     }
-    if(state[SDL_SCANCODE_RIGHT] || state[SDL_SCANCODE_D] && man->alive)
+    if((state[SDL_SCANCODE_RIGHT] || state[SDL_SCANCODE_D]) && man->alive)
     {
         man->x = man->x + (200*(man->deltaTimeS));
 
@@ -142,7 +139,7 @@ int processEvents(Player *man,Bullet b[],int *moved,int *type,int *direct,Networ
             man->x = 960;
 
     }
-    if(state[SDL_SCANCODE_UP] || state[SDL_SCANCODE_W] && man->alive)
+    if((state[SDL_SCANCODE_UP] || state[SDL_SCANCODE_W]) && man->alive)
     {
         man->y = man->y - (200*(man->deltaTimeS));
         *moved = 1;
@@ -159,7 +156,7 @@ int processEvents(Player *man,Bullet b[],int *moved,int *type,int *direct,Networ
         if(man->y<0)
             man->y = 0;
     }
-    if(state[SDL_SCANCODE_DOWN] || state[SDL_SCANCODE_S] && man->alive)
+    if((state[SDL_SCANCODE_DOWN] || state[SDL_SCANCODE_S]) && man->alive)
     {
         man->y = man->y + (200*(man->deltaTimeS));
         *moved = 1;
@@ -178,7 +175,6 @@ int processEvents(Player *man,Bullet b[],int *moved,int *type,int *direct,Networ
     }
     if (man->blinked == 1)
     {
-        printf("fårporr\n");
         *moved = 1;
         *type = 2;
         *direct = -1;
@@ -186,7 +182,7 @@ int processEvents(Player *man,Bullet b[],int *moved,int *type,int *direct,Networ
     }
     if((SDL_GetMouseState(NULL,NULL) &&SDL_BUTTON_LEFT) && man->alive && !man->justShot)
     {
-        int blinkX,blinkY,bulletNo,shotX,shotY;
+        int bulletNo,shotX,shotY;
         checkRunningDirection(&*man, &shotX, &shotY);
         SDL_GetMouseState(&blinkX, &blinkY);
         if(global%6==0)
@@ -194,7 +190,7 @@ int processEvents(Player *man,Bullet b[],int *moved,int *type,int *direct,Networ
             man->justShot = 1;
             if(((bulletNo = addBullet(shotX,shotY,5,b,blinkX,blinkY))>=0))
             {
-                Mix_PlayChannel(-1,bulletShot,0);
+                Mix_PlayChannel(-1,man->sounds.bulletShot,0);
                 man->blinkX = blinkX;
                 man->blinkY = blinkY;
                 man->bulletNo = bulletNo;
@@ -206,7 +202,6 @@ int processEvents(Player *man,Bullet b[],int *moved,int *type,int *direct,Networ
     checkCd(&*man);
     if(state[SDL_SCANCODE_SPACE] && man->alive) // kan inte ha  && man->spellReady här
     {
-        printf("pressed 1\n");
         if (man->spellReady == 0 && *direct <= 0)
             *direct = -1;
         int bX,bY;
@@ -245,18 +240,17 @@ int processEvents(Player *man,Bullet b[],int *moved,int *type,int *direct,Networ
                 Mix_PlayChannel(-1,blink,0);
             }
 
-
         }
     }
     //printf("Thinktime : %d \n",man->thinkTime);
-    *bulletShot;
     return done;
 }
 
 void checkCd(Player *man)
 {
     man->currentTime = SDL_GetTicks();
-    if (man->currentTime > man->cdTime+40 && man->blinkRect.w < 150)  // && man->currentTime+3000 < man->lastTime
+    // +40 och man->blinkRect.w+=2 bestämmer CD för blink
+    if (man->currentTime > man->cdTime+40 && man->blinkRect.w < 150)
     {
         man->blinkRect.w += 2;
         man->cdTime = man->currentTime;
@@ -269,6 +263,7 @@ void checkCd(Player *man)
 
 void collisionDetect(Player *man, int *direct, int *moved, int *type)
 {
+    // collision när man går (wasd)
     if (*direct > 0)
     {
         int i, bpe = 0;
@@ -322,12 +317,14 @@ void collisionDetect(Player *man, int *direct, int *moved, int *type)
                         man->y = by-mh;
                 }
                 // ladda enemies istället för ledges
+                if(man->enemies[i].alive)
                 bx = man->enemies[i].dstRect.x, by = man->enemies[i].dstRect.y, bw = man->enemies[i].dstRect.w, bh = man->enemies[i].dstRect.h;
                 bpe++;
             }
             bpe = 0;
         }
     }
+    // för blink (space)
     else if (*direct < 0)
     {
         int i, bpe = 0;
@@ -346,7 +343,7 @@ void collisionDetect(Player *man, int *direct, int *moved, int *type)
             man->y = 630-mh;
 
         // check for collision with any ledges and enemies
-        for (i = 0; i < 7; i++)
+        for (i = 0; i < 6; i++)
         {
             // ladda ledges
             int bw = man->ledges[i].w, bh = man->ledges[i].h;
@@ -407,9 +404,12 @@ void collisionDetect(Player *man, int *direct, int *moved, int *type)
                     }
                 }
                 // ladda enemies istället för ledges
+                if(man->enemies[i].alive)
+                {
+                    bw = man->enemies[i].dstRect.w, bh = man->enemies[i].dstRect.h;
+                    bx = man->enemies[i].dstRect.x+bw/2, by = man->enemies[i].dstRect.y+bh/2;
+                }
 
-                bw = man->enemies[i].dstRect.w, bh = man->enemies[i].dstRect.h;
-                bx = man->enemies[i].dstRect.x+bw/2, by = man->enemies[i].dstRect.y+bh/2;
 
                 bpe++;
             }
@@ -626,11 +626,6 @@ void checkRunningEnemyDirection(Player *man, int *bulletX, int *bulletY, int id)
     }
 }
 
-void bulletDetect(Player *man, Bullet b[])
-{
-    printf("asd\n");
-}
-
 void doRender(Player *man,Bullet b[]) //, Enemy *enemies
 {
     int i,j;
@@ -638,8 +633,6 @@ void doRender(Player *man,Bullet b[]) //, Enemy *enemies
     SDL_SetRenderDrawColor(program.renderer, 0, 0, 255, 255);
     //Clear the screen (to blue)
 
-    SDL_Rect rect = { man->x, man->y , 32, 32 };
-    SDL_Rect src = {man->frameX,0,32,32};
     SDL_Rect bg = {0,0,1024,768};
     //SDL_Rect scoreBg = {0,630,1024,138};
 
@@ -726,8 +719,6 @@ void doRender(Player *man,Bullet b[]) //, Enemy *enemies
 
 void respawn(Player *man)
 {
-    int i,j,k;
-    int busy = 0;
     int spawn = rand()%9;
 
     if(spawn == 0)

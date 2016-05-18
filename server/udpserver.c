@@ -35,7 +35,7 @@ typedef struct
 {
     UDPpacket *p;
     int id;
-    int exists;
+    int exists,ingame;
     TCPsocket tcpsock;
     IPaddress ip;
     float x,y;
@@ -262,7 +262,6 @@ int main(int argc, char **argv)
                         }
                 }
             }
-
         }
         while(SDLNet_CheckSockets(tcpset,0)>0)
         {
@@ -282,17 +281,18 @@ int main(int argc, char **argv)
                                 printf("TCP Recv failed: %s\n",SDL_GetError());
                                 return 1;
                             }
+                            printf("tar emot data\n");
                             max++;
                         }
                         while(uncomplete_string(tmp) && max<20);
                         sscanf(tmp,"%d %d",&type,&id);
+                        printf("type: %d\n",type);
                         players[id].lastData = SDL_GetTicks();
                         if(max>=20)
                         {
                             type = 3;
                             sprintf(tmp,"%d %d \n",type,i);
                         }
-
                         if(type == 3)
                         {
                             for(k=0; k<maxPlayers; k++)
@@ -327,6 +327,27 @@ int main(int argc, char **argv)
                                 }
                             }
                         }
+                        else if(type == 11)
+                        {
+                            for(k=0; k<maxPlayers; k++)
+                            {
+                                if(players[k].exists)
+                                    if(k!=i)
+                                    {
+                                        size=0;
+                                        len=strlen(tmp)+1;
+                                        while(size<len)
+                                        {
+                                            if(!(size+=SDLNet_TCP_Send(players[k].tcpsock,tmp+size,len-size)))
+                                            {
+                                                printf("TCP Send failed: %s\n",SDL_GetError());
+                                                return 1;
+                                            }
+                                        }
+                                    }
+
+                            }
+                        }
 
                     }
             }
@@ -336,14 +357,13 @@ int main(int argc, char **argv)
         {
             if(players[i].exists)
             {
-                if((SDL_GetTicks()-players[i].lastData > 30000)) /**IF AFK FOR >30 SECONDS **/
+                if((SDL_GetTicks()-players[i].lastData > 60000)) /** KICK PLAYER IF AFK FOR >60 SECONDS **/
                 {
                     type = 3;
                     sprintf(tmp,"%d %d \n",type,i);
                     for(k=0; k<maxPlayers; k++)
                     {
                         if(players[k].exists)
-                            if(k!=i)
                             {
                                 size=0;
                                 len=strlen(tmp)+1;

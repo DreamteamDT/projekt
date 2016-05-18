@@ -1,6 +1,7 @@
 #include "bullet.h"
-extern void sendBullets(Player *man,Bullet b[],Network *client);
-extern void send_data(Player *man,Network *client,int type);
+//extern void sendBullets(Player *man,Bullet b[],Network *client);
+//extern void send_data(Player *man,Network *client,int type);
+//extern void enemyDeathSound(Player *man, int hitid);
 
 SDL_Texture *getBulletSprite()
 {
@@ -81,7 +82,7 @@ void addEnemyBullet(int x,int y,int dx,Bullet b[],int b1,int b2,int i)
 
 void detectHit(Player *man,Bullet b[],Network *client)
 {
-    int i,j,k;
+    int i,j;
     for(i=0; i<5; i++)
     {
         if(man->enemies[i].exists && man->enemies[i].alive)
@@ -109,7 +110,7 @@ void detectHit(Player *man,Bullet b[],Network *client)
 
 void bulletGone(Bullet b[],Player *man,Network *client)
 {
-    int i, j,k;
+    int i, j;
 
     for(i=0; i<20; i++) /**PLAYERS BULLETS **/
     {

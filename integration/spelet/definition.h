@@ -10,6 +10,7 @@
 #include <string.h>
 #include <stdlib.h>
 #include <stdio.h>
+#include <math.h>
 #include <SDL.h>
 #include <SDL_image.h>
 #include <SDL_net.h>
@@ -79,6 +80,18 @@ typedef struct
 
 typedef struct
 {
+    Mix_Music *backgroundSound;
+    Mix_Music *backgroundLinux;
+    Mix_Music *backstreet;
+    Mix_Music *cykablyat;
+    Mix_Music *america;
+    Mix_Music *china;
+    Mix_Chunk *bulletShot;
+
+} Sound;
+
+typedef struct
+{
     Enemy enemies[10];
     Ledge ledges[7];
     float x, y;
@@ -87,7 +100,7 @@ typedef struct
     int hitid,alive,kills,deaths;
     int currentTime, cdTime, spellReady, blinked;
     SDL_Texture *texture,*background,*scoreBackground,*bullet,*cdTimer,*score,*scoreHead,*ipTexture,*ipAddressText;
-    int thinkTime;
+    int thinkTime,disconnected;
     int shot,bulletid,blinkX,blinkY,bulletNo,connected;
     int id;
     int justShot;
@@ -96,7 +109,11 @@ typedef struct
     int spritePick;
     SDL_Rect blinkRect,scoreRect,ipRect;
     char *ip;
+    Sound sounds;
 } Player;
+
+
+
 
 typedef struct
 {

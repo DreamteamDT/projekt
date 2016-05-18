@@ -135,16 +135,16 @@ int handlePick(int *pickCharacter,Player *man)
         //Stäng fönstret om användaren klickar på X-rutan på fönstret
         if(e.type==SDL_QUIT)
         {
-            ingame=0;
+            ingame=-1;
             *pickCharacter = 0;
         }
         //Stäng fönstret om användaren trycker på ESC-knappen på tangentbordet
-        else if(e.key.keysym.sym==SDLK_ESCAPE)
-        {
-            ingame=0;
-            *pickCharacter = 0;
+       // else if(e.key.keysym.sym==SDLK_ESCAPE)
+       // {
+       //     ingame=-1;
+       //     *pickCharacter = 0;
 
-        }
+     //   }
         //Återgå till huvudmenyn om användaren trycker back-pilen genom ett vänsterklick
         else if(x>400 && x<606 && y>626 && y<725 && e.type==SDL_MOUSEBUTTONDOWN)
         {
@@ -152,7 +152,7 @@ int handlePick(int *pickCharacter,Player *man)
             {
                 //Laddar upp huvudmenyn på fönstret och programräknaren återgår till main-loopen
                 *pickCharacter = 0;
-                ingame = 0;
+                ingame = -1;
             }
         }
         //Användaren väljer första gubben
@@ -202,7 +202,7 @@ int handlePick(int *pickCharacter,Player *man)
 
 void generateScoreboard(Player *man)
 {
-    int i,j,k,scoreposition=657;
+    int i,scoreposition=657;
     SDL_Surface* surfaceMessage;
     SDL_Color black = {0, 0, 0};
     char *score = (char*)malloc(100);
@@ -226,6 +226,7 @@ void generateScoreboard(Player *man)
         sprintf(score,"China      %d      %d",man->kills,man->deaths);
     }
     surfaceMessage = TTF_RenderText_Blended(arial,score,black);
+    SDL_DestroyTexture(man->score);
     man->score = SDL_CreateTextureFromSurface(program.renderer,surfaceMessage);
     SDL_Rect rect = {164,scoreposition,250,20};
     man->scoreRect = rect;
@@ -256,6 +257,7 @@ void generateScoreboard(Player *man)
             }
 
             surfaceMessage = TTF_RenderText_Blended(arial,score,black);
+            SDL_DestroyTexture(man->enemies[i].score);
             man->enemies[i].score = SDL_CreateTextureFromSurface(program.renderer,surfaceMessage);
             SDL_Rect rect = {164,scoreposition,250,20};
             man->enemies[i].scoreRect = rect;

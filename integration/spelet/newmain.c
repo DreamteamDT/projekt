@@ -1,130 +1,71 @@
 #include "definition.h"
 
-extern void initPlayer(Player *player);
-extern void initLedges(Player *player);
-extern void doRender(Player *man,Bullet b[]); //, Enemy *enemies
-extern int processEvents(Player *man,Bullet b[],int *moved,int *type,int *direct,Network *client);
-extern void collisionDetect(Player *man, int *direct, int *moved, int *type);
+/** Vi behöver tydligen 7inte deklarera funktionerna här?? **/
+/** Linkern gör det åt oss **/
 
-extern void clearCartridge(Bullet ammo[]);
-extern void Quit();
-extern void sendPosition(Player *man);
-
-extern void loadAmmo(Bullet b[]);
-//extern void infitBullet();
-extern SDL_Texture *initBullet();
-extern void updateLogic(Player *p, Bullet b[]);
-
-extern void send_data(Player *man,Network *client,int type);
-extern int networkInit(Network *client,Player *man,char *ipaddress);
-extern void recv_data(Player *player,Network *client,int *done,Bullet b[]);
-
-extern void displayMenu(Menu menu);
-extern int handleMenu(int *exit);
-extern void initMenu(Menu *menu, Player *man);
-extern void initPick(Menu *pick);
-extern void initCd(Player *player);
-extern int handlePick(int *pickCharacter,Player *man);
-
-extern void bulletGone(Bullet b[],Player *man,Network *client);
-extern void detectHit(Player *man,Bullet b[],Network *client);
-extern void bulletClear(Bullet b[],Player *man, Network *client);
-extern void updateEnemyBullet(Player *man);
-
-extern void respawn(Player *man);
-extern void generateScoreboard(Player *man);
-extern int enterIP(Player *man);
-extern void createTextures(Player *player);
 
 int global = 0;
 int main(int argc, char *argv[])
 {
 
-    int startMenu = 1,pickCharacter = 0,imageNo,exit = 0,ingame = 0;
+    int pickCharacter = 0,exit = 0,ingame = 0,connected, i,done = 0;
+    int choice,newline,moved = 0,type,direct = 0,enterIPmenu;
+    unsigned int lastTime,currentTime;
     char *tmp = (char*)malloc(100);
-    int q = 0;
-    int done = 0,hitid;
-    int connected, i;
+    int frameStart=0,frameEnd=0;
+    float lastSent = 0;
+    Menu menu,pick;
+
     Player player = {0};
     Network client;
-    int choice;
-    int newline;
-    int moved = 0;
-    int type;
-    int direct = 0;
     player.blinked = 0;
     player.spellReady = 1;
     bullet.texture=initBullet();
     Bullet ammo[20];
-    unsigned int lastTime,currentTime;
-    int frameStart=0,frameEnd=0;
-    float lastSent = 0;
-    int enterIPmenu;
-
-    Mix_Music *backgroundSound;
-    Mix_Music *backgroundLinux;
-
 
     TTF_Init();
 
-    int sekund,spawnTimer=4;
+    int spawnTimer=4;
     srand(time(NULL));
 
-   // printf("Vill du connecta till servern? 1=JA 0=NEJ: ");
-   // scanf("%d",&choice);
-   // scanf("%c",&newline);
-    //choice = 0;
-
-    for(i=0; i<10; i++)
-    {
-        player.enemies[i].exists = 0;
-    }
-
-    player.connected = 1;
     connected = 1;
 
-
-    if(LINUX)
-    {
-        Mix_OpenAudio(44100,MIX_DEFAULT_FORMAT,2,2048);
-        backgroundLinux = Mix_LoadMUS("gta3.wav");
-
-    }
-    else
-    {
-        Mix_OpenAudio(44100,MIX_DEFAULT_FORMAT,2,2048);
-        Mix_VolumeMusic(20);
-        backgroundSound = Mix_LoadMUS("gta3.MP3");
-    }
-
-
-    //link(ammo);
-    //Event loop
-    Menu menu,pick;
+    /** INIT SOUNDS,PICTURES,TEXTURES ETC **/
+    loadSounds(&player);
     initMenu(&menu,&player);
     initPick(&pick);
+    initSounds(&player);
+    initLedges(&player);
+    initCd(&player);
     SDLNet_Init();
-    int testss = 0;
     while(!exit) ///**** MAIN MENU ****/
     {
-       if(LINUX)
-        {
-           	 Mix_PlayMusic(backgroundLinux, -1);
-        }
+        if(LINUX)
+            Mix_PlayMusic(player.sounds.backgroundLinux, -1);
         else
-        {
-            Mix_PlayMusic(backgroundSound,-1);
+            Mix_PlayMusic(player.sounds.backgroundSound,-1);
 
-        }
-        // Mix_PlayMusic(backgroundSound,-1);
         displayMenu(menu);
         enterIPmenu = handleMenu(&exit);
 
-        while(enterIPmenu)
+        while(enterIPmenu) /***** SKRIV IN IP ****/
         {
             pickCharacter = enterIP(&player);
+            SDL_StopTextInput();
             if(pickCharacter)
-                SDL_StopTextInput();
+            {
+                if(!(networkInit(&client,&player,tmp)))
+                {
+                    ingame = 0;
+                    pickCharacter = 0;
+                    enterIPmenu = 0;
+                }
+                else
+                {
+                    player.connected = 1;
+                    player.disconnected = 0;
+                }
+            }
             else
                 enterIPmenu = 0;
 
@@ -132,34 +73,18 @@ int main(int argc, char *argv[])
             {
                 displayMenu(pick);
                 ingame = handlePick(&pickCharacter,&player);
-                SDL_Delay(50);
-                if(ingame)
+                if(ingame==1)
                 {
-                    clearCartridge(ammo);
                     initPlayer(&player);
-                    initLedges(&player);
-                    initCd(&player);
-                    if(connected && !(networkInit(&client,&player,tmp)))
-                    {
-                        exit = 1;
-                        ingame = 0;
-                        pickCharacter = 0;
-                        enterIPmenu = 0;
-                    }
-                    printf("my x: %f, my y: %f\n",player.x,player.y);
-                    if(connected && exit!=1)
-                    {
-                        send_data(&player,&client,2);
-                    }
-                    // lastTime = SDL_GetTicks();
-                    // lastTime = lastTime/1000;
+                    clearCartridge(ammo);
+                    send_data(&player,&client,2);
                     player.deltaTimeMs = 0;
-
+                    player.alive = 0;
                 }
-
-                while(ingame) /**** INGAME ****/
+                recv_data(&player,&client,&done,ammo);
+                while(ingame==1) /**** INGAME ****/
                 {
-                    //createTextures(&player);
+
                     if(player.deltaTimeMs < 1)
                     {
                         frameStart = SDL_GetTicks();
@@ -178,14 +103,14 @@ int main(int argc, char *argv[])
                     if(player.alive)
                         collisionDetect(&player, &direct, &moved, &type);
                     bulletGone(ammo,&player,&client);
-//&& SDL_GetTicks()>lastSent+5
-                    if(moved && connected && player.alive)
+
+                    if(moved && player.alive)
                     {
                         send_data(&player,&client,type);
                         moved = 0;
                     }
 
-                    if (connected && done != 1)
+                    if (done != 1)
                         recv_data(&player,&client,&done,ammo);
 
                     doRender(&player,ammo); //,&enemies[i]
@@ -209,28 +134,31 @@ int main(int argc, char *argv[])
                         }
                     }
 
-                    //SDL_Delay(20);
-                    if(done)
+                    if(done || player.disconnected)
                     {
-                        if(connected)
-
-                        {
-                            moved = 0;
-                            send_data(&player,&client,3);
-                            SDL_Delay(1000);
-                            SDLNet_FreeSocketSet(client.udpset);
-                            SDLNet_FreeSocketSet(client.tcpset);
-                            SDLNet_UDP_Close(client.udpsock);
-                            SDLNet_TCP_Close(client.tcpsock);
-                        }
-
-                        pickCharacter = 0;
                         ingame = 0;
-                        enterIPmenu = 0;
-
+                        if(LINUX)
+                            Mix_PlayMusic(player.sounds.backgroundLinux, -1);
+                        else
+                            Mix_PlayMusic(player.sounds.backgroundSound,-1);
                     }
                     frameEnd = SDL_GetTicks();
                     player.deltaTimeMs = frameEnd - frameStart;
+                }
+
+                if(ingame==-1 || player.disconnected)
+                {
+                    if(!player.disconnected)
+                    {
+                        send_data(&player,&client,3);
+                        SDL_Delay(1000);
+                    }
+                    SDLNet_FreeSocketSet(client.udpset);
+                    SDLNet_FreeSocketSet(client.tcpset);
+                    SDLNet_UDP_Close(client.udpsock);
+                    SDLNet_TCP_Close(client.tcpsock);
+                    pickCharacter = 0;
+                    enterIPmenu = 0;
                 }
                 exit = 0;
             }
@@ -239,11 +167,11 @@ int main(int argc, char *argv[])
     TTF_Quit();
     if(LINUX)
     {
-       Mix_FreeMusic(backgroundLinux);
+        Mix_FreeMusic(player.sounds.backgroundLinux);
     }
     else
     {
-       Mix_FreeMusic(backgroundSound);
+        Mix_FreeMusic(player.sounds.backgroundSound);
     }
     Mix_CloseAudio();
     free(tmp);
