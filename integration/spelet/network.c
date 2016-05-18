@@ -216,10 +216,11 @@ void recv_data(Player *man, Network *client,int *done,Bullet b[])
             if(man->alive)
             {
                 send_data(&*man,&*client,2);
+                send_data(&*man,&*client,2);
             }
 
         }
-        if (type == 2 && (SDL_GetTicks() - man->enemies[enemyid].justDied > 1000))
+        else if (type == 2 && (SDL_GetTicks() - man->enemies[enemyid].justDied > 1000))
         {
             sscanf(client->rcvpack->data,"%d %d %f %f %d %d",
                    &type,&enemyid,&enemyDX,&enemyDY,&enemySX,&spritePick);
@@ -229,7 +230,7 @@ void recv_data(Player *man, Network *client,int *done,Bullet b[])
             man->enemies[enemyid].srcRect.x = enemySX;
         }
 
-        if(type == 7)
+        else if(type == 7)
         {
             sscanf(client->rcvpack->data,"%d %d %d %d",&type,&enemyid,&hitid,&bulletid);
             if(hitid == man->id)
@@ -251,14 +252,14 @@ void recv_data(Player *man, Network *client,int *done,Bullet b[])
                 enemyDeathSound(&*man, hitid);
             }
         }
-        if (type == 8)
+        else if (type == 8)
         {
             sscanf(client->rcvpack->data,"%d %d %d %d %d %d %d",
                    &type,&enemyid,&bulletX,&bulletY,&blinkX,&blinkY,&bulletid);
             checkRunningEnemyDirection(&*man, &bulletX, &bulletY, enemyid);
             addEnemyBullet(bulletX,bulletY,5,man->enemies[enemyid].bullet,blinkX,blinkY,bulletid);
         }
-        if(type == 10)
+        else if(type == 10)
         {
             sscanf(client->rcvpack->data,"%d %d %d %d",&type,&enemyid,&kills,&deaths);
             //printf("%d %d %d %d\n",type,enemyid,kills,deaths);
@@ -308,14 +309,14 @@ void recv_data(Player *man, Network *client,int *done,Bullet b[])
             }
 
         }
-        if(type == 11)
+        else if(type == 11)
         {
             man->enemies[enemyid].exists = 0;
             man->enemies[enemyid].alive = 0;
             SDL_DestroyTexture(man->enemies[enemyid].texture);
         }
 
-        if(type == 6)
+        else if(type == 6)
         {
             printf("Server shut down!\n");
             *done = 1;
