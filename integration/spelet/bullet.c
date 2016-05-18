@@ -100,6 +100,7 @@ void detectHit(Player *man,Bullet b[],Network *client)
                         man->enemies[i].alive = 0;
                         man->enemies[i].justDied = SDL_GetTicks();
                         send_data(&*man,&*client,7);
+                        enemyDeathSound(&*man, i);
                     }
                 }
             }

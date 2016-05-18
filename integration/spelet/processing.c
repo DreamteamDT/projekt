@@ -234,6 +234,18 @@ int processEvents(Player *man,Bullet b[],int *moved,int *type,int *direct,Networ
             man->blinkRect.w = 0;
             man->spellReady = 0;
             man->blinked = 1;
+            if(LINUX)
+            {
+                Mix_Chunk *blink = Mix_LoadWAV("Soundeffects/blink.wav");
+                Mix_PlayChannel(-1,blink,0);
+            }
+            else
+            {
+                Mix_Chunk *blink = Mix_LoadWAV("Soundeffects/blink.WAV");
+                Mix_PlayChannel(-1,blink,0);
+            }
+
+
         }
     }
     //printf("Thinktime : %d \n",man->thinkTime);
