@@ -34,6 +34,7 @@ extern void updateEnemyBullet(Player *man);
 extern void respawn(Player *man);
 extern void generateScoreboard(Player *man);
 extern int enterIP(Player *man);
+extern void createTextures(Player *player);
 
 int global = 0;
 int main(int argc, char *argv[])
@@ -158,6 +159,7 @@ int main(int argc, char *argv[])
 
                 while(ingame) /**** INGAME ****/
                 {
+                    //createTextures(&player);
                     if(player.deltaTimeMs < 1)
                     {
                         frameStart = SDL_GetTicks();

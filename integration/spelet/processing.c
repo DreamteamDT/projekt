@@ -226,8 +226,8 @@ int processEvents(Player *man,Bullet b[],int *moved,int *type,int *direct,Networ
             unit_vector.y = (direction.y)/ v_length;
             //man->x+=(unit_vector.x*100)-16;
             //man->y+=(unit_vector.y*100)-16;
-            man->x+=(unit_vector.x*100);
-            man->y+=(unit_vector.y*100);
+            man->x+=(unit_vector.x*200);
+            man->y+=(unit_vector.y*200);
             *moved = 1;
             *type = 2;
             *direct = -1;
@@ -237,6 +237,7 @@ int processEvents(Player *man,Bullet b[],int *moved,int *type,int *direct,Networ
         }
     }
     //printf("Thinktime : %d \n",man->thinkTime);
+    *bulletShot;
     return done;
 }
 
@@ -624,7 +625,6 @@ void doRender(Player *man,Bullet b[]) //, Enemy *enemies
     //set the drawing color to blue
     SDL_SetRenderDrawColor(program.renderer, 0, 0, 255, 255);
     //Clear the screen (to blue)
-    SDL_RenderClear(program.renderer);
 
     SDL_Rect rect = { man->x, man->y , 32, 32 };
     SDL_Rect src = {man->frameX,0,32,32};
@@ -706,6 +706,10 @@ void doRender(Player *man,Bullet b[]) //, Enemy *enemies
 
 
     SDL_RenderPresent(program.renderer);
+//    SDL_DestroyTexture(man->texture);
+//    SDL_DestroyTexture(man->background);
+//    SDL_DestroyTexture(man->scoreBackground);
+//    SDL_DestroyTexture(man->bullet);
 }
 
 void respawn(Player *man)

@@ -1,6 +1,113 @@
 #include "init.h"
 #include <stdio.h>
 
+void createTextures(Player *player)
+{
+    SDL_Surface *image,*background,*scoreBg,*bullet;
+    SDL_Surface* surfaceMessage;
+
+    TTF_Font* arial = TTF_OpenFont("arialbd.ttf", 48);
+    SDL_Color black = {0, 0, 0};
+    surfaceMessage = TTF_RenderText_Blended(arial, "Player      Kills       Deaths", black);
+    player->scoreHead = SDL_CreateTextureFromSurface(program.renderer,surfaceMessage);
+    SDL_FreeSurface(surfaceMessage);
+
+    if(LINUX)
+    {
+        bullet = IMG_Load("kula.png");
+        background = IMG_Load("Background6.png");
+        if(background==NULL)
+        {
+            //Laddningen av bakgrunden misslyckades
+            printf("Unable to load background image!\n");
+        }
+    }
+    else
+    {
+        bullet =IMG_Load("kula.PNG");
+        background = IMG_Load("Background6.PNG");
+        if(background==NULL)
+        {
+            //Laddningen av bakgrunden misslyckades
+            printf("Unable to load background image!\n");
+        }
+    }
+    if(LINUX)
+    {
+        if(!(scoreBg = IMG_Load("scoreBackground.png")))
+        {
+            printf("syntax error\n");
+        }
+
+    }
+    else
+    {
+        if(!(scoreBg = IMG_Load("scoreBackground.PNG")))
+        {
+            printf("syntax error\n");
+        }
+    }
+    if(LINUX)
+    {
+        if(player->spritePick==1)
+        {
+            image = IMG_Load("USA.png");
+
+        }
+
+        else if(player->spritePick == 2)
+        {
+            image = IMG_Load("spriteRussia.png");
+        }
+        else if(player->spritePick == 3)
+        {
+            image = IMG_Load("spriteMurica.png");
+
+        }
+        else
+        {
+            image = IMG_Load("spriteChina.png");
+        }
+    }
+    else
+    {
+        if(player->spritePick==1)
+        {
+            image = IMG_Load("USA.PNG");
+
+        }
+
+        else if(player->spritePick == 2)
+        {
+            image = IMG_Load("spriteRussia.PNG");
+        }
+        else if(player->spritePick == 3)
+        {
+            image = IMG_Load("spriteMurica.PNG");
+        }
+        else
+        {
+            image = IMG_Load("spriteChina.PNG");
+        }
+
+    }
+
+    SDL_Texture *texture,*bgtexture,*scoreBgtext,*bullettxt;
+    bgtexture = SDL_CreateTextureFromSurface(program.renderer,background);
+    texture = SDL_CreateTextureFromSurface(program.renderer,image);
+    scoreBgtext = SDL_CreateTextureFromSurface(program.renderer,scoreBg);
+    bullettxt = SDL_CreateTextureFromSurface(program.renderer,bullet);
+    SDL_FreeSurface(bullet);
+    SDL_FreeSurface(scoreBg);
+    SDL_FreeSurface(background);
+    SDL_FreeSurface(image);
+    player->texture = texture;
+    player->background = bgtexture;
+    player->scoreBackground = scoreBgtext;
+    player->bullet = bullettxt;
+}
+
+
 void initPlayer(Player *player)
 {
     int i;
@@ -35,79 +142,79 @@ void initPlayer(Player *player)
     }
     if(LINUX)
     {
-       if(!(scoreBg = IMG_Load("scoreBackground.png")))
-       {
+        if(!(scoreBg = IMG_Load("scoreBackground.png")))
+        {
             printf("syntax error\n");
-       }
+        }
 
     }
     else
     {
-       if(!(scoreBg = IMG_Load("scoreBackground.PNG")))
-       {
+        if(!(scoreBg = IMG_Load("scoreBackground.PNG")))
+        {
             printf("syntax error\n");
-      }
+        }
     }
-   if(LINUX)
-   {
-      if(player->spritePick==1)
+    if(LINUX)
     {
-        image = IMG_Load("USA.png");
-        Mix_Music *soundtrack1 = Mix_LoadMUS("Backstreet.wav");
-        Mix_PlayMusic(soundtrack1,-1);
+        if(player->spritePick==1)
+        {
+            image = IMG_Load("USA.png");
+            Mix_Music *soundtrack1 = Mix_LoadMUS("Backstreet.wav");
+            Mix_PlayMusic(soundtrack1,-1);
 
-    }
+        }
 
-    else if(player->spritePick == 2)
-    {
-        image = IMG_Load("spriteRussia.png");
-        Mix_Music *soundtrack1 = Mix_LoadMUS("cykablyat.wav");
-        Mix_PlayMusic(soundtrack1,-1);
-    }
-    else if(player->spritePick == 3)
-    {
-        image = IMG_Load("spriteMurica.png");
-        Mix_Music *soundtrack1 = Mix_LoadMUS("America.wav");
-        Mix_PlayMusic(soundtrack1,-1);
+        else if(player->spritePick == 2)
+        {
+            image = IMG_Load("spriteRussia.png");
+            Mix_Music *soundtrack1 = Mix_LoadMUS("cykablyat.wav");
+            Mix_PlayMusic(soundtrack1,-1);
+        }
+        else if(player->spritePick == 3)
+        {
+            image = IMG_Load("spriteMurica.png");
+            Mix_Music *soundtrack1 = Mix_LoadMUS("America.wav");
+            Mix_PlayMusic(soundtrack1,-1);
 
+        }
+        else
+        {
+            image = IMG_Load("spriteChina.png");
+            Mix_Music *soundtrack1 = Mix_LoadMUS("Chinese.wav");
+            Mix_PlayMusic(soundtrack1,-1);
+        }
     }
     else
     {
-        image = IMG_Load("spriteChina.png");
-        Mix_Music *soundtrack1 = Mix_LoadMUS("Chinese.wav");
-        Mix_PlayMusic(soundtrack1,-1);
-    }
-   }
-   else
-   {
-       if(player->spritePick==1)
-    {
-        image = IMG_Load("USA.PNG");
-        Mix_Music *soundtrack1 = Mix_LoadMUS("Backstreet.MP3");
-        Mix_PlayMusic(soundtrack1,-1);
+        if(player->spritePick==1)
+        {
+            image = IMG_Load("USA.PNG");
+            Mix_Music *soundtrack1 = Mix_LoadMUS("Backstreet.MP3");
+            Mix_PlayMusic(soundtrack1,-1);
+
+        }
+
+        else if(player->spritePick == 2)
+        {
+            image = IMG_Load("spriteRussia.PNG");
+            Mix_Music *soundtrack1 = Mix_LoadMUS("cykablyat.MP3");
+            Mix_PlayMusic(soundtrack1,-1);
+        }
+        else if(player->spritePick == 3)
+        {
+            image = IMG_Load("spriteMurica.PNG");
+            Mix_Music *soundtrack1 = Mix_LoadMUS("America.MP3");
+            Mix_PlayMusic(soundtrack1,-1);
+        }
+        else
+        {
+            image = IMG_Load("spriteChina.PNG");
+            Mix_Music *soundtrack1 = Mix_LoadMUS("Chinese.MP3");
+            Mix_PlayMusic(soundtrack1,-1);
+        }
 
     }
-
-    else if(player->spritePick == 2)
-    {
-        image = IMG_Load("spriteRussia.PNG");
-        Mix_Music *soundtrack1 = Mix_LoadMUS("cykablyat.MP3");
-        Mix_PlayMusic(soundtrack1,-1);
-    }
-    else if(player->spritePick == 3)
-    {
-        image = IMG_Load("spriteMurica.PNG");
-        Mix_Music *soundtrack1 = Mix_LoadMUS("America.MP3");
-        Mix_PlayMusic(soundtrack1,-1);
-    }
-    else
-    {
-        image = IMG_Load("spriteChina.PNG");
-        Mix_Music *soundtrack1 = Mix_LoadMUS("Chinese.MP3");
-        Mix_PlayMusic(soundtrack1,-1);
-    }
-
-   }
 
     SDL_Texture *texture,*bgtexture,*scoreBgtext,*bullettxt;
     bgtexture = SDL_CreateTextureFromSurface(program.renderer,background);
@@ -127,7 +234,7 @@ void initPlayer(Player *player)
     player->bullet = bullettxt;
     player->alive = 1;
 
-    for(i=0;i<4;i++)
+    for(i=0; i<4; i++)
     {
         player->enemies[i].justDied = 0;
     }
@@ -191,12 +298,12 @@ void initCd(Player *player)
     SDL_Surface *timer;
     if(LINUX)
     {
-          timer = IMG_Load("cdTimer.png");
+        timer = IMG_Load("cdTimer.png");
 
     }
     else
     {
-          timer = IMG_Load("cdTimer.PNG");
+        timer = IMG_Load("cdTimer.PNG");
     }
     SDL_Texture *cdTimer;
     cdTimer = SDL_CreateTextureFromSurface(program.renderer,timer);
