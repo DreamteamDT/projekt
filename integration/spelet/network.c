@@ -262,7 +262,7 @@ void recv_data(Player *man, Network *client,int *done,Bullet b[])
 
                 if(spritePick==1)
                 {
-                    image = IMG_Load("USA.png");
+                    image = IMG_Load("spriteTorg.png");
                     man->enemies[enemyid].sprite = 1;
                 }
                 else if(spritePick==2)
@@ -286,7 +286,7 @@ void recv_data(Player *man, Network *client,int *done,Bullet b[])
             {
                 if(spritePick==1)
                 {
-                    image = IMG_Load("USA.PNG");
+                    image = IMG_Load("spriteTorg.PNG");
                     man->enemies[enemyid].sprite = 1;
                 }
                 else if(spritePick==2)
