@@ -87,6 +87,15 @@ typedef struct
     Mix_Music *america;
     Mix_Music *china;
     Mix_Chunk *bulletShot;
+    Mix_Chunk *deathsound1;
+    Mix_Chunk *deathsound2;
+    Mix_Chunk *deathsound3;
+    Mix_Chunk *deathsound4;
+
+    Mix_Chunk *Ldeathsound1;
+    Mix_Chunk *Ldeathsound2;
+    Mix_Chunk *Ldeathsound3;
+    Mix_Chunk *Ldeathsound4;
 
 } Sound;
 

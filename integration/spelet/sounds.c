@@ -22,48 +22,56 @@ void loadSounds(Player *man)
             man->sounds.cykablyat = Mix_LoadMUS("cykablyat.wav");
             man->sounds.america = Mix_LoadMUS("America.wav");
             man->sounds.china = Mix_LoadMUS("Chinese.wav");
+            man->sounds.Ldeathsound1 = Mix_LoadWAV("Soundeffects/deathtorgny.wav");
+            man->sounds.Ldeathsound2 = Mix_LoadWAV("Soundeffects/death4.wav");
+            man->sounds.Ldeathsound3 = Mix_LoadWAV("Soundeffects/death15.wav");
+            man->sounds.Ldeathsound4 = Mix_LoadWAV("Soundeffects/death8.wav");
+            man->sounds.bulletShot = Mix_LoadWAV("bulletPop.wav");
+
     }
     else
     {
+            man->sounds.bulletShot = Mix_LoadWAV("bulletPop.WAV");
             man->sounds.backstreet = Mix_LoadMUS("Backstreet.MP3");
             man->sounds.cykablyat = Mix_LoadMUS("cykablyat.MP3");
             man->sounds.america = Mix_LoadMUS("America.MP3");
             man->sounds.china = Mix_LoadMUS("Chinese.MP3");
+            man->sounds.deathsound1 = Mix_LoadWAV("Soundeffects/deathtorgny.WAV");
+            man->sounds.deathsound2 = Mix_LoadWAV("Soundeffects/death4.WAV");
+            man->sounds.deathsound3 = Mix_LoadWAV("Soundeffects/death15.WAV");
+            man->sounds.deathsound4 = Mix_LoadWAV("Soundeffects/death8.WAV");
 
     }
 
-    man->sounds.bulletShot = Mix_LoadWAV("bulletPop.WAV");
+
 }
 
 void enemyDeathSound(Player *man, int hitid)
 {
-    Mix_Chunk *deathsound1 = Mix_LoadWAV("Soundeffects/deathtorgny.WAV");
-    Mix_Chunk *deathsound2 = Mix_LoadWAV("Soundeffects/death4.WAV");
-    Mix_Chunk *deathsound3 = Mix_LoadWAV("Soundeffects/death15.WAV");
-    Mix_Chunk *deathsound4 = Mix_LoadWAV("Soundeffects/death8.WAV");
+
 
 
     if(LINUX)
     {
         if(man->enemies[hitid].sprite==1)
         {
-           Mix_Chunk *deathsound = Mix_LoadWAV("Soundeffects/deathtorgny.wav");
-           Mix_PlayChannel(-1,deathsound,0);
+
+           Mix_PlayChannel(-1,man->sounds.Ldeathsound1,0);
         }
         else if(man->enemies[hitid].sprite==2)
         {
-           Mix_Chunk *deathsound = Mix_LoadWAV("Soundeffects/death4.wav");
-           Mix_PlayChannel(-1,deathsound,0);
+
+           Mix_PlayChannel(-1,man->sounds.Ldeathsound2,0);
         }
         else if(man->enemies[hitid].sprite==3)
         {
-           Mix_Chunk *deathsound = Mix_LoadWAV("Soundeffects/death15.wav");
-           Mix_PlayChannel(-1,deathsound,0);
+
+           Mix_PlayChannel(-1,man->sounds.Ldeathsound3,0);
         }
         else if(man->enemies[hitid].sprite==4)
         {
-           Mix_Chunk *deathsound = Mix_LoadWAV("Soundeffects/death8.wav");
-           Mix_PlayChannel(-1,deathsound,0);
+
+           Mix_PlayChannel(-1,man->sounds.Ldeathsound4,0);
         }
 
     }
@@ -72,22 +80,22 @@ void enemyDeathSound(Player *man, int hitid)
         if(man->enemies[hitid].sprite==1)
         {
 
-           Mix_PlayChannel(-1,deathsound1,0);
+           Mix_PlayChannel(-1,man->sounds.deathsound1,0);
         }
         else if(man->enemies[hitid].sprite==2)
         {
 
-           Mix_PlayChannel(-1,deathsound2,0);
+           Mix_PlayChannel(-1,man->sounds.deathsound2,0);
         }
         else if(man->enemies[hitid].sprite==3)
         {
 
-           Mix_PlayChannel(-1,deathsound3,0);
+           Mix_PlayChannel(-1,man->sounds.deathsound3,0);
         }
         else if(man->enemies[hitid].sprite==4)
         {
 
-           Mix_PlayChannel(-1,deathsound4,0);
+           Mix_PlayChannel(-1,man->sounds.deathsound4,0);
         }
     }
 }
@@ -95,55 +103,43 @@ void enemyDeathSound(Player *man, int hitid)
 
 void playerDeathSound(Player *man)
 {
-    Mix_Chunk *deathsound1 = Mix_LoadWAV("Soundeffects/deathtorgny.WAV");
-    Mix_Chunk *deathsound2 = Mix_LoadWAV("Soundeffects/death4.WAV");
-    Mix_Chunk *deathsound3 = Mix_LoadWAV("Soundeffects/death15.WAV");
-    Mix_Chunk *deathsound4 = Mix_LoadWAV("Soundeffects/death8.WAV");
+
      if(LINUX)
      {
          if(man->spritePick==1)
         {
-           Mix_Chunk *deathsound = Mix_LoadWAV("Soundeffects/deathtorgny.wav");
-           Mix_PlayChannel(-1,deathsound,0);
+           Mix_PlayChannel(-1,man->sounds.Ldeathsound1,0);
         }
         else if(man->spritePick==2)
         {
-           Mix_Chunk *deathsound = Mix_LoadWAV("Soundeffects/death4.wav");
-           Mix_PlayChannel(-1,deathsound,0);
+           Mix_PlayChannel(-1,man->sounds.Ldeathsound2,0);
         }
         else if(man->spritePick==3)
         {
-           Mix_Chunk *deathsound = Mix_LoadWAV("Soundeffects/death15.wav");
-           Mix_PlayChannel(-1,deathsound,0);
+           Mix_PlayChannel(-1,man->sounds.Ldeathsound3,0);
         }
         else if(man->spritePick==4)
         {
-           Mix_Chunk *deathsound = Mix_LoadWAV("Soundeffects/death8.wav");
-           Mix_PlayChannel(-1,deathsound,0);
+           Mix_PlayChannel(-1,man->sounds.Ldeathsound4,0);
         }
      }
     else
     {
         if(man->spritePick==1)
         {
-            printf("test\n");
-
-           Mix_PlayChannel(-1,deathsound1,0);
+           Mix_PlayChannel(-1,man->sounds.deathsound1,0);
         }
         else if(man->spritePick==2)
         {
-
-           Mix_PlayChannel(-1,deathsound2,0);
+           Mix_PlayChannel(-1,man->sounds.deathsound2,0);
         }
         else if(man->spritePick==3)
         {
-
-           Mix_PlayChannel(-1,deathsound3,0);
+           Mix_PlayChannel(-1,man->sounds.deathsound3,0);
         }
         else if(man->spritePick==4)
         {
-
-           Mix_PlayChannel(-1,deathsound4,0);
+           Mix_PlayChannel(-1,man->sounds.deathsound4,0);
         }
 
     }
