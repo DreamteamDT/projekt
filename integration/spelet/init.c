@@ -6,11 +6,11 @@ void createTextures(Player *player)
     SDL_Surface *image,*background,*scoreBg,*bullet;
     SDL_Surface* surfaceMessage;
 
-    TTF_Font* arial = TTF_OpenFont("arialbd.ttf", 48);
-    SDL_Color black = {0, 0, 0};
-    surfaceMessage = TTF_RenderText_Blended(arial, "Player      Kills       Deaths", black);
-    player->scoreHead = SDL_CreateTextureFromSurface(program.renderer,surfaceMessage);
-    SDL_FreeSurface(surfaceMessage);
+//    TTF_Font* arial = TTF_OpenFont("arialbd.ttf", 48);
+//    SDL_Color black = {0, 0, 0};
+//    surfaceMessage = TTF_RenderText_Blended(arial, "Player      Kills       Deaths", black);
+//    player->scoreHead = SDL_CreateTextureFromSurface(program.renderer,surfaceMessage);
+        SDL_FreeSurface(surfaceMessage);
 
     if(LINUX)
     {
@@ -91,20 +91,14 @@ void createTextures(Player *player)
         }
 
     }
-
-    SDL_Texture *texture,*bgtexture,*scoreBgtext,*bullettxt;
-    bgtexture = SDL_CreateTextureFromSurface(program.renderer,background);
-    texture = SDL_CreateTextureFromSurface(program.renderer,image);
-    scoreBgtext = SDL_CreateTextureFromSurface(program.renderer,scoreBg);
-    bullettxt = SDL_CreateTextureFromSurface(program.renderer,bullet);
+    player->background = SDL_CreateTextureFromSurface(program.renderer,background);
+    player->texture = SDL_CreateTextureFromSurface(program.renderer,image);
+    player->scoreBackground = SDL_CreateTextureFromSurface(program.renderer,scoreBg);
+    player->bullet = SDL_CreateTextureFromSurface(program.renderer,bullet);
     SDL_FreeSurface(bullet);
     SDL_FreeSurface(scoreBg);
     SDL_FreeSurface(background);
     SDL_FreeSurface(image);
-    player->texture = texture;
-    player->background = bgtexture;
-    player->scoreBackground = scoreBgtext;
-    player->bullet = bullettxt;
 }
 
 
@@ -216,22 +210,18 @@ void initPlayer(Player *player)
 
     }
 
-    SDL_Texture *texture,*bgtexture,*scoreBgtext,*bullettxt;
-    bgtexture = SDL_CreateTextureFromSurface(program.renderer,background);
-    texture = SDL_CreateTextureFromSurface(program.renderer,image);
-    scoreBgtext = SDL_CreateTextureFromSurface(program.renderer,scoreBg);
-    bullettxt = SDL_CreateTextureFromSurface(program.renderer,bullet);
+    player->background = SDL_CreateTextureFromSurface(program.renderer,background);
+    player->texture = SDL_CreateTextureFromSurface(program.renderer,image);
+    player->scoreBackground = SDL_CreateTextureFromSurface(program.renderer,scoreBg);
+    player->bullet = SDL_CreateTextureFromSurface(program.renderer,bullet);
     SDL_FreeSurface(bullet);
     SDL_FreeSurface(scoreBg);
     SDL_FreeSurface(background);
     SDL_FreeSurface(image);
 
+
     player->frameX = 0;
     player->frameY = 0;
-    player->texture = texture;
-    player->background = bgtexture;
-    player->scoreBackground = scoreBgtext;
-    player->bullet = bullettxt;
     player->alive = 1;
 
     for(i=0; i<4; i++)
@@ -322,6 +312,13 @@ SDL_Texture *initBullet()
     texture = SDL_CreateTextureFromSurface(program.renderer,image);
     return texture;
 }
+
+void initSounds(Player *man)
+{
+    man->sounds.bulletShot = Mix_LoadWAV("bulletPop.WAV");
+}
+
+
 void Quit()
 {
     SDL_DestroyWindow(program.window);

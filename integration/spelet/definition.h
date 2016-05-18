@@ -79,6 +79,11 @@ typedef struct
 
 typedef struct
 {
+    Mix_Chunk *bulletShot;
+} Sound;
+
+typedef struct
+{
     Enemy enemies[10];
     Ledge ledges[7];
     float x, y;
@@ -96,7 +101,11 @@ typedef struct
     int spritePick;
     SDL_Rect blinkRect,scoreRect,ipRect;
     char *ip;
+    Sound sounds;
 } Player;
+
+
+
 
 typedef struct
 {

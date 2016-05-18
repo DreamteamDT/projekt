@@ -35,6 +35,7 @@ extern void respawn(Player *man);
 extern void generateScoreboard(Player *man);
 extern int enterIP(Player *man);
 extern void createTextures(Player *player);
+extern void initSounds(Player *man);
 
 int global = 0;
 int main(int argc, char *argv[])
@@ -103,6 +104,7 @@ int main(int argc, char *argv[])
     Menu menu,pick;
     initMenu(&menu,&player);
     initPick(&pick);
+    initSounds(&player);
     SDLNet_Init();
     int testss = 0;
     while(!exit) ///**** MAIN MENU ****/
