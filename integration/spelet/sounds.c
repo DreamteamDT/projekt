@@ -40,10 +40,7 @@ void loadSounds(Player *man)
             man->sounds.deathsound2 = Mix_LoadWAV("Soundeffects/death4.WAV");
             man->sounds.deathsound3 = Mix_LoadWAV("Soundeffects/death15.WAV");
             man->sounds.deathsound4 = Mix_LoadWAV("Soundeffects/death8.WAV");
-
     }
-
-
 }
 
 void enemyDeathSound(Player *man, int hitid)
