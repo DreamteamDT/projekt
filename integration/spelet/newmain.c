@@ -3,6 +3,7 @@
 /** Vi behöver tydligen 7inte deklarera funktionerna här?? **/
 /** Linkern gör det åt oss **/
 
+extern void initSounds(Player *man);
 
 int global = 0;
 int main(int argc, char *argv[])
