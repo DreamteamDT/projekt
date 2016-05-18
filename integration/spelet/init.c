@@ -322,11 +322,7 @@ SDL_Texture *initBullet()
     texture = SDL_CreateTextureFromSurface(program.renderer,image);
     return texture;
 }
-<<<<<<< HEAD
-=======
 
-
->>>>>>> 2eabe2f130960c84ae80011c8e9b75ebd04a6059
 void Quit()
 {
     SDL_DestroyWindow(program.window);
