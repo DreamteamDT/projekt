@@ -51,7 +51,7 @@ void createTextures(Player *player)
     {
         if(player->spritePick==1)
         {
-            image = IMG_Load("USA.png");
+            image = IMG_Load("spriteTorg.png");
 
         }
 
@@ -73,7 +73,7 @@ void createTextures(Player *player)
     {
         if(player->spritePick==1)
         {
-            image = IMG_Load("USA.PNG");
+            image = IMG_Load("spriteTorg.PNG");
 
         }
 
@@ -159,7 +159,7 @@ void initPlayer(Player *player)
     {
         if(player->spritePick==1)
         {
-            image = IMG_Load("USA.png");
+            image = IMG_Load("spriteTorg.png");
             Mix_Music *soundtrack1 = Mix_LoadMUS("Backstreet.wav");
             Mix_PlayMusic(soundtrack1,-1);
 
@@ -189,7 +189,7 @@ void initPlayer(Player *player)
     {
         if(player->spritePick==1)
         {
-            image = IMG_Load("USA.PNG");
+            image = IMG_Load("spriteTorg.PNG");
             Mix_Music *soundtrack1 = Mix_LoadMUS("Backstreet.MP3");
             Mix_PlayMusic(soundtrack1,-1);
 
