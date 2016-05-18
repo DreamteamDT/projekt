@@ -96,6 +96,7 @@ void detectHit(Player *man,Bullet b[],Network *client)
                         b[j].active = 0;
                         man->bulletid = j;
                         man->hitid = i;
+
                         man->enemies[i].alive = 0;
                         man->enemies[i].justDied = SDL_GetTicks();
                         send_data(&*man,&*client,7);

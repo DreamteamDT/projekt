@@ -120,7 +120,7 @@ void sendBullet(Player man,Network client)
 
 void enemyDeathSound(Player *man, int hitid)
 {
-    Mix_Chunk *deathsound1 = Mix_LoadWAV("Soundeffects/death14.WAV");
+    Mix_Chunk *deathsound1 = Mix_LoadWAV("Soundeffects/deathtorgny.WAV");
     Mix_Chunk *deathsound2 = Mix_LoadWAV("Soundeffects/death4.WAV");
     Mix_Chunk *deathsound3 = Mix_LoadWAV("Soundeffects/death15.WAV");
     Mix_Chunk *deathsound4 = Mix_LoadWAV("Soundeffects/death8.WAV");
@@ -130,7 +130,7 @@ void enemyDeathSound(Player *man, int hitid)
     {
         if(man->enemies[hitid].sprite==1)
         {
-           Mix_Chunk *deathsound = Mix_LoadWAV("Soundeffects/death14.wav");
+           Mix_Chunk *deathsound = Mix_LoadWAV("Soundeffects/deathtorgny.wav");
            Mix_PlayChannel(-1,deathsound,0);
         }
         else if(man->enemies[hitid].sprite==2)
@@ -178,7 +178,7 @@ void enemyDeathSound(Player *man, int hitid)
 
 void playerDeathSound(Player *man)
 {
-    Mix_Chunk *deathsound1 = Mix_LoadWAV("Soundeffects/death14.WAV");
+    Mix_Chunk *deathsound1 = Mix_LoadWAV("Soundeffects/deathtorgny.WAV");
     Mix_Chunk *deathsound2 = Mix_LoadWAV("Soundeffects/death4.WAV");
     Mix_Chunk *deathsound3 = Mix_LoadWAV("Soundeffects/death15.WAV");
     Mix_Chunk *deathsound4 = Mix_LoadWAV("Soundeffects/death8.WAV");
@@ -186,7 +186,7 @@ void playerDeathSound(Player *man)
      {
          if(man->spritePick==1)
         {
-           Mix_Chunk *deathsound = Mix_LoadWAV("Soundeffects/death14.wav");
+           Mix_Chunk *deathsound = Mix_LoadWAV("Soundeffects/deathtorgny.wav");
            Mix_PlayChannel(-1,deathsound,0);
         }
         else if(man->spritePick==2)

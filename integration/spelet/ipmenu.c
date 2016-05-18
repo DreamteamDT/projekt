@@ -25,13 +25,12 @@ int enterIP(Player *man)
     }
 
 
-    SDL_StartTextInput();
 
     while(1)
     {
+        SDL_StartTextInput();
         while(SDL_PollEvent(&e) !=0)
         {
-            SDL_GetMouseState(&x, &y);
 
             if(x>376 && x<645 && y>488 && y<587 && e.type==SDL_MOUSEBUTTONDOWN)
             {
@@ -84,7 +83,8 @@ int enterIP(Player *man)
         SDL_FreeSurface(surfaceMessage);
         SDL_RenderCopy(program.renderer,man->ipAddressText,NULL,&man->ipRect);
         SDL_RenderPresent(program.renderer);
-        SDL_Delay(5);
+        SDL_DestroyTexture(man->ipAddressText);
+        SDL_Delay(40);
 
     }
 
