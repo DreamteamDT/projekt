@@ -15,7 +15,6 @@ int enterIP(Player *man)
     SDL_Rect rect = {350,323,rectlen*length,35};
 
     char *text = (char*)malloc(100);
-    printf("%s\n",text);
 
     while(strlen(text)!=0)
     {
@@ -61,7 +60,6 @@ int enterIP(Player *man)
                 else if(e.type == SDL_TEXTINPUT)
                 {
                     strcat(text,e.text.text);
-                    printf("%s\n",text);
                 }
                 else if(e.type == SDL_KEYDOWN && e.key.keysym.sym==SDLK_ESCAPE)
                 {

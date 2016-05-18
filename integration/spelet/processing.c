@@ -41,6 +41,7 @@ void updateEnemyBullet(Player *man)
 int processEvents(Player *man,Bullet b[],int *moved,int *type,int *direct,Network *client)
 {
     unsigned int spellOne, spellOne_False=0;
+    int blinkX,blinkY;
     spellOne = SDL_GetTicks();
     SDL_Event event;
     int done = 0;
@@ -63,7 +64,7 @@ int processEvents(Player *man,Bullet b[],int *moved,int *type,int *direct,Networ
                 program.window = NULL;
                 done = 1;
                 *moved = 1;
-                *type = 3;
+                *type = 11;
             }
         }
         break;
@@ -74,12 +75,12 @@ int processEvents(Player *man,Bullet b[],int *moved,int *type,int *direct,Networ
             case SDLK_ESCAPE:
                 done = 1;
                 *moved = 1;
-                *type = 3;
+                *type = 11;
                 break;
             case SDLK_RETURN:
                 done = 1;
                 *moved = 1;
-                *type = 3;
+                *type = 11;
                 break;
             }
         }
@@ -89,13 +90,10 @@ int processEvents(Player *man,Bullet b[],int *moved,int *type,int *direct,Networ
             //quit out of the game
             done = 1;
             *moved = 1;
-            *type = 3;
+            *type = 11;
             break;
         case SDL_MOUSEBUTTONDOWN :
-            printf("clicked on mouse");
-            int blinkX,blinkY;
             SDL_GetMouseState(&blinkX, &blinkY);
-            printf("Cursor at %d x %d\n",blinkX,blinkY);
             break;
 
         case SDL_MOUSEBUTTONUP:
@@ -185,7 +183,7 @@ int processEvents(Player *man,Bullet b[],int *moved,int *type,int *direct,Networ
     }
     if((SDL_GetMouseState(NULL,NULL) &&SDL_BUTTON_LEFT) && man->alive && !man->justShot)
     {
-        int blinkX,blinkY,bulletNo,shotX,shotY;
+        int bulletNo,shotX,shotY;
         checkRunningDirection(&*man, &shotX, &shotY);
         SDL_GetMouseState(&blinkX, &blinkY);
         if(global%6==0)
@@ -319,6 +317,7 @@ void collisionDetect(Player *man, int *direct, int *moved, int *type)
                         man->y = by-mh;
                 }
                 // ladda enemies istället för ledges
+                if(man->enemies[i].alive)
                 bx = man->enemies[i].dstRect.x, by = man->enemies[i].dstRect.y, bw = man->enemies[i].dstRect.w, bh = man->enemies[i].dstRect.h;
                 bpe++;
             }
@@ -404,9 +403,12 @@ void collisionDetect(Player *man, int *direct, int *moved, int *type)
                     }
                 }
                 // ladda enemies istället för ledges
+                if(man->enemies[i].alive)
+                {
+                    bw = man->enemies[i].dstRect.w, bh = man->enemies[i].dstRect.h;
+                    bx = man->enemies[i].dstRect.x+bw/2, by = man->enemies[i].dstRect.y+bh/2;
+                }
 
-                bw = man->enemies[i].dstRect.w, bh = man->enemies[i].dstRect.h;
-                bx = man->enemies[i].dstRect.x+bw/2, by = man->enemies[i].dstRect.y+bh/2;
 
                 bpe++;
             }

@@ -80,7 +80,14 @@ typedef struct
 
 typedef struct
 {
+    Mix_Music *backgroundSound;
+    Mix_Music *backgroundLinux;
+    Mix_Music *backstreet;
+    Mix_Music *cykablyat;
+    Mix_Music *america;
+    Mix_Music *china;
     Mix_Chunk *bulletShot;
+
 } Sound;
 
 typedef struct
@@ -93,7 +100,7 @@ typedef struct
     int hitid,alive,kills,deaths;
     int currentTime, cdTime, spellReady, blinked;
     SDL_Texture *texture,*background,*scoreBackground,*bullet,*cdTimer,*score,*scoreHead,*ipTexture,*ipAddressText;
-    int thinkTime;
+    int thinkTime,disconnected;
     int shot,bulletid,blinkX,blinkY,bulletNo,connected;
     int id;
     int justShot;

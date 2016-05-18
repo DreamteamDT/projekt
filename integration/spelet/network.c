@@ -63,7 +63,7 @@ int networkInit(Network *client,Player *man,char *ipaddress)
         return 0;
     }
     SDLNet_TCP_Recv(client->tcpsock,tmp,1024);
-    sscanf(tmp,"%d %d %f %f",&type,&(man->id),&man->x,&man->y);
+    sscanf(tmp,"%d %d",&type,&(man->id));
     if(type==0)
         printf("my ID: %d\n",man->id);
     else if (type == 4)
@@ -92,6 +92,7 @@ void send_data(Player *man,Network *client,int type)
     }
     if(type == 3)
     {
+        printf("skickar type 3\n");
         sprintf(tmp,"%d %d \n",type,man->id);
         size=0;
         len=strlen(tmp)+1;
@@ -106,7 +107,17 @@ void send_data(Player *man,Network *client,int type)
         sprintf(client->sendpack->data,"%d %d %d %d",type,man->id,man->hitid,man->bulletid);
         SDLNet_UDP_Send(client->udpsock,-1,client->sendpack);
     }
-
+    if(type == 11)
+    {
+        printf("sending exit\n");
+        sprintf(tmp,"%d %d \n",type,man->id);
+        size=0;
+        len=strlen(tmp)+1;
+        while(size<len)
+        {
+            size+=SDLNet_TCP_Send(client->tcpsock,tmp+size,len-size);
+        }
+    }
 }
 
 void sendBullet(Player man,Network client)
@@ -117,126 +128,12 @@ void sendBullet(Player man,Network client)
     SDLNet_UDP_Send(client.udpsock,-1,client.sendpack);
 }
 
-void enemyDeathSound(Player *man, int hitid)
-{
-    Mix_Chunk *deathsound1 = Mix_LoadWAV("Soundeffects/deathtorgny.WAV");
-    Mix_Chunk *deathsound2 = Mix_LoadWAV("Soundeffects/death4.WAV");
-    Mix_Chunk *deathsound3 = Mix_LoadWAV("Soundeffects/death15.WAV");
-    Mix_Chunk *deathsound4 = Mix_LoadWAV("Soundeffects/death8.WAV");
-
-
-    if(LINUX)
-    {
-        if(man->enemies[hitid].sprite==1)
-        {
-           Mix_Chunk *deathsound = Mix_LoadWAV("Soundeffects/deathtorgny.wav");
-           Mix_PlayChannel(-1,deathsound,0);
-        }
-        else if(man->enemies[hitid].sprite==2)
-        {
-           Mix_Chunk *deathsound = Mix_LoadWAV("Soundeffects/death4.wav");
-           Mix_PlayChannel(-1,deathsound,0);
-        }
-        else if(man->enemies[hitid].sprite==3)
-        {
-           Mix_Chunk *deathsound = Mix_LoadWAV("Soundeffects/death15.wav");
-           Mix_PlayChannel(-1,deathsound,0);
-        }
-        else if(man->enemies[hitid].sprite==4)
-        {
-           Mix_Chunk *deathsound = Mix_LoadWAV("Soundeffects/death8.wav");
-           Mix_PlayChannel(-1,deathsound,0);
-        }
-
-    }
-    else
-    {
-        if(man->enemies[hitid].sprite==1)
-        {
-
-           Mix_PlayChannel(-1,deathsound1,0);
-        }
-        else if(man->enemies[hitid].sprite==2)
-        {
-
-           Mix_PlayChannel(-1,deathsound2,0);
-        }
-        else if(man->enemies[hitid].sprite==3)
-        {
-
-           Mix_PlayChannel(-1,deathsound3,0);
-        }
-        else if(man->enemies[hitid].sprite==4)
-        {
-
-           Mix_PlayChannel(-1,deathsound4,0);
-        }
-    }
-}
-
-
-void playerDeathSound(Player *man)
-{
-    Mix_Chunk *deathsound1 = Mix_LoadWAV("Soundeffects/deathtorgny.WAV");
-    Mix_Chunk *deathsound2 = Mix_LoadWAV("Soundeffects/death4.WAV");
-    Mix_Chunk *deathsound3 = Mix_LoadWAV("Soundeffects/death15.WAV");
-    Mix_Chunk *deathsound4 = Mix_LoadWAV("Soundeffects/death8.WAV");
-     if(LINUX)
-     {
-         if(man->spritePick==1)
-        {
-           Mix_Chunk *deathsound = Mix_LoadWAV("Soundeffects/deathtorgny.wav");
-           Mix_PlayChannel(-1,deathsound,0);
-        }
-        else if(man->spritePick==2)
-        {
-           Mix_Chunk *deathsound = Mix_LoadWAV("Soundeffects/death4.wav");
-           Mix_PlayChannel(-1,deathsound,0);
-        }
-        else if(man->spritePick==3)
-        {
-           Mix_Chunk *deathsound = Mix_LoadWAV("Soundeffects/death15.wav");
-           Mix_PlayChannel(-1,deathsound,0);
-        }
-        else if(man->spritePick==4)
-        {
-           Mix_Chunk *deathsound = Mix_LoadWAV("Soundeffects/death8.wav");
-           Mix_PlayChannel(-1,deathsound,0);
-        }
-     }
-    else
-    {
-        if(man->spritePick==1)
-        {
-            printf("test\n");
-
-           Mix_PlayChannel(-1,deathsound1,0);
-        }
-        else if(man->spritePick==2)
-        {
-
-           Mix_PlayChannel(-1,deathsound2,0);
-        }
-        else if(man->spritePick==3)
-        {
-
-           Mix_PlayChannel(-1,deathsound3,0);
-        }
-        else if(man->spritePick==4)
-        {
-
-           Mix_PlayChannel(-1,deathsound4,0);
-        }
-
-    }
-
-}
-
 
 void recv_data(Player *man, Network *client,int *done,Bullet b[])
 {
 
     int type, enemyid,enemySX,spritePick,hitid,bulletX,bulletY;
+
     float enemyDX,enemyDY;
     int blinkX,blinkY,bulletid;
     int kills,deaths;
@@ -248,10 +145,10 @@ void recv_data(Player *man, Network *client,int *done,Bullet b[])
 
         //man->enemies[enemyid].x = enemyDX;
         //man->enemies[enemyid].y = enemyDY;
-
         //Om ny fiende
         if (!man->enemies[enemyid].exists && (man->id!=enemyid))
         {
+            SDL_DestroyTexture(man->enemies[enemyid].texture);
             sscanf(client->rcvpack->data,"%d %d %f %f %d %d",
                    &type,&enemyid,&enemyDX,&enemyDY,&enemySX,&spritePick);
 
@@ -305,10 +202,8 @@ void recv_data(Player *man, Network *client,int *done,Bullet b[])
                 }
             }
 
-            SDL_Texture *texture;
-            texture = SDL_CreateTextureFromSurface(program.renderer,image);
+            man->enemies[enemyid].texture = SDL_CreateTextureFromSurface(program.renderer,image);
             SDL_FreeSurface(image);
-            man->enemies[enemyid].texture = texture;
             man->enemies[enemyid].srcRect.x = enemySX;
             man->enemies[enemyid].srcRect.y = 0;
             man->enemies[enemyid].srcRect.w = 32;
@@ -318,7 +213,6 @@ void recv_data(Player *man, Network *client,int *done,Bullet b[])
             man->enemies[enemyid].dstRect.w = 64;
             man->enemies[enemyid].dstRect.h = 64;
             man->enemies[enemyid].exists = 1;
-            man->enemies[enemyid].alive = 1;
             if(man->alive)
             {
                 send_data(&*man,&*client,2);
@@ -334,6 +228,7 @@ void recv_data(Player *man, Network *client,int *done,Bullet b[])
             man->enemies[enemyid].dstRect.y = enemyDY;
             man->enemies[enemyid].srcRect.x = enemySX;
         }
+
         if(type == 7)
         {
             sscanf(client->rcvpack->data,"%d %d %d %d",&type,&enemyid,&hitid,&bulletid);
@@ -348,7 +243,6 @@ void recv_data(Player *man, Network *client,int *done,Bullet b[])
                 man->enemies[hitid].alive = 0;
                 b[bulletid].active = 0;
                 enemyDeathSound(&*man, hitid);
-
             }
             else
             {
@@ -403,14 +297,29 @@ void recv_data(Player *man, Network *client,int *done,Bullet b[])
 
         if(type == 3)
         {
+            if(enemyid==man->id)
+            {
+                man->disconnected = 1;
+            }
+            else
+            {
+                man->enemies[enemyid].exists = 0;
+                SDL_DestroyTexture(man->enemies[enemyid].texture);
+            }
+
+        }
+        if(type == 11)
+        {
             man->enemies[enemyid].exists = 0;
-            man->enemies[enemyid].texture = NULL;
+            man->enemies[enemyid].alive = 0;
+            SDL_DestroyTexture(man->enemies[enemyid].texture);
         }
 
         if(type == 6)
         {
             printf("Server shut down!\n");
             *done = 1;
+            man->disconnected = 1;
             return;
         }
 
