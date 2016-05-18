@@ -5,20 +5,20 @@ void loadSounds(Player *man)
     if(LINUX)
     {
         Mix_OpenAudio(44100,MIX_DEFAULT_FORMAT,2,2048);
-        man->sounds.backgroundLinux = Mix_LoadMUS("Soundeffects/gta3.wav");
+        man->sounds.backgroundLinux = Mix_LoadMUS("Soundeffects/Fall.wav");
 
     }
     else
     {
         Mix_OpenAudio(44100,MIX_DEFAULT_FORMAT,2,2048);
         Mix_VolumeMusic(20);
-        man->sounds.backgroundSound = Mix_LoadMUS("Soundeffects/gta3.MP3");
+        man->sounds.backgroundSound = Mix_LoadMUS("Soundeffects/Fall.MP3");
     }
 
     if(LINUX)
     {
 
-            man->sounds.backstreet = Mix_LoadMUS("Backstreet.wav");
+            man->sounds.backstreet = Mix_LoadMUS("Soundeffects/Torgny.wav");
             man->sounds.cykablyat = Mix_LoadMUS("cykablyat.wav");
             man->sounds.america = Mix_LoadMUS("America.wav");
             man->sounds.china = Mix_LoadMUS("Chinese.wav");
@@ -32,7 +32,7 @@ void loadSounds(Player *man)
     else
     {
             man->sounds.bulletShot = Mix_LoadWAV("bulletPop.WAV");
-            man->sounds.backstreet = Mix_LoadMUS("Backstreet.MP3");
+            man->sounds.backstreet = Mix_LoadMUS("Soundeffects/Torgny.MP3");
             man->sounds.cykablyat = Mix_LoadMUS("cykablyat.MP3");
             man->sounds.america = Mix_LoadMUS("America.MP3");
             man->sounds.china = Mix_LoadMUS("Chinese.MP3");
