@@ -1,5 +1,6 @@
-#include "init.h"
+#include "definition.h"
 #include <stdio.h>
+
 
 void createTextures(Player *player)
 {

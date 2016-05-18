@@ -1,9 +1,9 @@
 #include "processing.h"
 
-extern int addBullet(int,int,int,Bullet b[],int b1,int b2);
-extern void sendBullet(Player man,Network client);
-void checkRunningDirection(Player *man, int *shotX, int *shotY);
-void checkCd(Player *man);
+//extern int addBullet(int,int,int,Bullet b[],int b1,int b2);
+//extern void sendBullet(Player man,Network client);
+//void checkRunningDirection(Player *man, int *shotX, int *shotY);
+//void checkCd(Player *man);
 
 
 void updateLogic(Player *p,Bullet b[])

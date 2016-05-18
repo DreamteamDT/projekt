@@ -1,7 +1,7 @@
 #include "bullet.h"
-extern void sendBullets(Player *man,Bullet b[],Network *client);
-extern void send_data(Player *man,Network *client,int type);
-extern void enemyDeathSound(Player *man, int hitid);
+//extern void sendBullets(Player *man,Bullet b[],Network *client);
+//extern void send_data(Player *man,Network *client,int type);
+//extern void enemyDeathSound(Player *man, int hitid);
 
 SDL_Texture *getBulletSprite()
 {

@@ -1,5 +1,6 @@
 #include "definition.h"
 
+
 int enterIP(Player *man)
 {
     SDL_Event e;

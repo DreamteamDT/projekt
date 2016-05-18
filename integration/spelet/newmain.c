@@ -1,41 +1,8 @@
 #include "definition.h"
 
-extern void initPlayer(Player *player);
-extern void initLedges(Player *player);
-extern void doRender(Player *man,Bullet b[]); //, Enemy *enemies
-extern int processEvents(Player *man,Bullet b[],int *moved,int *type,int *direct,Network *client);
-extern void collisionDetect(Player *man, int *direct, int *moved, int *type);
+/** Vi behöver tydligen inte deklarera funktionerna här?? **/
+/** Linkern gör det åt oss **/
 
-extern void clearCartridge(Bullet ammo[]);
-extern void Quit();
-extern void sendPosition(Player *man);
-
-extern void loadAmmo(Bullet b[]);
-//extern void infitBullet();
-extern SDL_Texture *initBullet();
-extern void updateLogic(Player *p, Bullet b[]);
-
-extern void send_data(Player *man,Network *client,int type);
-extern int networkInit(Network *client,Player *man,char *ipaddress);
-extern void recv_data(Player *player,Network *client,int *done,Bullet b[]);
-
-extern void displayMenu(Menu menu);
-extern int handleMenu(int *exit);
-extern void initMenu(Menu *menu, Player *man);
-extern void initPick(Menu *pick);
-extern void initCd(Player *player);
-extern int handlePick(int *pickCharacter,Player *man);
-
-extern void bulletGone(Bullet b[],Player *man,Network *client);
-extern void detectHit(Player *man,Bullet b[],Network *client);
-extern void bulletClear(Bullet b[],Player *man, Network *client);
-extern void updateEnemyBullet(Player *man);
-
-extern void respawn(Player *man);
-extern void generateScoreboard(Player *man);
-extern int enterIP(Player *man);
-extern void createTextures(Player *player);
-extern void initSounds(Player *man);
 
 int global = 0;
 int main(int argc, char *argv[])
@@ -69,11 +36,6 @@ int main(int argc, char *argv[])
 
     int spawnTimer=4;
     srand(time(NULL));
-
-   // printf("Vill du connecta till servern? 1=JA 0=NEJ: ");
-   // scanf("%d",&choice);
-   // scanf("%c",&newline);
-    //choice = 0;
 
     for(i=0; i<10; i++)
     {
