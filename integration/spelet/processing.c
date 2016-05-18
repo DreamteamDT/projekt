@@ -43,7 +43,7 @@ int processEvents(Player *man,Bullet b[],int *moved,int *type,int *direct,Networ
     unsigned int spellOne, spellOne_False=0;
     spellOne = SDL_GetTicks();
     SDL_Event event;
-    int done = 0,shooting;
+    int done = 0;
 
     man->thinkTime--;
     if(man->thinkTime<=0)
@@ -105,7 +105,7 @@ int processEvents(Player *man,Bullet b[],int *moved,int *type,int *direct,Networ
     }
 
     const Uint8 *state = SDL_GetKeyboardState(NULL);
-    if(state[SDL_SCANCODE_LEFT] || state[SDL_SCANCODE_A] && man->alive)
+    if((state[SDL_SCANCODE_LEFT] || state[SDL_SCANCODE_A]) && man->alive)
     {
         man->x = man->x - (200*(man->deltaTimeS));
         *moved = 1;
@@ -122,7 +122,7 @@ int processEvents(Player *man,Bullet b[],int *moved,int *type,int *direct,Networ
         if(man->x < 0)
             man->x = 0;
     }
-    if(state[SDL_SCANCODE_RIGHT] || state[SDL_SCANCODE_D] && man->alive)
+    if((state[SDL_SCANCODE_RIGHT] || state[SDL_SCANCODE_D]) && man->alive)
     {
         man->x = man->x + (200*(man->deltaTimeS));
 
@@ -141,7 +141,7 @@ int processEvents(Player *man,Bullet b[],int *moved,int *type,int *direct,Networ
             man->x = 960;
 
     }
-    if(state[SDL_SCANCODE_UP] || state[SDL_SCANCODE_W] && man->alive)
+    if((state[SDL_SCANCODE_UP] || state[SDL_SCANCODE_W]) && man->alive)
     {
         man->y = man->y - (200*(man->deltaTimeS));
         *moved = 1;
@@ -158,7 +158,7 @@ int processEvents(Player *man,Bullet b[],int *moved,int *type,int *direct,Networ
         if(man->y<0)
             man->y = 0;
     }
-    if(state[SDL_SCANCODE_DOWN] || state[SDL_SCANCODE_S] && man->alive)
+    if((state[SDL_SCANCODE_DOWN] || state[SDL_SCANCODE_S]) && man->alive)
     {
         man->y = man->y + (200*(man->deltaTimeS));
         *moved = 1;
@@ -343,7 +343,7 @@ void collisionDetect(Player *man, int *direct, int *moved, int *type)
             man->y = 630-mh;
 
         // check for collision with any ledges and enemies
-        for (i = 0; i < 7; i++)
+        for (i = 0; i < 6; i++)
         {
             // ladda ledges
             int bw = man->ledges[i].w, bh = man->ledges[i].h;
@@ -635,8 +635,6 @@ void doRender(Player *man,Bullet b[]) //, Enemy *enemies
     SDL_SetRenderDrawColor(program.renderer, 0, 0, 255, 255);
     //Clear the screen (to blue)
 
-    SDL_Rect rect = { man->x, man->y , 32, 32 };
-    SDL_Rect src = {man->frameX,0,32,32};
     SDL_Rect bg = {0,0,1024,768};
     //SDL_Rect scoreBg = {0,630,1024,138};
 
@@ -723,8 +721,6 @@ void doRender(Player *man,Bullet b[]) //, Enemy *enemies
 
 void respawn(Player *man)
 {
-    int i,j,k;
-    int busy = 0;
     int spawn = rand()%9;
 
     if(spawn == 0)

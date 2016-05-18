@@ -18,7 +18,7 @@ int uncomplete_string(char tmp[])
 
 int networkInit(Network *client,Player *man,char *ipaddress)
 {
-    int i,type;
+    int type;
     client->tcpset=SDLNet_AllocSocketSet(10);
     client->udpset=SDLNet_AllocSocketSet(10);
     IPaddress ip,tcpip;
@@ -111,7 +111,6 @@ void send_data(Player *man,Network *client,int type)
 
 void sendBullet(Player man,Network client)
 {
-    int i,j,k,size,len;
     int type = 8;
     sprintf(client.sendpack->data,"%d %d %d %d %d %d %d",
             type,man.id,(int)man.x,(int)man.y, man.blinkX,man.blinkY,man.bulletNo);

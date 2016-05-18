@@ -41,10 +41,9 @@ int global = 0;
 int main(int argc, char *argv[])
 {
 
-    int startMenu = 1,pickCharacter = 0,imageNo,exit = 0,ingame = 0;
+    int pickCharacter = 0,exit = 0,ingame = 0;
     char *tmp = (char*)malloc(100);
-    int q = 0;
-    int done = 0,hitid;
+    int done = 0;
     int connected, i;
     Player player = {0};
     Network client;
@@ -68,7 +67,7 @@ int main(int argc, char *argv[])
 
     TTF_Init();
 
-    int sekund,spawnTimer=4;
+    int spawnTimer=4;
     srand(time(NULL));
 
    // printf("Vill du connecta till servern? 1=JA 0=NEJ: ");
@@ -106,7 +105,6 @@ int main(int argc, char *argv[])
     initPick(&pick);
     initSounds(&player);
     SDLNet_Init();
-    int testss = 0;
     while(!exit) ///**** MAIN MENU ****/
     {
        if(LINUX)

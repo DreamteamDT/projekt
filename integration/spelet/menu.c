@@ -202,7 +202,7 @@ int handlePick(int *pickCharacter,Player *man)
 
 void generateScoreboard(Player *man)
 {
-    int i,j,k,scoreposition=657;
+    int i,scoreposition=657;
     SDL_Surface* surfaceMessage;
     SDL_Color black = {0, 0, 0};
     char *score = (char*)malloc(100);

@@ -3,12 +3,10 @@
 int enterIP(Player *man)
 {
     SDL_Event e;
-    SDL_Rect textRect;
     int i=0;
     int x,y;
     int length = 1;
     int rectlen = 20;
-    int a,b;
     TTF_Font* arial = TTF_OpenFont("arialbd.ttf", 48);
     SDL_Color black = {0, 0, 0};
     SDL_Surface* surfaceMessage;
