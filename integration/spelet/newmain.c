@@ -35,7 +35,6 @@ int main(int argc, char *argv[])
     loadSounds(&player);
     initMenu(&menu,&player);
     initPick(&pick);
-    initSounds(&player);
     initLedges(&player);
     initCd(&player);
     SDLNet_Init();
@@ -117,7 +116,7 @@ int main(int argc, char *argv[])
                     doRender(&player,ammo); //,&enemies[i]
                     detectHit(&player,ammo,&client);
 
-                    if(!player.alive)
+                    if(!player.alive) /** RESPAWNING IN 4 SECONDS **/
                     {
                         currentTime = SDL_GetTicks();
                         currentTime = currentTime/1000;
