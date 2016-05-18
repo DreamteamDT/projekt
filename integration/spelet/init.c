@@ -55,25 +55,25 @@ void initPlayer(Player *player)
         if(player->spritePick==1)
         {
             image = IMG_Load("spriteTorg.png");
-            Mix_PlayMusic(man->sounds.backstreet,-1);
+            Mix_PlayMusic(player->sounds.backstreet,-1);
 
         }
 
         else if(player->spritePick == 2)
         {
             image = IMG_Load("spriteRussia.png");
-            Mix_PlayMusic(man->sounds.cykablyat,-1);
+            Mix_PlayMusic(player->sounds.cykablyat,-1);
         }
         else if(player->spritePick == 3)
         {
             image = IMG_Load("spriteMurica.png");
-            Mix_PlayMusic(man->sounds.america,-1);
+            Mix_PlayMusic(player->sounds.america,-1);
 
         }
         else
         {
             image = IMG_Load("spriteChina.png");
-            Mix_PlayMusic(man->sounds.china,-1);
+            Mix_PlayMusic(player->sounds.china,-1);
         }
     }
     else
@@ -81,24 +81,24 @@ void initPlayer(Player *player)
         if(player->spritePick==1)
         {
             image = IMG_Load("spriteTorg.PNG");
-            Mix_PlayMusic(man->sounds.backstreet,-1);
+            Mix_PlayMusic(player->sounds.backstreet,-1);
 
         }
 
         else if(player->spritePick == 2)
         {
             image = IMG_Load("spriteRussia.PNG");
-            Mix_PlayMusic(man->sounds.cykablyat,-1);
+            Mix_PlayMusic(player->sounds.cykablyat,-1);
         }
         else if(player->spritePick == 3)
         {
             image = IMG_Load("spriteMurica.PNG");
-            Mix_PlayMusic(man->sounds.america,-1);
+            Mix_PlayMusic(player->sounds.america,-1);
         }
         else
         {
             image = IMG_Load("spriteChina.PNG");
-            Mix_PlayMusic(man->sounds.china,-1);
+            Mix_PlayMusic(player->sounds.china,-1);
         }
 
     }
