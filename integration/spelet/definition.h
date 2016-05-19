@@ -108,7 +108,7 @@ typedef struct
     int x1, y1;
     int hitid,alive,kills,deaths;
     int currentTime, cdTime, spellReady, blinked;
-    SDL_Texture *texture,*background,*scoreBackground,*bullet,*cdTimer,*score,*scoreHead,*ipTexture,*ipAddressText;
+    SDL_Texture *texture,*background,*scoreBackground,*bullet,*cdTimer,*cdText,*score,*scoreHead,*ipTexture,*ipAddressText;
     int thinkTime,disconnected;
     int shot,bulletid,blinkX,blinkY,bulletNo,connected;
     int id;
