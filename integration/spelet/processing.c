@@ -250,7 +250,7 @@ void checkCd(Player *man)
 {
     man->currentTime = SDL_GetTicks();
     // +40 och man->blinkRect.w+=2 bestämmer CD för blink
-    if (man->currentTime > man->cdTime+40 && man->blinkRect.w < 150)
+    if (man->currentTime > man->cdTime+124 && man->blinkRect.w < 150)
     {
         man->blinkRect.w += 2;
         man->cdTime = man->currentTime;
@@ -771,9 +771,3 @@ void respawn(Player *man)
         man->y = 415;
     }
 }
-
-
-
-
-
-
