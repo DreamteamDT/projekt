@@ -50,9 +50,49 @@ void initMenu(Menu *menu,Player *man)
     man->scoreHead = SDL_CreateTextureFromSurface(program.renderer,surfaceMessage);
     SDL_FreeSurface(surfaceMessage);
 
+    SDL_Surface* cdtext;
+    cdtext = TTF_RenderText_Blended(arial, "Teleport cooldown", black);
+    man->cdText = SDL_CreateTextureFromSurface(program.renderer,cdtext);
+    SDL_FreeSurface(cdtext);
 }
 
+void helpMenu()
+{
+    SDL_Event e;
+    int x,y;
 
+    SDL_Surface* image;
+    SDL_Texture* helpMenu;
+    SDL_Texture* mainMenu;
+
+    image = SDL_LoadBMP("HelpMenu.bmp");
+    helpMenu = SDL_CreateTextureFromSurface(program.renderer, image);
+    SDL_FreeSurface(image);
+
+    SDL_RenderCopy(program.renderer, helpMenu, NULL, NULL);
+    SDL_RenderPresent(program.renderer);
+
+    int back=0;
+
+    while(back==0)
+    {
+        while(SDL_PollEvent(&e)!=0)
+        {
+            if(e.key.keysym.sym==SDLK_ESCAPE)
+            {
+                SDL_DestroyTexture(image);
+                image = SDL_LoadBMP("MainMenu.bmp");
+                mainMenu = SDL_CreateTextureFromSurface(program.renderer, image);
+                SDL_FreeSurface(image);
+                SDL_RenderCopy(program.renderer, mainMenu, NULL, NULL);
+                SDL_RenderPresent(program.renderer);
+
+                back=1;
+            }
+        }
+    }
+    return;
+}
 
 int handleMenu(int *exit)
 {
@@ -98,6 +138,14 @@ int handleMenu(int *exit)
                 {
                     *exit = 1;
                     quit=1;
+                }
+            }
+            //Användaren trycker på "Help"
+            else if(x>794 && x<995 && y>29 && y<141 && e.type==SDL_MOUSEBUTTONDOWN)
+            {
+                if(e.button.button==SDL_BUTTON_LEFT)
+                {
+                    helpMenu();
                 }
             }
         }
@@ -218,7 +266,7 @@ void generateScoreboard(Player *man)
     /** FOR PLAYER **/
     if(man->spritePick == 1)
     {
-        sprintf(score,"Fag        %d      %d",man->kills,man->deaths);
+        sprintf(score,"Torgny     %d      %d",man->kills,man->deaths);
     }
     else if(man->spritePick == 2)
     {
@@ -248,7 +296,7 @@ void generateScoreboard(Player *man)
             printf("printing enemy %d\n",i);
             if(man->enemies[i].sprite == 1)
             {
-                sprintf(score,"Fag        %d      %d",man->enemies[i].kills,man->enemies[i].deaths);
+                sprintf(score,"Torgny     %d      %d",man->enemies[i].kills,man->enemies[i].deaths);
             }
             else if(man->enemies[i].sprite == 2)
             {
@@ -256,7 +304,7 @@ void generateScoreboard(Player *man)
             }
             else if(man->enemies[i].sprite == 3)
             {
-                sprintf(score,"Murica    %d      %d",man->enemies[i].kills,man->enemies[i].deaths);
+                sprintf(score,"Murica     %d      %d",man->enemies[i].kills,man->enemies[i].deaths);
             }
             else
             {

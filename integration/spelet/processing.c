@@ -248,14 +248,14 @@ int processEvents(Player *man,Bullet b[],int *moved,int *type,int *direct,Networ
 
 void checkCd(Player *man)
 {
+    // +124 och man->blinkRect.w+=2 bestämmer CD för blink
     man->currentTime = SDL_GetTicks();
-    // +40 och man->blinkRect.w+=2 bestämmer CD för blink
-    if (man->currentTime > man->cdTime+124 && man->blinkRect.w < 150)
+    if (man->currentTime > man->cdTime+124 && man->blinkRect.w < 300)
     {
-        man->blinkRect.w += 2;
+        man->blinkRect.w += 4;
         man->cdTime = man->currentTime;
     }
-    else if (man->blinkRect.w >= 150)
+    else if (man->blinkRect.w >= 300)
     {
         man->spellReady = 1;
     }
@@ -700,6 +700,9 @@ void doRender(Player *man,Bullet b[]) //, Enemy *enemies
     SDL_Rect scoreHeadRect = {164,637,300,20};
     SDL_RenderCopy(program.renderer,man->scoreHead,NULL,&scoreHeadRect);
     SDL_RenderCopy(program.renderer,man->score,NULL,&man->scoreRect);
+
+    SDL_Rect cdRect = {500,637,300,20};
+    SDL_RenderCopy(program.renderer,man->cdText,NULL,&cdRect);
 
     for(i=0; i<4; i++)
     {
