@@ -248,14 +248,14 @@ int processEvents(Player *man,Bullet b[],int *moved,int *type,int *direct,Networ
 
 void checkCd(Player *man)
 {
+    // +124 och man->blinkRect.w+=2 bestämmer CD för blink
     man->currentTime = SDL_GetTicks();
-    // +40 och man->blinkRect.w+=2 bestämmer CD för blink
-    if (man->currentTime > man->cdTime+40 && man->blinkRect.w < 150)
+    if (man->currentTime > man->cdTime+124 && man->blinkRect.w < 300)
     {
-        man->blinkRect.w += 2;
+        man->blinkRect.w += 4;
         man->cdTime = man->currentTime;
     }
-    else if (man->blinkRect.w >= 150)
+    else if (man->blinkRect.w >= 300)
     {
         man->spellReady = 1;
     }
@@ -420,32 +420,32 @@ void collisionDetect(Player *man, int *direct, int *moved, int *type)
 
 void checkRunningDirection(Player *man, int *shotX, int *shotY)
 {
-    // megafag
+    // torgny
     if (man->spritePick == 1)
     {
         // ner
         if (man->frameX == 0 || man->frameX == 32)
         {
-            *shotX = man->x + 18;
-            *shotY = man->y + 40;
+            *shotX = man->x + 54;
+            *shotY = man->y + 44;
         }
         // upp
         else if (man->frameX == 64 || man->frameX == 96)
         {
-            *shotX = man->x + 44;
-            *shotY = man->y + 10;
+            *shotX = man->x + 8;
+            *shotY = man->y + 44;
         }
         // höger
         else if (man->frameX == 128 || man->frameX == 160)
         {
-            *shotX = man->x + 52;
-            *shotY = man->y + 38;
+            *shotX = man->x + 58;
+            *shotY = man->y + 40;
         }
         // vänster
         else
         {
-            *shotX = man->x + 6;
-            *shotY = man->y + 36;
+            *shotX = man->x + 4;
+            *shotY = man->y + 40;
         }
     }
     // russia
@@ -524,32 +524,32 @@ void checkRunningDirection(Player *man, int *shotX, int *shotY)
 
 void checkRunningEnemyDirection(Player *man, int *bulletX, int *bulletY, int id)
 {
-    // megafag
+    // torgny
     if (man->enemies[id].sprite == 1)
     {
         // ner
         if (man->enemies[id].srcRect.x == 0 || man->enemies[id].srcRect.x == 32)
         {
-            *bulletX = *bulletX + 18;
-            *bulletY = *bulletY + 40;
+            *bulletX = *bulletX + 54;
+            *bulletY = *bulletY + 44;
         }
         // upp
         else if (man->enemies[id].srcRect.x == 64 || man->enemies[id].srcRect.x == 96)
         {
-            *bulletX = *bulletX + 44;
-            *bulletY = *bulletY + 10;
+            *bulletX = *bulletX + 8;
+            *bulletY = *bulletY + 44;
         }
         // höger
         else if (man->enemies[id].srcRect.x == 128 || man->enemies[id].srcRect.x == 160)
         {
-            *bulletX = *bulletX + 52;
-            *bulletY = *bulletY + 38;
+            *bulletX = *bulletX + 58;
+            *bulletY = *bulletY + 40;
         }
         // vänster
         else
         {
-            *bulletX = *bulletX + 6;
-            *bulletY = *bulletY + 36;
+            *bulletX = *bulletX + 4;
+            *bulletY = *bulletY + 40;
         }
     }
     // russia
@@ -701,6 +701,9 @@ void doRender(Player *man,Bullet b[]) //, Enemy *enemies
     SDL_RenderCopy(program.renderer,man->scoreHead,NULL,&scoreHeadRect);
     SDL_RenderCopy(program.renderer,man->score,NULL,&man->scoreRect);
 
+    SDL_Rect cdRect = {500,637,300,20};
+    SDL_RenderCopy(program.renderer,man->cdText,NULL,&cdRect);
+
     for(i=0; i<4; i++)
     {
         if(man->enemies[i].exists)
@@ -771,9 +774,3 @@ void respawn(Player *man)
         man->y = 415;
     }
 }
-
-
-
-
-
-

@@ -50,6 +50,10 @@ void initMenu(Menu *menu,Player *man)
     man->scoreHead = SDL_CreateTextureFromSurface(program.renderer,surfaceMessage);
     SDL_FreeSurface(surfaceMessage);
 
+    SDL_Surface* cdtext;
+    cdtext = TTF_RenderText_Blended(arial, "Teleport cooldown", black);
+    man->cdText = SDL_CreateTextureFromSurface(program.renderer,cdtext);
+    SDL_FreeSurface(cdtext);
 }
 
 
@@ -218,7 +222,7 @@ void generateScoreboard(Player *man)
     /** FOR PLAYER **/
     if(man->spritePick == 1)
     {
-        sprintf(score,"Fag        %d      %d",man->kills,man->deaths);
+        sprintf(score,"Torgny     %d      %d",man->kills,man->deaths);
     }
     else if(man->spritePick == 2)
     {
@@ -248,7 +252,7 @@ void generateScoreboard(Player *man)
             printf("printing enemy %d\n",i);
             if(man->enemies[i].sprite == 1)
             {
-                sprintf(score,"Fag        %d      %d",man->enemies[i].kills,man->enemies[i].deaths);
+                sprintf(score,"Torgny     %d      %d",man->enemies[i].kills,man->enemies[i].deaths);
             }
             else if(man->enemies[i].sprite == 2)
             {
@@ -256,7 +260,7 @@ void generateScoreboard(Player *man)
             }
             else if(man->enemies[i].sprite == 3)
             {
-                sprintf(score,"Murica    %d      %d",man->enemies[i].kills,man->enemies[i].deaths);
+                sprintf(score,"Murica     %d      %d",man->enemies[i].kills,man->enemies[i].deaths);
             }
             else
             {

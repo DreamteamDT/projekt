@@ -192,9 +192,9 @@ void initCd(Player *player)
     cdTimer = SDL_CreateTextureFromSurface(program.renderer,timer);
     SDL_FreeSurface(timer);
     player->cdTimer = cdTimer;
-    player->blinkRect.x = 100;
-    player->blinkRect.y = 600;
-    player->blinkRect.w = 150;
+    player->blinkRect.x = 500;
+    player->blinkRect.y = 660;
+    player->blinkRect.w = 300;
     player->blinkRect.h = 30;
 }
 
