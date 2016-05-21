@@ -118,6 +118,11 @@ void send_data(Player *man,Network *client,int type)
             size+=SDLNet_TCP_Send(client->tcpsock,tmp+size,len-size);
         }
     }
+    if(type == 12)
+    {
+        sprintf(client->sendpack->data,"%d %d",type,man->id);
+        SDLNet_UDP_Send(client->udpsock,-1,client->sendpack);
+    }
 }
 
 void sendBullet(Player man,Network client)
@@ -275,6 +280,11 @@ void recv_data(Player *man, Network *client,int *done,Bullet b[])
             }
             generateScoreboard(&*man);
 
+        }
+        else if (type == 12)
+        {
+            sscanf(client->rcvpack->data,"%d %d %d",
+                   &type,&enemyid,&man->roundTime);
         }
     }
 

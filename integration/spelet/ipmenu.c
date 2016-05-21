@@ -8,7 +8,6 @@ int enterIP(Player *man)
     int x,y;
     int length = 1;
     int rectlen = 20;
-    TTF_Font* arial = TTF_OpenFont("arialbd.ttf", 48);
     SDL_Color black = {0, 0, 0};
     SDL_Surface* surfaceMessage;
     SDL_Rect bg = {0,0,1024,768};
@@ -72,7 +71,7 @@ int enterIP(Player *man)
         }
         SDL_RenderClear(program.renderer);
         SDL_RenderCopy(program.renderer,man->ipTexture,NULL,&bg);
-        surfaceMessage = TTF_RenderText_Blended(arial,text,black);
+        surfaceMessage = TTF_RenderText_Blended(man->arial,text,black);
         man->ipAddressText = SDL_CreateTextureFromSurface(program.renderer,surfaceMessage);
         length = strlen(text);
         rect.w = rectlen*length;

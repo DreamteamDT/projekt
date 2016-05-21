@@ -84,6 +84,10 @@ int main(int argc, char **argv)
     int curid=0;
     int playernum=0;
     SDL_Event event;
+    unsigned int roundTime = 300000;
+    int lastPrint = 300000;
+    int gameStarted = 0,startTime,currentTime,lastTime,timeDiff;
+
 
     TCPsocket tcpsock;
     UDPsocket rcvSock;
@@ -101,7 +105,8 @@ int main(int argc, char **argv)
         players[i].exists = 0;
     }
 
-    port=(Uint16)strtol(argv[1],NULL,0);
+    // port=(Uint16)strtol(argv[1],NULL,0);
+    port=(Uint16)4000;
 
     /* Resolve the argument into an IPaddress type */
     SDLNet_ResolveHost(&ip,NULL,port);
@@ -145,11 +150,10 @@ int main(int argc, char **argv)
                                       0                                  // flags
                                      );
     program.renderer = SDL_CreateRenderer(program.window, -1, SDL_RENDERER_ACCELERATED);
-
     int running = 1;
+    currentTime = SDL_GetTicks();
     while(running)
     {
-
         // Lägger till ny klient vid ny connection
         players[next].tcpsock = SDLNet_TCP_Accept(tcpsock);
         //printf("test ");
@@ -157,6 +161,10 @@ int main(int argc, char **argv)
         {
             if(playernum<maxPlayers)
             {
+                if(gameStarted == 0)
+                {
+                    gameStarted = 1;
+                }
                 SDLNet_TCP_AddSocket(tcpset,players[next].tcpsock);
                 players[next].exists = 1;
                 players[next].kills = 0;
@@ -262,6 +270,12 @@ int main(int argc, char **argv)
                         }
                 }
             }
+            else if(type == 12)
+            {
+                sprintf(rcvPack->data,"%d %d %d",type,id,roundTime);
+                rcvPack->address = players[id].ip;
+                SDLNet_UDP_Send(rcvSock,-1,rcvPack);
+            }
         }
         while(SDLNet_CheckSockets(tcpset,0)>0)
         {
@@ -364,18 +378,18 @@ int main(int argc, char **argv)
                     for(k=0; k<maxPlayers; k++)
                     {
                         if(players[k].exists)
+                        {
+                            size=0;
+                            len=strlen(tmp)+1;
+                            while(size<len)
                             {
-                                size=0;
-                                len=strlen(tmp)+1;
-                                while(size<len)
+                                if(!(size+=SDLNet_TCP_Send(players[k].tcpsock,tmp+size,len-size)))
                                 {
-                                    if(!(size+=SDLNet_TCP_Send(players[k].tcpsock,tmp+size,len-size)))
-                                    {
-                                        printf("TCP Send failed: %s\n",SDL_GetError());
-                                        return 1;
-                                    }
+                                    printf("TCP Send failed: %s\n",SDL_GetError());
+                                    return 1;
                                 }
                             }
+                        }
 
                     }
                     SDLNet_TCP_DelSocket(tcpset,players[i].tcpsock);
@@ -432,6 +446,21 @@ int main(int argc, char **argv)
                 SDL_Delay(1000);
             }
         }
+        if(gameStarted)
+        {
+            lastTime = SDL_GetTicks();
+            timeDiff = lastTime - currentTime;
+            currentTime = lastTime;
+            roundTime = roundTime - timeDiff;
+            if((roundTime)<=(lastPrint-1000))
+            {
+                printf("Round time: %d\n",roundTime);
+                lastPrint=roundTime;
+            }
+        }
+
+
+
     }
 
     SDLNet_TCP_Close(tcpsock);

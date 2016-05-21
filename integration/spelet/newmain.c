@@ -80,6 +80,7 @@ int main(int argc, char *argv[])
                     send_data(&player,&client,2);
                     player.deltaTimeMs = 0;
                     player.alive = 0;
+                    send_data(&player,&client,12);
                 }
                 recv_data(&player,&client,&done,ammo);
                 while(ingame==1) /**** INGAME ****/

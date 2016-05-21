@@ -42,6 +42,8 @@ void initMenu(Menu *menu,Player *man)
     menu->rect.h = 768;
     menu->texture = texture;
     man->ipTexture = ipText;
+    man->arial = TTF_OpenFont("arialbd.ttf", 48);
+    man->scoreText = (char*)malloc(100);
 
     SDL_Surface* surfaceMessage;
     TTF_Font* arial = TTF_OpenFont("arialbd.ttf", 48);
@@ -260,27 +262,26 @@ void generateScoreboard(Player *man)
     int i,scoreposition=657;
     SDL_Surface* surfaceMessage;
     SDL_Color black = {0, 0, 0};
-    char *score = (char*)malloc(100);
-    TTF_Font* arial = TTF_OpenFont("arialbd.ttf", 48);
+
 
     /** FOR PLAYER **/
     if(man->spritePick == 1)
     {
-        sprintf(score,"Torgny     %d      %d",man->kills,man->deaths);
+        sprintf(man->scoreText,"Torgny     %d      %d",man->kills,man->deaths);
     }
     else if(man->spritePick == 2)
     {
-        sprintf(score,"Russia     %d      %d",man->kills,man->deaths);
+        sprintf(man->scoreText,"Russia     %d      %d",man->kills,man->deaths);
     }
     else if(man->spritePick == 3)
     {
-        sprintf(score,"Murica    %d      %d",man->kills,man->deaths);
+        sprintf(man->scoreText,"Murica    %d      %d",man->kills,man->deaths);
     }
     else
     {
-        sprintf(score,"China      %d      %d",man->kills,man->deaths);
+        sprintf(man->scoreText,"China      %d      %d",man->kills,man->deaths);
     }
-    surfaceMessage = TTF_RenderText_Blended(arial,score,black);
+    surfaceMessage = TTF_RenderText_Blended(man->arial,man->scoreText,black);
     SDL_DestroyTexture(man->score);
     man->score = SDL_CreateTextureFromSurface(program.renderer,surfaceMessage);
     SDL_Rect rect = {164,scoreposition,250,20};
@@ -296,22 +297,22 @@ void generateScoreboard(Player *man)
             printf("printing enemy %d\n",i);
             if(man->enemies[i].sprite == 1)
             {
-                sprintf(score,"Torgny     %d      %d",man->enemies[i].kills,man->enemies[i].deaths);
+                sprintf(man->scoreText,"Torgny     %d      %d",man->enemies[i].kills,man->enemies[i].deaths);
             }
             else if(man->enemies[i].sprite == 2)
             {
-                sprintf(score,"Russia     %d      %d",man->enemies[i].kills,man->enemies[i].deaths);
+                sprintf(man->scoreText,"Russia     %d      %d",man->enemies[i].kills,man->enemies[i].deaths);
             }
             else if(man->enemies[i].sprite == 3)
             {
-                sprintf(score,"Murica     %d      %d",man->enemies[i].kills,man->enemies[i].deaths);
+                sprintf(man->scoreText,"Murica     %d      %d",man->enemies[i].kills,man->enemies[i].deaths);
             }
             else
             {
-                sprintf(score,"China      %d      %d",man->enemies[i].kills,man->enemies[i].deaths);
+                sprintf(man->scoreText,"China      %d      %d",man->enemies[i].kills,man->enemies[i].deaths);
             }
 
-            surfaceMessage = TTF_RenderText_Blended(arial,score,black);
+            surfaceMessage = TTF_RenderText_Blended(man->arial,man->scoreText,black);
             SDL_DestroyTexture(man->enemies[i].score);
             man->enemies[i].score = SDL_CreateTextureFromSurface(program.renderer,surfaceMessage);
             SDL_Rect rect = {164,scoreposition,250,20};
@@ -320,5 +321,4 @@ void generateScoreboard(Player *man)
             scoreposition = scoreposition+20;
         }
     }
-    free(score);
 }
