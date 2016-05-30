@@ -4,6 +4,7 @@
 /** Linkern gör det åt oss **/
 
 extern void initSounds(Player *man);
+extern void intro(void);
 
 int global = 0;
 int main(int argc, char *argv[])
@@ -38,6 +39,8 @@ int main(int argc, char *argv[])
     initLedges(&player);
     initCd(&player);
     SDLNet_Init();
+
+    intro();
     while(!exit) ///**** MAIN MENU ****/
     {
         if(LINUX)
