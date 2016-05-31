@@ -103,7 +103,7 @@ int processEvents(Player *man,Bullet b[],int *moved,int *type,int *direct,Networ
     }
 
     const Uint8 *state = SDL_GetKeyboardState(NULL);
-    if((state[SDL_SCANCODE_LEFT] || state[SDL_SCANCODE_A]) && man->alive)
+    if((state[SDL_SCANCODE_LEFT] || state[SDL_SCANCODE_A]) && man->alive && man->gameStarted)
     {
         man->x = man->x - (200*(man->deltaTimeS));
         *moved = 1;
@@ -120,7 +120,7 @@ int processEvents(Player *man,Bullet b[],int *moved,int *type,int *direct,Networ
         if(man->x < 0)
             man->x = 0;
     }
-    if((state[SDL_SCANCODE_RIGHT] || state[SDL_SCANCODE_D]) && man->alive)
+    if((state[SDL_SCANCODE_RIGHT] || state[SDL_SCANCODE_D]) && man->alive && man->gameStarted)
     {
         man->x = man->x + (200*(man->deltaTimeS));
 
@@ -139,7 +139,7 @@ int processEvents(Player *man,Bullet b[],int *moved,int *type,int *direct,Networ
             man->x = 960;
 
     }
-    if((state[SDL_SCANCODE_UP] || state[SDL_SCANCODE_W]) && man->alive)
+    if((state[SDL_SCANCODE_UP] || state[SDL_SCANCODE_W]) && man->alive && man->gameStarted)
     {
         man->y = man->y - (200*(man->deltaTimeS));
         *moved = 1;
@@ -156,7 +156,7 @@ int processEvents(Player *man,Bullet b[],int *moved,int *type,int *direct,Networ
         if(man->y<0)
             man->y = 0;
     }
-    if((state[SDL_SCANCODE_DOWN] || state[SDL_SCANCODE_S]) && man->alive)
+    if((state[SDL_SCANCODE_DOWN] || state[SDL_SCANCODE_S]) && man->alive && man->gameStarted)
     {
         man->y = man->y + (200*(man->deltaTimeS));
         *moved = 1;
@@ -180,7 +180,7 @@ int processEvents(Player *man,Bullet b[],int *moved,int *type,int *direct,Networ
         *direct = -1;
         man->blinked = 0;
     }
-    if((SDL_GetMouseState(NULL,NULL) &&SDL_BUTTON_LEFT) && man->alive && !man->justShot)
+    if((SDL_GetMouseState(NULL,NULL) &&SDL_BUTTON_LEFT) && man->alive && !man->justShot && man->gameStarted)
     {
         int bulletNo,shotX,shotY;
         checkRunningDirection(&*man, &shotX, &shotY);
@@ -200,7 +200,7 @@ int processEvents(Player *man,Bullet b[],int *moved,int *type,int *direct,Networ
         }
     }
     checkCd(&*man);
-    if(state[SDL_SCANCODE_SPACE] && man->alive) // kan inte ha  && man->spellReady här
+    if(state[SDL_SCANCODE_SPACE] && man->alive && man->gameStarted) // kan inte ha  && man->spellReady här
     {
         if (man->spellReady == 0 && *direct <= 0)
             *direct = -1;

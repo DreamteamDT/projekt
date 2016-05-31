@@ -151,8 +151,9 @@ void recv_data(Player *man, Network *client,int *done,Bullet b[])
         //man->enemies[enemyid].x = enemyDX;
         //man->enemies[enemyid].y = enemyDY;
         //Om ny fiende
-        if (!man->enemies[enemyid].exists && (man->id!=enemyid))
+        if (!man->enemies[enemyid].exists && (man->id!=enemyid) && type!=12 &&type!=10)
         {
+            printf("received package: %d\n",type);
             SDL_DestroyTexture(man->enemies[enemyid].texture);
             sscanf(client->rcvpack->data,"%d %d %f %f %d %d",
                    &type,&enemyid,&enemyDX,&enemyDY,&enemySX,&spritePick);
@@ -285,6 +286,9 @@ void recv_data(Player *man, Network *client,int *done,Bullet b[])
         {
             sscanf(client->rcvpack->data,"%d %d %d",
                    &type,&enemyid,&man->roundTime);
+                   man->lastRTime = SDL_GetTicks();
+                   printf("round time: %d\n",man->roundTime);
+                   man->gameStarted = 1;
         }
     }
 

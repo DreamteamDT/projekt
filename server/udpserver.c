@@ -85,7 +85,7 @@ int main(int argc, char **argv)
     int playernum=0;
     SDL_Event event;
     unsigned int roundTime = 300000;
-    int lastPrint = 300000;
+    int lastPrint = 301000;
     int gameStarted = 0,startTime,currentTime,lastTime,timeDiff;
 
 
@@ -151,7 +151,6 @@ int main(int argc, char **argv)
                                      );
     program.renderer = SDL_CreateRenderer(program.window, -1, SDL_RENDERER_ACCELERATED);
     int running = 1;
-    currentTime = SDL_GetTicks();
     while(running)
     {
         // Lägger till ny klient vid ny connection
@@ -161,10 +160,24 @@ int main(int argc, char **argv)
         {
             if(playernum<maxPlayers)
             {
-                if(gameStarted == 0)
-                {
-                    gameStarted = 1;
-                }
+                if(playernum > 0)
+                    if(gameStarted == 0)
+                    {
+
+                        for(i=0; i<maxPlayers; i++)
+                        {
+                            if(players[i].exists)
+                            {
+                                type = 12;
+                                sprintf(rcvPack->data,"%d %d %d",type,id,roundTime);
+                                rcvPack->address = players[id].ip;
+                                SDLNet_UDP_Send(rcvSock,-1,rcvPack);;
+                            }
+                        }
+
+                        gameStarted = 1;
+                        currentTime = SDL_GetTicks();
+                    }
                 SDLNet_TCP_AddSocket(tcpset,players[next].tcpsock);
                 players[next].exists = 1;
                 players[next].kills = 0;
@@ -187,6 +200,7 @@ int main(int argc, char **argv)
                     }
                 }
                 playernum++;
+
             }
             else
             {
@@ -272,9 +286,12 @@ int main(int argc, char **argv)
             }
             else if(type == 12)
             {
-                sprintf(rcvPack->data,"%d %d %d",type,id,roundTime);
-                rcvPack->address = players[id].ip;
-                SDLNet_UDP_Send(rcvSock,-1,rcvPack);
+                if(gameStarted)
+                {
+                    sprintf(rcvPack->data,"%d %d %d",type,id,roundTime);
+                    rcvPack->address = players[id].ip;
+                    SDLNet_UDP_Send(rcvSock,-1,rcvPack);
+                }
             }
         }
         while(SDLNet_CheckSockets(tcpset,0)>0)
@@ -454,7 +471,7 @@ int main(int argc, char **argv)
             roundTime = roundTime - timeDiff;
             if((roundTime)<=(lastPrint-1000))
             {
-                printf("Round time: %d\n",roundTime);
+                printf("Round time: %d\n",roundTime/1000);
                 lastPrint=roundTime;
             }
         }

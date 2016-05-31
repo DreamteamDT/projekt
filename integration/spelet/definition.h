@@ -111,11 +111,12 @@ typedef struct
     SDL_Texture *texture,*background,*scoreBackground,*bullet,*cdTimer,*cdText,*score,*scoreHead,*ipTexture,*ipAddressText;
     int thinkTime,disconnected;
     int shot,bulletid,blinkX,blinkY,bulletNo,connected;
+    int gameStarted;
     TTF_Font* arial;
     char *scoreText;
     int id;
     int justShot;
-    int deltaTimeMs,roundTime;
+    int deltaTimeMs,roundTime,currentRTime,lastRTime;
     float deltaTimeS;
     int spritePick;
     SDL_Rect blinkRect,scoreRect,ipRect;

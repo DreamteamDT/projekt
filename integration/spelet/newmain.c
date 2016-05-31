@@ -9,8 +9,8 @@ int global = 0;
 int main(int argc, char *argv[])
 {
 
-    int pickCharacter = 0,exit = 0,ingame = 0,connected, i,done = 0;
-    int choice,newline,moved = 0,type,direct = 0,enterIPmenu;
+    int pickCharacter = 0,exit = 0,ingame = 0,connected, i,done = 0,timeDiff;
+    int choice,newline,moved = 0,type,direct = 0,enterIPmenu,lastPrint=300000;
     unsigned int lastTime,currentTime;
     char *tmp = (char*)malloc(100);
     int frameStart=0,frameEnd=0;
@@ -75,6 +75,7 @@ int main(int argc, char *argv[])
                 ingame = handlePick(&pickCharacter,&player);
                 if(ingame==1)
                 {
+                    player.gameStarted = 1;
                     initPlayer(&player);
                     clearCartridge(ammo);
                     send_data(&player,&client,2);
@@ -98,7 +99,10 @@ int main(int argc, char *argv[])
 
                     direct = 0;
                     done = 0;
+
                     done = processEvents(&player,ammo,&moved,&type,&direct,&client);
+
+
                     updateEnemyBullet(&player);
                     updateLogic(&player,ammo);
                     if(player.alive)
@@ -134,6 +138,20 @@ int main(int argc, char *argv[])
                             spawnTimer = 4;
                         }
                     }
+                    if(player.gameStarted)
+                    {
+                        player.currentRTime = SDL_GetTicks();
+                        timeDiff = player.currentRTime - player.lastRTime;
+                        player.roundTime = player.roundTime - timeDiff;
+                        player.lastRTime = player.currentRTime;
+                        if(player.roundTime <= (lastPrint-1000))
+                        {
+                            printf("Time left: %d\n",player.roundTime/1000);
+                            lastPrint = player.roundTime;
+                        }
+                    }
+
+
 
                     if(done || player.disconnected)
                     {
