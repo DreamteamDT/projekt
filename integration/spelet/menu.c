@@ -58,6 +58,82 @@ void initMenu(Menu *menu,Player *man)
     SDL_FreeSurface(cdtext);
 }
 
+
+void intro()
+{
+    TTF_Font* Sans = TTF_OpenFont("BlackOpsOne-Regular.ttf", 24);
+
+    SDL_Color White = {255, 255, 255};  // this is the color in rgb format, maxing out all would give you the color white, and it will be your text's color
+
+    SDL_Surface* surfaceMessage = TTF_RenderText_Solid(Sans, "Give War A Chance", White); // as TTF_RenderText_Solid could only be used on SDL_Surface then you have to create the surface first
+    SDL_Surface* subtitle = TTF_RenderText_Solid(Sans,"Press any key to continue",White);
+
+    SDL_Texture* Message = SDL_CreateTextureFromSurface(program.renderer, surfaceMessage); //now you can convert it into a texture
+    SDL_Texture* Submessage = SDL_CreateTextureFromSurface(program.renderer,subtitle);
+    int *i;
+    SDL_Rect Message_rect; //create a rect
+    SDL_Rect mini;
+    //Message_rect.x = 1024/2-125;  //controls the rect's x coordinate
+    Message_rect.y = 768/2; // controls the rect's y coordinte
+    Message_rect.w = 300; // controls the width of the rect
+    Message_rect.h = 100; // controls the height of the rect
+    Message_rect.x =0;
+
+
+    mini.x = 400;
+    mini.y = 600;
+    mini.w = Message_rect.w-30;
+    mini.h = Message_rect.h-30;
+
+    Mix_Music *introMusic;
+    if(LINUX)
+    {
+       Mix_LoadMUS("ATeam_theme5.wav");
+    }
+    else
+    {
+       Mix_LoadMUS("ATeam_theme5.mp3");
+    }
+    Mix_PlayMusic(introMusic, -1);
+
+    SDL_Event event;
+    bool quit = false;
+    while(!quit)
+    {
+     while(SDL_PollEvent(&event))
+     {
+       if(event.type == SDL_QUIT)
+       {
+          quit = true;
+       }
+       if(event.type == SDL_KEYDOWN)
+       {
+          quit = true;
+       }
+       if(event.type == SDL_MOUSEBUTTONDOWN)
+       {
+          quit = true;
+       }
+     }
+      //set the drawing color to blue
+    SDL_SetRenderDrawColor(program.renderer, 0, 0, 255, 255);
+
+    //Clear the screen (to blue)
+    SDL_RenderClear(program.renderer);
+     if(Message_rect.x != 1024/2-125)
+     {
+            Message_rect.x++;
+     }
+     SDL_SetRenderDrawColor(program.renderer, 0, 0, 255, 255);
+     SDL_RenderCopy(program.renderer, Message, NULL, &Message_rect);
+     SDL_RenderCopy(program.renderer,Submessage,NULL,&mini);
+     SDL_RenderPresent(program.renderer);
+     SDL_Delay(20);
+     }
+    TTF_CloseFont(Sans);
+
+}
+
 void helpMenu()
 {
     SDL_Event e;
