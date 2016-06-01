@@ -28,7 +28,7 @@ int enterIP(Player *man)
         SDL_StartTextInput();
         while(SDL_PollEvent(&e) !=0)
         {
-
+            SDL_GetMouseState(&x, &y);
             if(x>376 && x<645 && y>488 && y<587 && e.type==SDL_MOUSEBUTTONDOWN)
             {
                 if(e.button.button==SDL_BUTTON_LEFT)

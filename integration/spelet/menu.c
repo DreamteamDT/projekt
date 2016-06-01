@@ -15,7 +15,7 @@ void initMenu(Menu *menu,Player *man)
                                      );
     program.renderer = SDL_CreateRenderer(program.window, -1, SDL_RENDERER_ACCELERATED);
 
-    SDL_Surface *image = IMG_Load("MainMenu.bmp");
+    SDL_Surface *image = IMG_Load("pictures/MainMenu.bmp");
     SDL_Texture *texture;
     texture = SDL_CreateTextureFromSurface(program.renderer,image);
     SDL_FreeSurface(image);
@@ -25,12 +25,12 @@ void initMenu(Menu *menu,Player *man)
 
     if(LINUX)
     {
-    ipImage = IMG_Load("enterIP.png");
+    ipImage = IMG_Load("pictures/enterIP.png");
     ipText = SDL_CreateTextureFromSurface(program.renderer,ipImage);
     }
     else
     {
-    ipImage = IMG_Load("enterip.PNG");
+    ipImage = IMG_Load("pictures/enterip.PNG");
     ipText = SDL_CreateTextureFromSurface(program.renderer,ipImage);
     }
 
@@ -88,11 +88,11 @@ void intro()
     Mix_Music *introMusic;
     if(LINUX)
     {
-       Mix_LoadMUS("ATeam_theme5.wav");
+       Mix_LoadMUS("Soundeffects/ATeam_theme5.wav");
     }
     else
     {
-       Mix_LoadMUS("ATeam_theme5.mp3");
+       Mix_LoadMUS("Soundeffects/ATeam_theme5.mp3");
     }
     Mix_PlayMusic(introMusic, -1);
 
@@ -143,7 +143,7 @@ void helpMenu()
     SDL_Texture* helpMenu;
     SDL_Texture* mainMenu;
 
-    image = SDL_LoadBMP("HelpMenu.bmp");
+    image = SDL_LoadBMP("pictures/HelpMenu.bmp");
     helpMenu = SDL_CreateTextureFromSurface(program.renderer, image);
     SDL_FreeSurface(image);
 
@@ -159,7 +159,7 @@ void helpMenu()
             if(e.key.keysym.sym==SDLK_ESCAPE)
             {
                 SDL_DestroyTexture(image);
-                image = SDL_LoadBMP("MainMenu.bmp");
+                image = SDL_LoadBMP("pictures/MainMenu.bmp");
                 mainMenu = SDL_CreateTextureFromSurface(program.renderer, image);
                 SDL_FreeSurface(image);
                 SDL_RenderCopy(program.renderer, mainMenu, NULL, NULL);
@@ -241,7 +241,7 @@ void displayMenu(Menu menu)
 
 void initPick(Menu *pick)
 {
-    SDL_Surface *image = IMG_Load("ChooseCharacter.bmp");
+    SDL_Surface *image = IMG_Load("pictures/ChooseCharacter.bmp");
     SDL_Texture *texture;
     texture = SDL_CreateTextureFromSurface(program.renderer,image);
     SDL_FreeSurface(image);

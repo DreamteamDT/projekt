@@ -19,23 +19,23 @@ void loadSounds(Player *man)
     {
 
             man->sounds.backstreet = Mix_LoadMUS("Soundeffects/Torgny.wav");
-            man->sounds.cykablyat = Mix_LoadMUS("cykablyat.wav");
-            man->sounds.america = Mix_LoadMUS("America.wav");
-            man->sounds.china = Mix_LoadMUS("Chinese.wav");
+            man->sounds.cykablyat = Mix_LoadMUS("Soundeffects/cykablyat.wav");
+            man->sounds.america = Mix_LoadMUS("Soundeffects/America.wav");
+            man->sounds.china = Mix_LoadMUS("Soundeffects/Chinese.wav");
             man->sounds.Ldeathsound1 = Mix_LoadWAV("Soundeffects/deathtorgny.wav");
             man->sounds.Ldeathsound2 = Mix_LoadWAV("Soundeffects/death4.wav");
             man->sounds.Ldeathsound3 = Mix_LoadWAV("Soundeffects/death15.wav");
             man->sounds.Ldeathsound4 = Mix_LoadWAV("Soundeffects/death8.wav");
-            man->sounds.bulletShot = Mix_LoadWAV("bulletPop.wav");
+            man->sounds.bulletShot = Mix_LoadWAV("Soundeffects/bulletPop.wav");
 
     }
     else
     {
-            man->sounds.bulletShot = Mix_LoadWAV("bulletPop.WAV");
+            man->sounds.bulletShot = Mix_LoadWAV("Soundeffects/bulletPop.WAV");
             man->sounds.backstreet = Mix_LoadMUS("Soundeffects/Torgny.MP3");
-            man->sounds.cykablyat = Mix_LoadMUS("cykablyat.MP3");
-            man->sounds.america = Mix_LoadMUS("America.MP3");
-            man->sounds.china = Mix_LoadMUS("Chinese.MP3");
+            man->sounds.cykablyat = Mix_LoadMUS("Soundeffects/cykablyat.MP3");
+            man->sounds.america = Mix_LoadMUS("Soundeffects/America.MP3");
+            man->sounds.china = Mix_LoadMUS("Soundeffects/Chinese.MP3");
             man->sounds.deathsound1 = Mix_LoadWAV("Soundeffects/deathtorgny.WAV");
             man->sounds.deathsound2 = Mix_LoadWAV("Soundeffects/death4.WAV");
             man->sounds.deathsound3 = Mix_LoadWAV("Soundeffects/death15.WAV");
