@@ -1,8 +1,5 @@
 #include "definition.h"
 
-/** Vi behöver tydligen 7inte deklarera funktionerna här?? **/
-/** Linkern gör det åt oss **/
-
 extern void initSounds(Player *man);
 extern void intro(void);
 
