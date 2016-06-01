@@ -10,7 +10,6 @@
 void updateLogic(Player *p,Bullet b[])
 {
     int i;
-
     for(i=0; i<20; i++)
     {
         if(b[i].active == 1)
@@ -228,8 +227,6 @@ int processEvents(Player *man,Bullet b[],int *moved,int *type,int *direct,Networ
             direction.y = bY-man->y;
             unit_vector.x = (direction.x)/ v_length;
             unit_vector.y = (direction.y)/ v_length;
-            //man->x+=(unit_vector.x*100)-16;
-            //man->y+=(unit_vector.y*100)-16;
             man->x+=(unit_vector.x*200);
             man->y+=(unit_vector.y*200);
             *moved = 1;
@@ -251,7 +248,6 @@ int processEvents(Player *man,Bullet b[],int *moved,int *type,int *direct,Networ
 
         }
     }
-    //printf("Thinktime : %d \n",man->thinkTime);
     return done;
 }
 
@@ -651,16 +647,8 @@ void doRender(Player *man,Bullet b[])
     //Clear the screen (to blue)
 
     SDL_Rect bg = {0,0,1024,768};
-    //SDL_Rect scoreBg = {0,630,1024,138};
 
     SDL_RenderCopy(program.renderer,man->background,NULL,&bg);
-
-
-
-    //SDL_Rect rectE = {enemies->dstRect.x, enemies->dstRect.y, 32, 32};
-    //SDL_Rect srcE = {enemies->srcRect.x, 0, 32, 32};
-
-    //SDL_RenderFillRect(program.renderer, &rect);
 
     for(i=0; i<20; i++)
     {
@@ -669,11 +657,6 @@ void doRender(Player *man,Bullet b[])
 
             SDL_Rect faggot = {b[i].x , b[i].y,8,8};
             SDL_RenderCopy(program.renderer,man->bullet,NULL,&faggot);
-
-            // SDL_Rect faggot = {b[i].x , b[i].y,8,8 };
-            //  printf("faggot x: %d faggot y: %d\n",faggot.x,faggot.y);
-            // SDL_RenderCopyEx(program.renderer,man->bullet,NULL,&faggot,0,NULL,0);
-
         }
     }
     for(i=0; i<4; i++)
@@ -731,11 +714,8 @@ void doRender(Player *man,Bullet b[])
 
 
     SDL_RenderPresent(program.renderer);
-//    SDL_DestroyTexture(man->texture);
-//    SDL_DestroyTexture(man->background);
-//    SDL_DestroyTexture(man->scoreBackground);
-//    SDL_DestroyTexture(man->bullet);
 }
+
 /***** spelaren spawnar på en slupmässig plats på spelplanen *****/
 void respawn(Player *man)
 {
@@ -745,15 +725,11 @@ void respawn(Player *man)
     {
         man->x = 70;
         man->y = 212;
-        //man->x = 113;
-        //man->y = 79;
     }
     else if(spawn == 1)
     {
         man->x = 942;
         man->y = 212;
-        //man->x = 909;
-        //man->y = 73;
     }
     else if(spawn == 2)
     {
