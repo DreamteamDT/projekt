@@ -1,9 +1,6 @@
 #include "definition.h"
-//extern void addEnemyBullet(int x,int y,int dx,Bullet b[],int b1,int b2,int i);
-//void checkRunningEnemyDirection(Player *man, int *bulletX, int *bulletY, int id);
-//extern  void generateScoreboard(Player *man);
 
-
+/** LÄSER IN HELA STRÄNGEN **/
 int uncomplete_string(char tmp[])
 {
     int i=0;
@@ -59,7 +56,6 @@ int networkInit(Network *client,Player *man,char *ipaddress)
     //Försöker connecta till servern
     if(!(client->tcpsock = SDLNet_TCP_Open(&tcpip)))
     {
-        printf("Couldnt connect to server\n");
         return 0;
     }
     SDLNet_TCP_Recv(client->tcpsock,tmp,1024);
@@ -80,7 +76,7 @@ int networkInit(Network *client,Player *man,char *ipaddress)
     return 1;
 }
 
-void send_data(Player *man,Network *client,int type)
+void send_data(Player *man,Network *client,int type)/** SKICKA DATA **/
 {
     char tmp[128];
     int size,len;
@@ -92,7 +88,6 @@ void send_data(Player *man,Network *client,int type)
     }
     if(type == 3)
     {
-        printf("skickar type 3\n");
         sprintf(tmp,"%d %d \n",type,man->id);
         size=0;
         len=strlen(tmp)+1;
@@ -100,7 +95,6 @@ void send_data(Player *man,Network *client,int type)
         {
             size+=SDLNet_TCP_Send(client->tcpsock,tmp+size,len-size);
         }
-        printf("Disconnected!\n");
     }
     if(type == 7)
     {
@@ -109,7 +103,6 @@ void send_data(Player *man,Network *client,int type)
     }
     if(type == 11)
     {
-        printf("sending exit\n");
         sprintf(tmp,"%d %d \n",type,man->id);
         size=0;
         len=strlen(tmp)+1;
@@ -125,7 +118,7 @@ void send_data(Player *man,Network *client,int type)
     }
 }
 
-void sendBullet(Player man,Network client)
+void sendBullet(Player man,Network client) /** SKICKA BULLET NÄR MAN SKJUTER **/
 {
     int type = 8;
     sprintf(client.sendpack->data,"%d %d %d %d %d %d %d",
@@ -134,7 +127,7 @@ void sendBullet(Player man,Network client)
 }
 
 
-void recv_data(Player *man, Network *client,int *done,Bullet b[])
+void recv_data(Player *man, Network *client,int *done,Bullet b[]) /** LÄSER IN DATA **/
 {
 
     int type, enemyid,enemySX,spritePick,hitid,bulletX,bulletY;
@@ -142,18 +135,14 @@ void recv_data(Player *man, Network *client,int *done,Bullet b[])
     float enemyDX,enemyDY;
     int blinkX,blinkY,bulletid;
     int kills,deaths;
-    while(SDLNet_CheckSockets(client->udpset,0)>0)
+    while(SDLNet_CheckSockets(client->udpset,0)>0) /** KOLLAR UDP-SOCKET OM DATA INKOMMER **/
     {
         SDLNet_UDP_Recv(client->udpsock,client->rcvpack);
         sscanf(client->rcvpack->data,"%d %d",&type,&enemyid);
 
-
-        //man->enemies[enemyid].x = enemyDX;
-        //man->enemies[enemyid].y = enemyDY;
-        //Om ny fiende
+        /** OM NY FIENDE **/
         if (!man->enemies[enemyid].exists && (man->id!=enemyid) && type!=12 &&type!=10)
         {
-            printf("received package: %d\n",type);
             SDL_DestroyTexture(man->enemies[enemyid].texture);
             sscanf(client->rcvpack->data,"%d %d %f %f %d %d",
                    &type,&enemyid,&enemyDX,&enemyDY,&enemySX,&spritePick);
@@ -164,22 +153,22 @@ void recv_data(Player *man, Network *client,int *done,Bullet b[])
 
                 if(spritePick==1)
                 {
-                    image = IMG_Load("spriteTorg.png");
+                    image = IMG_Load("pictures/spriteTorg.png");
                     man->enemies[enemyid].sprite = 1;
                 }
                 else if(spritePick==2)
                 {
-                    image = IMG_Load("spriteRussia.png");
+                    image = IMG_Load("pictures/spriteRussia.png");
                     man->enemies[enemyid].sprite = 2;
                 }
                 else if(spritePick==3)
                 {
-                    image = IMG_Load("spriteMurica.png");
+                    image = IMG_Load("pictures/spriteMurica.png");
                     man->enemies[enemyid].sprite = 3;
                 }
                 else
                 {
-                    image = IMG_Load("spriteChina.png");
+                    image = IMG_Load("pictures/spriteChina.png");
                     man->enemies[enemyid].sprite = 4;
                 }
 
@@ -188,22 +177,22 @@ void recv_data(Player *man, Network *client,int *done,Bullet b[])
             {
                 if(spritePick==1)
                 {
-                    image = IMG_Load("spriteTorg.PNG");
+                    image = IMG_Load("pictures/spriteTorg.PNG");
                     man->enemies[enemyid].sprite = 1;
                 }
                 else if(spritePick==2)
                 {
-                    image = IMG_Load("spriteRussia.PNG");
+                    image = IMG_Load("pictures/spriteRussia.PNG");
                     man->enemies[enemyid].sprite = 2;
                 }
                 else if(spritePick==3)
                 {
-                    image = IMG_Load("spriteMurica.PNG");
+                    image = IMG_Load("pictures/spriteMurica.PNG");
                     man->enemies[enemyid].sprite = 3;
                 }
                 else
                 {
-                    image = IMG_Load("spriteChina.PNG");
+                    image = IMG_Load("pictures/spriteChina.PNG");
                     man->enemies[enemyid].sprite = 4;
                 }
             }
@@ -226,6 +215,7 @@ void recv_data(Player *man, Network *client,int *done,Bullet b[])
             }
 
         }
+        /** TYP 2 = FIENDE SKICKAR KORDINATER VID FÖRFLYTTNING **/
         else if (type == 2 && (SDL_GetTicks() - man->enemies[enemyid].justDied > 1000))
         {
             sscanf(client->rcvpack->data,"%d %d %f %f %d %d",
@@ -292,7 +282,7 @@ void recv_data(Player *man, Network *client,int *done,Bullet b[])
         }
     }
 
-    while(SDLNet_CheckSockets(client->tcpset,0)>0)
+    while(SDLNet_CheckSockets(client->tcpset,0)>0) /** KOLLAR TCP-SOCKET OM DATA INKOMMER **/
     {
         printf("incoming data on tcp socket\n");
         int offset = 0;
