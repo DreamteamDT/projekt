@@ -6,6 +6,7 @@
 //void checkCd(Player *man);
 
 
+/***** updaterar spelarens skotts position *****/
 void updateLogic(Player *p,Bullet b[])
 {
     int i;
@@ -21,6 +22,7 @@ void updateLogic(Player *p,Bullet b[])
     global++;
 }
 
+/***** updaterar fienders skotts position *****/
 void updateEnemyBullet(Player *man)
 {
     int i,j;
@@ -38,6 +40,8 @@ void updateEnemyBullet(Player *man)
         }
     }
 }
+
+/***** Regestrerar spelarens handlingar *****/
 int processEvents(Player *man,Bullet b[],int *moved,int *type,int *direct,Network *client)
 {
     unsigned int spellOne, spellOne_False=0;
@@ -52,6 +56,8 @@ int processEvents(Player *man,Bullet b[],int *moved,int *type,int *direct,Networ
         man->thinkTime = 0;
     }
 
+    /***** Spelaren kan stänga av spelet på ett säkert sätt,
+           sammlar information när spelaren klickar på musknappen *****/
     while(SDL_PollEvent(&event))
     {
         switch(event.type)
@@ -103,7 +109,7 @@ int processEvents(Player *man,Bullet b[],int *moved,int *type,int *direct,Networ
     }
 
     const Uint8 *state = SDL_GetKeyboardState(NULL);
-    if((state[SDL_SCANCODE_LEFT] || state[SDL_SCANCODE_A]) && man->alive && man->gameStarted)
+    if((state[SDL_SCANCODE_LEFT] || state[SDL_SCANCODE_A]) && man->alive)
     {
         man->x = man->x - (200*(man->deltaTimeS));
         *moved = 1;
@@ -120,7 +126,7 @@ int processEvents(Player *man,Bullet b[],int *moved,int *type,int *direct,Networ
         if(man->x < 0)
             man->x = 0;
     }
-    if((state[SDL_SCANCODE_RIGHT] || state[SDL_SCANCODE_D]) && man->alive && man->gameStarted)
+    if((state[SDL_SCANCODE_RIGHT] || state[SDL_SCANCODE_D]) && man->alive)
     {
         man->x = man->x + (200*(man->deltaTimeS));
 
@@ -139,7 +145,7 @@ int processEvents(Player *man,Bullet b[],int *moved,int *type,int *direct,Networ
             man->x = 960;
 
     }
-    if((state[SDL_SCANCODE_UP] || state[SDL_SCANCODE_W]) && man->alive && man->gameStarted)
+    if((state[SDL_SCANCODE_UP] || state[SDL_SCANCODE_W]) && man->alive)
     {
         man->y = man->y - (200*(man->deltaTimeS));
         *moved = 1;
@@ -156,7 +162,7 @@ int processEvents(Player *man,Bullet b[],int *moved,int *type,int *direct,Networ
         if(man->y<0)
             man->y = 0;
     }
-    if((state[SDL_SCANCODE_DOWN] || state[SDL_SCANCODE_S]) && man->alive && man->gameStarted)
+    if((state[SDL_SCANCODE_DOWN] || state[SDL_SCANCODE_S]) && man->alive)
     {
         man->y = man->y + (200*(man->deltaTimeS));
         *moved = 1;
@@ -180,7 +186,9 @@ int processEvents(Player *man,Bullet b[],int *moved,int *type,int *direct,Networ
         *direct = -1;
         man->blinked = 0;
     }
-    if((SDL_GetMouseState(NULL,NULL) &&SDL_BUTTON_LEFT) && man->alive && !man->justShot && man->gameStarted)
+
+    /***** när spelaren klickar på en musknapp för att skjuta *****/
+    if((SDL_GetMouseState(NULL,NULL) &&SDL_BUTTON_LEFT) && man->alive && !man->justShot)
     {
         int bulletNo,shotX,shotY;
         checkRunningDirection(&*man, &shotX, &shotY);
@@ -200,7 +208,8 @@ int processEvents(Player *man,Bullet b[],int *moved,int *type,int *direct,Networ
         }
     }
     checkCd(&*man);
-    if(state[SDL_SCANCODE_SPACE] && man->alive && man->gameStarted) // kan inte ha  && man->spellReady här
+    /***** när spelaren använder blink *****/
+    if(state[SDL_SCANCODE_SPACE] && man->alive)
     {
         if (man->spellReady == 0 && *direct <= 0)
             *direct = -1;
@@ -246,6 +255,7 @@ int processEvents(Player *man,Bullet b[],int *moved,int *type,int *direct,Networ
     return done;
 }
 
+/***** cooldown för blink *****/
 void checkCd(Player *man)
 {
     // +124 och man->blinkRect.w+=2 bestämmer CD för blink
@@ -261,6 +271,7 @@ void checkCd(Player *man)
     }
 }
 
+/***** kollisionsdetektion när spelaren rört sig eller använts blink *****/
 void collisionDetect(Player *man, int *direct, int *moved, int *type)
 {
     // collision när man går (wasd)
@@ -270,10 +281,12 @@ void collisionDetect(Player *man, int *direct, int *moved, int *type)
         // check for collision with any ledges and enemies
         for (i = 0; i < 7; i++)
         {
+            // sparar brädden och höjden av karaktärerna
             int mw = 64, mh = 64;
+            // sparar var karaktärerna finns på spelplanen
             int mx = man->x, my = man->y;
 
-            // ladda ledges
+            // ladda ledges (kaktusarna)
             int bx = man->ledges[i].x, by = man->ledges[i].y, bw = man->ledges[i].w, bh = man->ledges[i].h;
 
             // kolla [i] för ledges och fiende
@@ -318,7 +331,7 @@ void collisionDetect(Player *man, int *direct, int *moved, int *type)
                 }
                 // ladda enemies istället för ledges
                 if(man->enemies[i].alive)
-                bx = man->enemies[i].dstRect.x, by = man->enemies[i].dstRect.y, bw = man->enemies[i].dstRect.w, bh = man->enemies[i].dstRect.h;
+                    bx = man->enemies[i].dstRect.x, by = man->enemies[i].dstRect.y, bw = man->enemies[i].dstRect.w, bh = man->enemies[i].dstRect.h;
                 bpe++;
             }
             bpe = 0;
@@ -328,8 +341,11 @@ void collisionDetect(Player *man, int *direct, int *moved, int *type)
     else if (*direct < 0)
     {
         int i, bpe = 0;
+        // sparar brädden och höjden av karaktärerna
         int mw = 64, mh = 64;
+        // sparar var mitten av karaktärerna finns på spelplanen
         int mx = man->x+mw/2, my = man->y+mh/2;
+        // sparar var mitten av karaktärerna fanns på spelplanen innan blinken användes
         int ox = man->x1+mw/2, oy = man->y1+mh/2;
 
         // spelaren kan inte blinka utanför kartan
@@ -345,7 +361,7 @@ void collisionDetect(Player *man, int *direct, int *moved, int *type)
         // check for collision with any ledges and enemies
         for (i = 0; i < 6; i++)
         {
-            // ladda ledges
+            // ladda ledges (mitten av ledges)
             int bw = man->ledges[i].w, bh = man->ledges[i].h;
             int bx = man->ledges[i].x+bw/2, by = man->ledges[i].y+bh/2;
 
@@ -409,8 +425,6 @@ void collisionDetect(Player *man, int *direct, int *moved, int *type)
                     bw = man->enemies[i].dstRect.w, bh = man->enemies[i].dstRect.h;
                     bx = man->enemies[i].dstRect.x+bw/2, by = man->enemies[i].dstRect.y+bh/2;
                 }
-
-
                 bpe++;
             }
             bpe = 0;
@@ -418,6 +432,7 @@ void collisionDetect(Player *man, int *direct, int *moved, int *type)
     }
 }
 
+/***** spelarens skott startar från karaktärens vapen *****/
 void checkRunningDirection(Player *man, int *shotX, int *shotY)
 {
     // torgny
@@ -522,6 +537,7 @@ void checkRunningDirection(Player *man, int *shotX, int *shotY)
     }
 }
 
+/***** fienders skott startar från karaktärernas vapen *****/
 void checkRunningEnemyDirection(Player *man, int *bulletX, int *bulletY, int id)
 {
     // torgny
@@ -626,7 +642,8 @@ void checkRunningEnemyDirection(Player *man, int *bulletX, int *bulletY, int id)
     }
 }
 
-void doRender(Player *man,Bullet b[]) //, Enemy *enemies
+/***** ritar allting på spelplanen *****/
+void doRender(Player *man,Bullet b[])
 {
     int i,j;
     //set the drawing color to blue
@@ -719,7 +736,7 @@ void doRender(Player *man,Bullet b[]) //, Enemy *enemies
 //    SDL_DestroyTexture(man->scoreBackground);
 //    SDL_DestroyTexture(man->bullet);
 }
-
+/***** spelaren spawnar på en slupmässig plats på spelplanen *****/
 void respawn(Player *man)
 {
     int spawn = rand()%9;
