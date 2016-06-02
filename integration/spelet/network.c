@@ -164,22 +164,22 @@ void recv_data(Player *man, Network *client,int *done,Bullet b[])
 
                 if(spritePick==1)
                 {
-                    image = IMG_Load("spriteTorg.png");
+                    image = IMG_Load("pictures/spriteTorg.png");
                     man->enemies[enemyid].sprite = 1;
                 }
                 else if(spritePick==2)
                 {
-                    image = IMG_Load("spriteRussia.png");
+                    image = IMG_Load("pictures/spriteRussia.png");
                     man->enemies[enemyid].sprite = 2;
                 }
                 else if(spritePick==3)
                 {
-                    image = IMG_Load("spriteMurica.png");
+                    image = IMG_Load("pictures/spriteMurica.png");
                     man->enemies[enemyid].sprite = 3;
                 }
                 else
                 {
-                    image = IMG_Load("spriteChina.png");
+                    image = IMG_Load("pictures/spriteChina.png");
                     man->enemies[enemyid].sprite = 4;
                 }
 
@@ -188,22 +188,22 @@ void recv_data(Player *man, Network *client,int *done,Bullet b[])
             {
                 if(spritePick==1)
                 {
-                    image = IMG_Load("spriteTorg.PNG");
+                    image = IMG_Load("pictures/spriteTorg.PNG");
                     man->enemies[enemyid].sprite = 1;
                 }
                 else if(spritePick==2)
                 {
-                    image = IMG_Load("spriteRussia.PNG");
+                    image = IMG_Load("pictures/spriteRussia.PNG");
                     man->enemies[enemyid].sprite = 2;
                 }
                 else if(spritePick==3)
                 {
-                    image = IMG_Load("spriteMurica.PNG");
+                    image = IMG_Load("pictures/spriteMurica.PNG");
                     man->enemies[enemyid].sprite = 3;
                 }
                 else
                 {
-                    image = IMG_Load("spriteChina.PNG");
+                    image = IMG_Load("pictures/spriteChina.PNG");
                     man->enemies[enemyid].sprite = 4;
                 }
             }

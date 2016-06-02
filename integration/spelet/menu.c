@@ -1,11 +1,11 @@
 #include "definition.h"
 
-
+/***** laddar in bilder, skapar text till scoreboard och cd *****/
 void initMenu(Menu *menu,Player *man)
 {
-
     SDL_Init(SDL_INIT_EVERYTHING);
 
+    // skapar spelfönstret, 1024x768
     program.window = SDL_CreateWindow("Game Window",                     // window title
                                       SDL_WINDOWPOS_UNDEFINED,           // initial x position
                                       SDL_WINDOWPOS_UNDEFINED,           // initial y position
@@ -45,6 +45,7 @@ void initMenu(Menu *menu,Player *man)
     man->arial = TTF_OpenFont("arialbd.ttf", 48);
     man->scoreText = (char*)malloc(100);
 
+    // text för scoreboard
     SDL_Surface* surfaceMessage;
     TTF_Font* arial = TTF_OpenFont("arialbd.ttf", 48);
     SDL_Color black = {0, 0, 0};
@@ -52,13 +53,14 @@ void initMenu(Menu *menu,Player *man)
     man->scoreHead = SDL_CreateTextureFromSurface(program.renderer,surfaceMessage);
     SDL_FreeSurface(surfaceMessage);
 
+    // text för cooldown av blink
     SDL_Surface* cdtext;
     cdtext = TTF_RenderText_Blended(arial, "Teleport cooldown", black);
     man->cdText = SDL_CreateTextureFromSurface(program.renderer,cdtext);
     SDL_FreeSurface(cdtext);
 }
 
-
+/***** skapar introt till spelet *****/
 void intro()
 {
     TTF_Font* Sans = TTF_OpenFont("BlackOpsOne-Regular.ttf", 24);
@@ -131,9 +133,9 @@ void intro()
      SDL_Delay(20);
      }
     TTF_CloseFont(Sans);
-
 }
 
+/***** hjälpmenyn som visar hur man spelar *****/
 void helpMenu()
 {
     SDL_Event e;
@@ -172,6 +174,7 @@ void helpMenu()
     return;
 }
 
+/***** låter spelaren använda menyn *****/
 int handleMenu(int *exit)
 {
     SDL_Event e;
@@ -184,19 +187,12 @@ int handleMenu(int *exit)
         while(SDL_PollEvent(&e)!=0)
         {
             SDL_GetMouseState(&x, &y);
-            //printf("x=%d \ny=%d\n", x, y);
             //Stäng fönstret & avsluta SDL om användaren klickar på X-rutan på fönstret
             if(e.type==SDL_QUIT)
             {
                 quit=1;
                 *exit = 1;
             }
-            //Stäng fönstret & avsluta SDL om användaren trycker på ESC-knappen på tangentbordet
-            // else if(e.key.keysym.sym==SDLK_ESCAPE)
-            //{
-            //  quit=1;
-            //*exit = 1;
-            //}
             //Gå till menyn "Choose Character" om användaren trycker på "Play Game"
             else if(x>226 && x<728 && y>275 && y<410 && e.type==SDL_MOUSEBUTTONDOWN)
             {
@@ -207,7 +203,6 @@ int handleMenu(int *exit)
                     pickCharacter = 1;
                     // chooseCharacter(); //Går till funktionen för "Choose Character"
                 }
-
             }
             //Stäng fönstret & avsluta SDL om användaren trycker på "Exit"
             else if(x>226 && x<728 && y>432 && y<558 && e.type==SDL_MOUSEBUTTONDOWN)
@@ -227,7 +222,6 @@ int handleMenu(int *exit)
                 }
             }
         }
-
     }
     return pickCharacter;
 }

@@ -108,7 +108,7 @@ int processEvents(Player *man,Bullet b[],int *moved,int *type,int *direct,Networ
     }
 
     const Uint8 *state = SDL_GetKeyboardState(NULL);
-    if((state[SDL_SCANCODE_LEFT] || state[SDL_SCANCODE_A]) && man->alive)
+    if((state[SDL_SCANCODE_LEFT] || state[SDL_SCANCODE_A]) && man->alive && man->gameStarted)
     {
         man->x = man->x - (200*(man->deltaTimeS));
         *moved = 1;
@@ -125,7 +125,7 @@ int processEvents(Player *man,Bullet b[],int *moved,int *type,int *direct,Networ
         if(man->x < 0)
             man->x = 0;
     }
-    if((state[SDL_SCANCODE_RIGHT] || state[SDL_SCANCODE_D]) && man->alive)
+    if((state[SDL_SCANCODE_RIGHT] || state[SDL_SCANCODE_D]) && man->alive && man->gameStarted)
     {
         man->x = man->x + (200*(man->deltaTimeS));
 
@@ -144,7 +144,7 @@ int processEvents(Player *man,Bullet b[],int *moved,int *type,int *direct,Networ
             man->x = 960;
 
     }
-    if((state[SDL_SCANCODE_UP] || state[SDL_SCANCODE_W]) && man->alive)
+    if((state[SDL_SCANCODE_UP] || state[SDL_SCANCODE_W]) && man->alive && man->gameStarted)
     {
         man->y = man->y - (200*(man->deltaTimeS));
         *moved = 1;
@@ -161,7 +161,7 @@ int processEvents(Player *man,Bullet b[],int *moved,int *type,int *direct,Networ
         if(man->y<0)
             man->y = 0;
     }
-    if((state[SDL_SCANCODE_DOWN] || state[SDL_SCANCODE_S]) && man->alive)
+    if((state[SDL_SCANCODE_DOWN] || state[SDL_SCANCODE_S]) && man->alive && man->gameStarted)
     {
         man->y = man->y + (200*(man->deltaTimeS));
         *moved = 1;
@@ -187,7 +187,7 @@ int processEvents(Player *man,Bullet b[],int *moved,int *type,int *direct,Networ
     }
 
     /***** när spelaren klickar på en musknapp för att skjuta *****/
-    if((SDL_GetMouseState(NULL,NULL) &&SDL_BUTTON_LEFT) && man->alive && !man->justShot)
+    if((SDL_GetMouseState(NULL,NULL) &&SDL_BUTTON_LEFT) && man->alive && !man->justShot && man->gameStarted)
     {
         int bulletNo,shotX,shotY;
         checkRunningDirection(&*man, &shotX, &shotY);
@@ -208,7 +208,7 @@ int processEvents(Player *man,Bullet b[],int *moved,int *type,int *direct,Networ
     }
     checkCd(&*man);
     /***** när spelaren använder blink *****/
-    if(state[SDL_SCANCODE_SPACE] && man->alive)
+    if(state[SDL_SCANCODE_SPACE] && man->alive && man->gameStarted)
     {
         if (man->spellReady == 0 && *direct <= 0)
             *direct = -1;
@@ -255,11 +255,11 @@ int processEvents(Player *man,Bullet b[],int *moved,int *type,int *direct,Networ
 /***** cooldown för blink *****/
 void checkCd(Player *man)
 {
-    // +124 och man->blinkRect.w+=2 bestämmer CD för blink
+    // +62 och man->blinkRect.w+=2 bestämmer CD för blink
     man->currentTime = SDL_GetTicks();
-    if (man->currentTime > man->cdTime+124 && man->blinkRect.w < 300)
+    if (man->currentTime > man->cdTime+62 && man->blinkRect.w < 300)
     {
-        man->blinkRect.w += 4;
+        man->blinkRect.w += 2;
         man->cdTime = man->currentTime;
     }
     else if (man->blinkRect.w >= 300)
@@ -268,8 +268,8 @@ void checkCd(Player *man)
     }
 }
 
-/***** kollisionsdetektion när spelaren rört sig eller använts blink *****/
-void collisionDetect(Player *man, int *direct, int *moved, int *type)
+/***** kollisionsdetektion när spelaren rört sig eller använt blink *****/
+void collisionDetect(Player *man, int *direct)
 {
     // collision när man går (wasd)
     if (*direct > 0)
@@ -370,50 +370,28 @@ void collisionDetect(Player *man, int *direct, int *moved, int *type)
                     // höger sida
                     if (ox >= bx)
                     {
+                        // höger
                         if (abs(bx-ox) > abs(by-oy))
-                        {
                             man->x = bx+bw/2;
-                            *moved = 0;
-                            *type = 0;
-                        }
                         // över
                         else if (abs(oy-mh/2) < abs(by-bh/2))
-                        {
                             man->y = by-bw/2-mh-14;
-                            *moved = 0;
-                            *type = 0;
-                        }
                         // under
                         else
-                        {
                             man->y = by+bh/2;
-                            *moved = 0;
-                            *type = 0;
-                        }
                     }
                     // vänster sida
                     else if (ox <= bx)
                     {
+                        // vänster
                         if (abs(bx-ox) > abs(by-oy))
-                        {
                             man->x = bx-bw/2-mw;
-                            *moved = 0;
-                            *type = 0;
-                        }
                         // över
                         else if (abs(oy-mh/2) < abs(by-bh/2))
-                        {
                             man->y = by-bw/2-mh-14;
-                            *moved = 0;
-                            *type = 0;
-                        }
                         // under
                         else
-                        {
                             man->y = by+bh/2;
-                            *moved = 0;
-                            *type = 0;
-                        }
                     }
                 }
                 // ladda enemies istället för ledges
