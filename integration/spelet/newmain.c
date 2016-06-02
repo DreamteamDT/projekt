@@ -3,6 +3,8 @@
 extern void initSounds(Player *man);
 extern void intro(void);
 
+/***** global = en timer som hindrar spelaren från att skjuta massa skott samtidigt,
+       med andra ord en pytteliten cooldown när man skjuter *****/
 int global = 0;
 
 int main(int argc, char *argv[])
@@ -207,7 +209,7 @@ int main(int argc, char *argv[])
     SDLNet_Quit();
     Quit();
 
-    // Close and destroy the window
+
 
     return 0;
 }

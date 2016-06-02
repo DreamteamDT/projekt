@@ -1,6 +1,6 @@
 #include "definition.h"
 
-/** LÄSER IN HELA STRÄNGEN **/
+/***** läser in hela strängen *****/
 int uncomplete_string(char tmp[])
 {
     int i=0;
@@ -13,6 +13,7 @@ int uncomplete_string(char tmp[])
     return 1;
 }
 
+/***** skapar förbindelse med servern *****/
 int networkInit(Network *client,Player *man,char *ipaddress)
 {
     int type;
@@ -76,7 +77,8 @@ int networkInit(Network *client,Player *man,char *ipaddress)
     return 1;
 }
 
-void send_data(Player *man,Network *client,int type)/** SKICKA DATA **/
+/***** skickar data *****/
+void send_data(Player *man,Network *client,int type)
 {
     char tmp[128];
     int size,len;
@@ -118,7 +120,8 @@ void send_data(Player *man,Network *client,int type)/** SKICKA DATA **/
     }
 }
 
-void sendBullet(Player man,Network client) /** SKICKA BULLET NÄR MAN SKJUTER **/
+/***** skicka bullet när man skjuter *****/
+void sendBullet(Player man,Network client)
 {
     int type = 8;
     sprintf(client.sendpack->data,"%d %d %d %d %d %d %d",
@@ -126,8 +129,8 @@ void sendBullet(Player man,Network client) /** SKICKA BULLET NÄR MAN SKJUTER **/
     SDLNet_UDP_Send(client.udpsock,-1,client.sendpack);
 }
 
-
-void recv_data(Player *man, Network *client,int *done,Bullet b[]) /** LÄSER IN DATA **/
+/***** tar emot data från servern *****/
+void recv_data(Player *man, Network *client,int *done,Bullet b[])
 {
 
     int type, enemyid,enemySX,spritePick,hitid,bulletX,bulletY;
@@ -135,12 +138,14 @@ void recv_data(Player *man, Network *client,int *done,Bullet b[]) /** LÄSER IN D
     float enemyDX,enemyDY;
     int blinkX,blinkY,bulletid;
     int kills,deaths;
-    while(SDLNet_CheckSockets(client->udpset,0)>0) /** KOLLAR UDP-SOCKET OM DATA INKOMMER **/
+
+    /***** kollar UDP-socket om data inkommer *****/
+    while(SDLNet_CheckSockets(client->udpset,0)>0)
     {
         SDLNet_UDP_Recv(client->udpsock,client->rcvpack);
         sscanf(client->rcvpack->data,"%d %d",&type,&enemyid);
 
-        /** OM NY FIENDE **/
+        /***** om ny fiende *****/
         if (!man->enemies[enemyid].exists && (man->id!=enemyid) && type!=12 &&type!=10)
         {
             SDL_DestroyTexture(man->enemies[enemyid].texture);
@@ -197,6 +202,7 @@ void recv_data(Player *man, Network *client,int *done,Bullet b[]) /** LÄSER IN D
                 }
             }
 
+            /***** skapar initiala värden för ny fiende *****/
             man->enemies[enemyid].texture = SDL_CreateTextureFromSurface(program.renderer,image);
             SDL_FreeSurface(image);
             man->enemies[enemyid].srcRect.x = enemySX;
@@ -215,7 +221,8 @@ void recv_data(Player *man, Network *client,int *done,Bullet b[]) /** LÄSER IN D
             }
 
         }
-        /** TYP 2 = FIENDE SKICKAR KORDINATER VID FÖRFLYTTNING **/
+
+        /***** typ 2 = fiende skickar kordinater vid förflyttning *****/
         else if (type == 2 && (SDL_GetTicks() - man->enemies[enemyid].justDied > 1000))
         {
             sscanf(client->rcvpack->data,"%d %d %f %f %d %d",
@@ -258,7 +265,6 @@ void recv_data(Player *man, Network *client,int *done,Bullet b[]) /** LÄSER IN D
         else if(type == 10)
         {
             sscanf(client->rcvpack->data,"%d %d %d %d",&type,&enemyid,&kills,&deaths);
-            //printf("%d %d %d %d\n",type,enemyid,kills,deaths);
             if(enemyid == man->id)
             {
                 man->kills = kills;
@@ -272,6 +278,8 @@ void recv_data(Player *man, Network *client,int *done,Bullet b[]) /** LÄSER IN D
             generateScoreboard(&*man);
 
         }
+
+        /***** round time *****/
         else if (type == 12)
         {
             sscanf(client->rcvpack->data,"%d %d %d",
@@ -282,7 +290,8 @@ void recv_data(Player *man, Network *client,int *done,Bullet b[]) /** LÄSER IN D
         }
     }
 
-    while(SDLNet_CheckSockets(client->tcpset,0)>0) /** KOLLAR TCP-SOCKET OM DATA INKOMMER **/
+    /***** kollar TCP-socket om data inkommer *****/
+    while(SDLNet_CheckSockets(client->tcpset,0)>0)
     {
         printf("incoming data on tcp socket\n");
         int offset = 0;
