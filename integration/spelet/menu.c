@@ -1,11 +1,11 @@
 #include "definition.h"
 
-
+/***** laddar in bilder, skapar text till scoreboard och cd *****/
 void initMenu(Menu *menu,Player *man)
 {
-
     SDL_Init(SDL_INIT_EVERYTHING);
 
+    // skapar spelfönstret, 1024x768
     program.window = SDL_CreateWindow("Game Window",                     // window title
                                       SDL_WINDOWPOS_UNDEFINED,           // initial x position
                                       SDL_WINDOWPOS_UNDEFINED,           // initial y position
@@ -45,6 +45,7 @@ void initMenu(Menu *menu,Player *man)
     man->arial = TTF_OpenFont("arialbd.ttf", 48);
     man->scoreText = (char*)malloc(100);
 
+    // text för scoreboard
     SDL_Surface* surfaceMessage;
     TTF_Font* arial = TTF_OpenFont("arialbd.ttf", 48);
     SDL_Color black = {0, 0, 0};
@@ -52,31 +53,31 @@ void initMenu(Menu *menu,Player *man)
     man->scoreHead = SDL_CreateTextureFromSurface(program.renderer,surfaceMessage);
     SDL_FreeSurface(surfaceMessage);
 
+    // text för cooldown av blink
     SDL_Surface* cdtext;
     cdtext = TTF_RenderText_Blended(arial, "Teleport cooldown", black);
     man->cdText = SDL_CreateTextureFromSurface(program.renderer,cdtext);
     SDL_FreeSurface(cdtext);
 }
 
-
+/***** skapar introt till spelet *****/
 void intro()
 {
-    TTF_Font* Sans = TTF_OpenFont("BlackOpsOne-Regular.ttf", 24);
+    TTF_Font* Tough = TTF_OpenFont("BlackOpsOne-Regular.ttf", 24);
 
-    SDL_Color White = {255, 255, 255};  // this is the color in rgb format, maxing out all would give you the color white, and it will be your text's color
+    SDL_Color White = {255, 255, 255};
 
-    SDL_Surface* surfaceMessage = TTF_RenderText_Solid(Sans, "Give War A Chance", White); // as TTF_RenderText_Solid could only be used on SDL_Surface then you have to create the surface first
-    SDL_Surface* subtitle = TTF_RenderText_Solid(Sans,"Press any key to continue",White);
+    SDL_Surface* surfaceMessage = TTF_RenderText_Solid(Tough, "Give War A Chance", White);
+    SDL_Surface* subtitle = TTF_RenderText_Solid(Tough,"Press any key to continue",White);
 
-    SDL_Texture* Message = SDL_CreateTextureFromSurface(program.renderer, surfaceMessage); //now you can convert it into a texture
+    SDL_Texture* Message = SDL_CreateTextureFromSurface(program.renderer, surfaceMessage);
     SDL_Texture* Submessage = SDL_CreateTextureFromSurface(program.renderer,subtitle);
     int *i;
-    SDL_Rect Message_rect; //create a rect
+    SDL_Rect Message_rect;
     SDL_Rect mini;
-    //Message_rect.x = 1024/2-125;  //controls the rect's x coordinate
-    Message_rect.y = 768/2; // controls the rect's y coordinte
-    Message_rect.w = 300; // controls the width of the rect
-    Message_rect.h = 100; // controls the height of the rect
+    Message_rect.y = 768/2;
+    Message_rect.w = 300;
+    Message_rect.h = 100;
     Message_rect.x =0;
 
 
@@ -92,7 +93,7 @@ void intro()
     }
     else
     {
-       Mix_LoadMUS("Soundeffects/ATeam_theme5.mp3");
+       Mix_LoadMUS("Soundeffects/ATeam_theme5.MP3");
     }
     Mix_PlayMusic(introMusic, -1);
 
@@ -115,10 +116,8 @@ void intro()
           quit = true;
        }
      }
-      //set the drawing color to blue
     SDL_SetRenderDrawColor(program.renderer, 0, 0, 255, 255);
 
-    //Clear the screen (to blue)
     SDL_RenderClear(program.renderer);
      if(Message_rect.x != 1024/2-125)
      {
@@ -130,10 +129,10 @@ void intro()
      SDL_RenderPresent(program.renderer);
      SDL_Delay(20);
      }
-    TTF_CloseFont(Sans);
-
+    TTF_CloseFont(Tough);
 }
 
+/***** hjälpmenyn som visar hur man spelar *****/
 void helpMenu()
 {
     SDL_Event e;
@@ -172,6 +171,7 @@ void helpMenu()
     return;
 }
 
+/***** låter spelaren använda menyn *****/
 int handleMenu(int *exit)
 {
     SDL_Event e;
@@ -184,19 +184,12 @@ int handleMenu(int *exit)
         while(SDL_PollEvent(&e)!=0)
         {
             SDL_GetMouseState(&x, &y);
-            //printf("x=%d \ny=%d\n", x, y);
             //Stäng fönstret & avsluta SDL om användaren klickar på X-rutan på fönstret
             if(e.type==SDL_QUIT)
             {
                 quit=1;
                 *exit = 1;
             }
-            //Stäng fönstret & avsluta SDL om användaren trycker på ESC-knappen på tangentbordet
-            // else if(e.key.keysym.sym==SDLK_ESCAPE)
-            //{
-            //  quit=1;
-            //*exit = 1;
-            //}
             //Gå till menyn "Choose Character" om användaren trycker på "Play Game"
             else if(x>226 && x<728 && y>275 && y<410 && e.type==SDL_MOUSEBUTTONDOWN)
             {
@@ -207,7 +200,6 @@ int handleMenu(int *exit)
                     pickCharacter = 1;
                     // chooseCharacter(); //Går till funktionen för "Choose Character"
                 }
-
             }
             //Stäng fönstret & avsluta SDL om användaren trycker på "Exit"
             else if(x>226 && x<728 && y>432 && y<558 && e.type==SDL_MOUSEBUTTONDOWN)
@@ -227,7 +219,6 @@ int handleMenu(int *exit)
                 }
             }
         }
-
     }
     return pickCharacter;
 }

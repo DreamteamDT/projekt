@@ -106,7 +106,7 @@ int main(int argc, char *argv[])
                     updateEnemyBullet(&player);
                     updateLogic(&player,ammo);
                     if(player.alive)
-                        collisionDetect(&player, &direct, &moved, &type);
+                        collisionDetect(&player, &direct);
                     bulletGone(ammo,&player,&client);
 
                     if(moved && player.alive)

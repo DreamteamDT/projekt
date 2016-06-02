@@ -3,7 +3,7 @@
 
 
 
-
+/***** laddar in bilder för senare användning *****/
 void initPlayer(Player *player)
 {
     int i;
@@ -123,11 +123,11 @@ void initPlayer(Player *player)
     }
 }
 
+/***** skapar kollision hitbox för objekt på spelplanen,
+       ändra x och y värden för en annan spelplan        *****/
 void initLedges(Player *player)
 {
     int i;
-    //int x = 221;
-    //int y = 121;
     int x = 361;
     int y = 181;
     for (i = 0; i < 6; i++)
@@ -136,10 +136,6 @@ void initLedges(Player *player)
         player->ledges[i].h = 66;
         player->ledges[i].x = x;
         player->ledges[i].y = y;
-        /*player->ledges[i].w = 124;
-        player->ledges[i].h = 103;
-        player->ledges[i].x = x;
-        player->ledges[i].y = y;*/
         if (i == 0)
         {
             x = 207;
@@ -167,6 +163,7 @@ void initLedges(Player *player)
         }
     }
 
+    // gränsen av spelplanen
     x = 0;
     y = 0;
     player->ledges[6].w = 1024;
@@ -176,6 +173,7 @@ void initLedges(Player *player)
 
 }
 
+/***** baren för att se cooldown av blink *****/
 void initCd(Player *player)
 {
     SDL_Surface *timer;
@@ -198,6 +196,7 @@ void initCd(Player *player)
     player->blinkRect.h = 30;
 }
 
+/***** texture för skotten *****/
 SDL_Texture *initBullet()
 {
     SDL_Surface *image = IMG_Load("pictures/bullet.PNG");
@@ -206,6 +205,7 @@ SDL_Texture *initBullet()
     return texture;
 }
 
+/***** avslutar på ett säkert sätt *****/
 void Quit()
 {
     SDL_DestroyWindow(program.window);
@@ -213,5 +213,4 @@ void Quit()
 
     // Clean up
     SDL_Quit();
-
 }

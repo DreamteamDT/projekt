@@ -7,6 +7,7 @@ SDL_Texture *getBulletSprite()
 {
     return bullet.texture;
 }
+/**musklick 'aktiverar' skottet*/
 int loadAmmo(Bullet b[])
 {
     int i;
@@ -35,7 +36,7 @@ void shotgun(Player *p)
         }
     }
 }
-
+/**Tömma bullet struct**/
 
 void clearCartridge(Bullet a[])
 {
@@ -46,6 +47,8 @@ void clearCartridge(Bullet a[])
         memset(&a[i],0,sizeof(Bullet));
     }
 }
+/**funktionen tar spelarens pos. samt muspekarens pos. skapar längdvektor
+och sen bedömmer i vilken riktning ska projektilen färdas*/
 int addBullet(int x, int y,int dx, Bullet b[],int b1,int b2)
 {
     int i = loadAmmo(b);
@@ -65,7 +68,7 @@ int addBullet(int x, int y,int dx, Bullet b[],int b1,int b2)
     b[i].vector_unitY = (b[i].directionY) / b[i].v_length;
     return i;
 }
-
+/**Fiendet avfyra skott*/
 void addEnemyBullet(int x,int y,int dx,Bullet b[],int b1,int b2,int i)
 {
     b[i].x = x;
@@ -79,7 +82,7 @@ void addEnemyBullet(int x,int y,int dx,Bullet b[],int b1,int b2,int i)
     b[i].vector_unitY = (b[i].directionY) / b[i].v_length;
     b[i].active = 1;
 }
-
+/**Collision detektion för när fiendet träffas av ett skott*/
 void detectHit(Player *man,Bullet b[],Network *client)
 {
     int i,j;
@@ -107,7 +110,7 @@ void detectHit(Player *man,Bullet b[],Network *client)
             }
     }
 }
-
+/** 'döda' bullet för när det träffar kaktus **/
 void bulletGone(Bullet b[],Player *man,Network *client)
 {
     int i, j;

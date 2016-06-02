@@ -18,7 +18,7 @@ const int WINDOW_WIDTH = 640;
 const int WINDOW_HEIGHT = 480;
 const char* WINDOW_TITLE = "SDL Start";
 
-
+/** LÄSER IN HELA STRÄNGEN**/
 int uncomplete_string(char tmp[])
 {
     int i=0;
@@ -31,6 +31,7 @@ int uncomplete_string(char tmp[])
     return 1;
 }
 
+/** STRUCT FÖR ALLA CONNECTADE KLIENTER **/
 typedef struct
 {
     UDPpacket *p;
@@ -50,6 +51,7 @@ struct Program
     SDL_Renderer *renderer;
 };
 
+/** SKICKAR SPAWN POS TILL NYA SPELARE **/
 void getSpawn(int next,Player *player)
 {
     int i;
@@ -153,10 +155,9 @@ int main(int argc, char **argv)
     int running = 1;
     while(running)
     {
-        // Lägger till ny klient vid ny connection
+        /** KOLLAR IFALL EN NY KLIENT VILL ANSLUTA **/
         players[next].tcpsock = SDLNet_TCP_Accept(tcpsock);
-        //printf("test ");
-        if(players[next].tcpsock)
+        if(players[next].tcpsock) /** LÄGGER TILL NY KLIENT **/
         {
             if(playernum<maxPlayers)
             {
@@ -191,7 +192,7 @@ int main(int argc, char **argv)
                 SDLNet_TCP_Send(players[next].tcpsock,tmp,strlen(tmp)+1);
                 players[next].ip = *SDLNet_TCP_GetPeerAddress(players[next].tcpsock);
 
-                for(i=0; i<maxPlayers; i++) //Hittar ledig spot för nästa klient
+                for(i=0; i<maxPlayers; i++) /** HITTAR LEDIG SPOT FÖR NÄSTA KLIENT **/
                 {
                     if(!players[i].exists)
                     {
@@ -202,7 +203,7 @@ int main(int argc, char **argv)
                 playernum++;
 
             }
-            else
+            else /** OM SERVERN ÄR FULL **/
             {
                 type = 4;
                 sprintf(tmp,"%d %d",type,next);
@@ -213,7 +214,7 @@ int main(int argc, char **argv)
 
         }
 
-        //check for incoming data
+        /** KOLLA INKOMMANDE DATA PÅ UDP-SOCKETEN **/
         while(SDLNet_CheckSockets(udpset,0)>0)
         {
             SDLNet_UDP_Recv(rcvSock,rcvPack);
@@ -294,17 +295,16 @@ int main(int argc, char **argv)
                 }
             }
         }
-        while(SDLNet_CheckSockets(tcpset,0)>0)
+        while(SDLNet_CheckSockets(tcpset,0)>0) /** KOLLA OM DATA KOMMER IN PÅ NÅGON AV TCP-SOCKETS **/
         {
             for(i=0; i<maxPlayers; i++)
             {
                 if(players[i].exists)
-                    if(SDLNet_SocketReady(players[i].tcpsock))
+                    if(SDLNet_SocketReady(players[i].tcpsock)) /** KOLLAR VILKEN AV SOCKETARNA SOM DATA KOMMER IN PÅ **/
                     {
-
-                        //	  printf("Inkommande paket\n");
                         offset = 0;
                         max = 0;
+
                         do
                         {
                             if(!(offset+=SDLNet_TCP_Recv(players[i].tcpsock,tmp+offset,1024)))
@@ -315,7 +315,8 @@ int main(int argc, char **argv)
                             printf("tar emot data\n");
                             max++;
                         }
-                        while(uncomplete_string(tmp) && max<20);
+                        while(uncomplete_string(tmp) && max<20); /** LÄSER IN HELA STRÄNGEN SAMT KRASH DETECT (MAX 20)**/
+
                         sscanf(tmp,"%d %d",&type,&id);
                         printf("type: %d\n",type);
                         players[id].lastData = SDL_GetTicks();
@@ -324,7 +325,7 @@ int main(int argc, char **argv)
                             type = 3;
                             sprintf(tmp,"%d %d \n",type,i);
                         }
-                        if(type == 3)
+                        if(type == 3) /** SPELARE DISCONNECTAD **/
                         {
                             for(k=0; k<maxPlayers; k++)
                             {
@@ -388,7 +389,7 @@ int main(int argc, char **argv)
         {
             if(players[i].exists)
             {
-                if((SDL_GetTicks()-players[i].lastData > 60000)) /** KICK PLAYER IF AFK FOR >60 SECONDS **/
+                if((SDL_GetTicks()-players[i].lastData > 120000)) /** KICK PLAYER IF AFK FOR >120 SECONDS **/
                 {
                     type = 3;
                     sprintf(tmp,"%d %d \n",type,i);
@@ -463,7 +464,7 @@ int main(int argc, char **argv)
                 SDL_Delay(1000);
             }
         }
-        if(gameStarted)
+        if(gameStarted) /** TIMER **/
         {
             lastTime = SDL_GetTicks();
             timeDiff = lastTime - currentTime;

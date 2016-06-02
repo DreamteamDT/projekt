@@ -6,10 +6,10 @@
 //void checkCd(Player *man);
 
 
+/***** updaterar spelarens skotts position *****/
 void updateLogic(Player *p,Bullet b[])
 {
     int i;
-
     for(i=0; i<20; i++)
     {
         if(b[i].active == 1)
@@ -21,6 +21,7 @@ void updateLogic(Player *p,Bullet b[])
     global++;
 }
 
+/***** updaterar fienders skotts position *****/
 void updateEnemyBullet(Player *man)
 {
     int i,j;
@@ -38,6 +39,8 @@ void updateEnemyBullet(Player *man)
         }
     }
 }
+
+/***** Regestrerar spelarens handlingar *****/
 int processEvents(Player *man,Bullet b[],int *moved,int *type,int *direct,Network *client)
 {
     unsigned int spellOne, spellOne_False=0;
@@ -52,6 +55,8 @@ int processEvents(Player *man,Bullet b[],int *moved,int *type,int *direct,Networ
         man->thinkTime = 0;
     }
 
+    /***** Spelaren kan stänga av spelet på ett säkert sätt,
+           sammlar information när spelaren klickar på musknappen *****/
     while(SDL_PollEvent(&event))
     {
         switch(event.type)
@@ -180,6 +185,8 @@ int processEvents(Player *man,Bullet b[],int *moved,int *type,int *direct,Networ
         *direct = -1;
         man->blinked = 0;
     }
+
+    /***** när spelaren klickar på en musknapp för att skjuta *****/
     if((SDL_GetMouseState(NULL,NULL) &&SDL_BUTTON_LEFT) && man->alive && !man->justShot && man->gameStarted)
     {
         int bulletNo,shotX,shotY;
@@ -200,7 +207,8 @@ int processEvents(Player *man,Bullet b[],int *moved,int *type,int *direct,Networ
         }
     }
     checkCd(&*man);
-    if(state[SDL_SCANCODE_SPACE] && man->alive && man->gameStarted) // kan inte ha  && man->spellReady här
+    /***** när spelaren använder blink *****/
+    if(state[SDL_SCANCODE_SPACE] && man->alive && man->gameStarted)
     {
         if (man->spellReady == 0 && *direct <= 0)
             *direct = -1;
@@ -219,12 +227,11 @@ int processEvents(Player *man,Bullet b[],int *moved,int *type,int *direct,Networ
             direction.y = bY-man->y;
             unit_vector.x = (direction.x)/ v_length;
             unit_vector.y = (direction.y)/ v_length;
-            //man->x+=(unit_vector.x*100)-16;
-            //man->y+=(unit_vector.y*100)-16;
             man->x+=(unit_vector.x*200);
             man->y+=(unit_vector.y*200);
             *moved = 1;
             *type = 2;
+            // variabler för kollisiondetect
             *direct = -1;
             man->blinkRect.w = 0;
             man->spellReady = 0;
@@ -242,17 +249,17 @@ int processEvents(Player *man,Bullet b[],int *moved,int *type,int *direct,Networ
 
         }
     }
-    //printf("Thinktime : %d \n",man->thinkTime);
     return done;
 }
 
+/***** cooldown för blink *****/
 void checkCd(Player *man)
 {
-    // +124 och man->blinkRect.w+=2 bestämmer CD för blink
+    // +62 och man->blinkRect.w+=2 bestämmer CD för blink
     man->currentTime = SDL_GetTicks();
-    if (man->currentTime > man->cdTime+124 && man->blinkRect.w < 300)
+    if (man->currentTime > man->cdTime+62 && man->blinkRect.w < 300)
     {
-        man->blinkRect.w += 4;
+        man->blinkRect.w += 2;
         man->cdTime = man->currentTime;
     }
     else if (man->blinkRect.w >= 300)
@@ -261,7 +268,8 @@ void checkCd(Player *man)
     }
 }
 
-void collisionDetect(Player *man, int *direct, int *moved, int *type)
+/***** kollisionsdetektion när spelaren rört sig eller använt blink *****/
+void collisionDetect(Player *man, int *direct)
 {
     // collision när man går (wasd)
     if (*direct > 0)
@@ -270,10 +278,12 @@ void collisionDetect(Player *man, int *direct, int *moved, int *type)
         // check for collision with any ledges and enemies
         for (i = 0; i < 7; i++)
         {
+            // sparar brädden och höjden av karaktärerna
             int mw = 64, mh = 64;
+            // sparar var karaktärerna finns på spelplanen
             int mx = man->x, my = man->y;
 
-            // ladda ledges
+            // ladda ledges (kaktusarna)
             int bx = man->ledges[i].x, by = man->ledges[i].y, bw = man->ledges[i].w, bh = man->ledges[i].h;
 
             // kolla [i] för ledges och fiende
@@ -318,7 +328,7 @@ void collisionDetect(Player *man, int *direct, int *moved, int *type)
                 }
                 // ladda enemies istället för ledges
                 if(man->enemies[i].alive)
-                bx = man->enemies[i].dstRect.x, by = man->enemies[i].dstRect.y, bw = man->enemies[i].dstRect.w, bh = man->enemies[i].dstRect.h;
+                    bx = man->enemies[i].dstRect.x, by = man->enemies[i].dstRect.y, bw = man->enemies[i].dstRect.w, bh = man->enemies[i].dstRect.h;
                 bpe++;
             }
             bpe = 0;
@@ -328,8 +338,11 @@ void collisionDetect(Player *man, int *direct, int *moved, int *type)
     else if (*direct < 0)
     {
         int i, bpe = 0;
+        // sparar brädden och höjden av karaktärerna
         int mw = 64, mh = 64;
+        // sparar var mitten av karaktärerna finns på spelplanen
         int mx = man->x+mw/2, my = man->y+mh/2;
+        // sparar var mitten av karaktärerna fanns på spelplanen innan blinken användes
         int ox = man->x1+mw/2, oy = man->y1+mh/2;
 
         // spelaren kan inte blinka utanför kartan
@@ -345,7 +358,7 @@ void collisionDetect(Player *man, int *direct, int *moved, int *type)
         // check for collision with any ledges and enemies
         for (i = 0; i < 6; i++)
         {
-            // ladda ledges
+            // ladda ledges (mitten av ledges)
             int bw = man->ledges[i].w, bh = man->ledges[i].h;
             int bx = man->ledges[i].x+bw/2, by = man->ledges[i].y+bh/2;
 
@@ -357,50 +370,28 @@ void collisionDetect(Player *man, int *direct, int *moved, int *type)
                     // höger sida
                     if (ox >= bx)
                     {
+                        // höger
                         if (abs(bx-ox) > abs(by-oy))
-                        {
                             man->x = bx+bw/2;
-                            *moved = 0;
-                            *type = 0;
-                        }
                         // över
                         else if (abs(oy-mh/2) < abs(by-bh/2))
-                        {
                             man->y = by-bw/2-mh-14;
-                            *moved = 0;
-                            *type = 0;
-                        }
                         // under
                         else
-                        {
                             man->y = by+bh/2;
-                            *moved = 0;
-                            *type = 0;
-                        }
                     }
                     // vänster sida
                     else if (ox <= bx)
                     {
+                        // vänster
                         if (abs(bx-ox) > abs(by-oy))
-                        {
                             man->x = bx-bw/2-mw;
-                            *moved = 0;
-                            *type = 0;
-                        }
                         // över
                         else if (abs(oy-mh/2) < abs(by-bh/2))
-                        {
                             man->y = by-bw/2-mh-14;
-                            *moved = 0;
-                            *type = 0;
-                        }
                         // under
                         else
-                        {
                             man->y = by+bh/2;
-                            *moved = 0;
-                            *type = 0;
-                        }
                     }
                 }
                 // ladda enemies istället för ledges
@@ -409,8 +400,6 @@ void collisionDetect(Player *man, int *direct, int *moved, int *type)
                     bw = man->enemies[i].dstRect.w, bh = man->enemies[i].dstRect.h;
                     bx = man->enemies[i].dstRect.x+bw/2, by = man->enemies[i].dstRect.y+bh/2;
                 }
-
-
                 bpe++;
             }
             bpe = 0;
@@ -418,6 +407,7 @@ void collisionDetect(Player *man, int *direct, int *moved, int *type)
     }
 }
 
+/***** spelarens skott startar från karaktärens vapen *****/
 void checkRunningDirection(Player *man, int *shotX, int *shotY)
 {
     // torgny
@@ -522,6 +512,7 @@ void checkRunningDirection(Player *man, int *shotX, int *shotY)
     }
 }
 
+/***** fienders skott startar från karaktärernas vapen *****/
 void checkRunningEnemyDirection(Player *man, int *bulletX, int *bulletY, int id)
 {
     // torgny
@@ -626,39 +617,29 @@ void checkRunningEnemyDirection(Player *man, int *bulletX, int *bulletY, int id)
     }
 }
 
-void doRender(Player *man,Bullet b[]) //, Enemy *enemies
+/***** ritar allting på spelplanen *****/
+void doRender(Player *man,Bullet b[])
 {
     int i,j;
-    //set the drawing color to blue
+    // set the drawing color to blue
     SDL_SetRenderDrawColor(program.renderer, 0, 0, 255, 255);
-    //Clear the screen (to blue)
+    // Clear the screen (to blue)
 
     SDL_Rect bg = {0,0,1024,768};
-    //SDL_Rect scoreBg = {0,630,1024,138};
 
     SDL_RenderCopy(program.renderer,man->background,NULL,&bg);
 
-
-
-    //SDL_Rect rectE = {enemies->dstRect.x, enemies->dstRect.y, 32, 32};
-    //SDL_Rect srcE = {enemies->srcRect.x, 0, 32, 32};
-
-    //SDL_RenderFillRect(program.renderer, &rect);
-
+    // ritar spelarens skott
     for(i=0; i<20; i++)
     {
         if(b[i].active == 1)
         {
-
-            SDL_Rect faggot = {b[i].x , b[i].y,8,8};
-            SDL_RenderCopy(program.renderer,man->bullet,NULL,&faggot);
-
-            // SDL_Rect faggot = {b[i].x , b[i].y,8,8 };
-            //  printf("faggot x: %d faggot y: %d\n",faggot.x,faggot.y);
-            // SDL_RenderCopyEx(program.renderer,man->bullet,NULL,&faggot,0,NULL,0);
-
+            SDL_Rect object = {b[i].x , b[i].y,8,8};
+            SDL_RenderCopy(program.renderer,man->bullet,NULL,&object);
         }
     }
+
+    // ritar fienders skott
     for(i=0; i<4; i++)
     {
         for(j=0; j<20; j++)
@@ -674,6 +655,7 @@ void doRender(Player *man,Bullet b[]) //, Enemy *enemies
         }
     }
 
+    // ritar spelare
     if(man->alive)
     {
         SDL_Rect rect = { man->x, man->y, 64, 64 };
@@ -682,6 +664,7 @@ void doRender(Player *man,Bullet b[]) //, Enemy *enemies
         SDL_RenderCopy(program.renderer,man->texture,&src,&rect);
     }
 
+    // ritar fiender
     for(i=0; i<4; i++)
     {
         if (man->enemies[i].exists && man->enemies[i].alive)
@@ -690,20 +673,21 @@ void doRender(Player *man,Bullet b[]) //, Enemy *enemies
             SDL_RenderCopyEx(program.renderer,man->enemies[i].texture, &man->enemies[i].srcRect, &man->enemies[i].dstRect, 0, NULL, 0);
         }
     }
+    // ritar scoreboard
     SDL_Rect scoreBg = {0,630,1024,138};
     SDL_RenderCopy(program.renderer,man->scoreBackground,NULL,&scoreBg);
-
-    // cd bar för blink
-    SDL_Rect blinkRec = {man->blinkRect.x, man->blinkRect.y, man->blinkRect.w, man->blinkRect.h};
-    SDL_RenderCopy(program.renderer,man->cdTimer,NULL,&blinkRec);
-
     SDL_Rect scoreHeadRect = {164,637,300,20};
     SDL_RenderCopy(program.renderer,man->scoreHead,NULL,&scoreHeadRect);
     SDL_RenderCopy(program.renderer,man->score,NULL,&man->scoreRect);
 
+    // ritar cd bar för blink
+    SDL_Rect blinkRec = {man->blinkRect.x, man->blinkRect.y, man->blinkRect.w, man->blinkRect.h};
+    SDL_RenderCopy(program.renderer,man->cdTimer,NULL,&blinkRec);
+
     SDL_Rect cdRect = {500,637,300,20};
     SDL_RenderCopy(program.renderer,man->cdText,NULL,&cdRect);
 
+    // ritar score
     for(i=0; i<4; i++)
     {
         if(man->enemies[i].exists)
@@ -712,14 +696,10 @@ void doRender(Player *man,Bullet b[]) //, Enemy *enemies
         }
     }
 
-
     SDL_RenderPresent(program.renderer);
-//    SDL_DestroyTexture(man->texture);
-//    SDL_DestroyTexture(man->background);
-//    SDL_DestroyTexture(man->scoreBackground);
-//    SDL_DestroyTexture(man->bullet);
 }
 
+/***** spelaren spawnar på en slupmässig plats på spelplanen *****/
 void respawn(Player *man)
 {
     int spawn = rand()%9;
@@ -728,15 +708,11 @@ void respawn(Player *man)
     {
         man->x = 70;
         man->y = 212;
-        //man->x = 113;
-        //man->y = 79;
     }
     else if(spawn == 1)
     {
         man->x = 942;
         man->y = 212;
-        //man->x = 909;
-        //man->y = 73;
     }
     else if(spawn == 2)
     {
