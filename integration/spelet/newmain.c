@@ -4,9 +4,9 @@ extern void initSounds(Player *man);
 extern void intro(void);
 
 int global = 0;
+
 int main(int argc, char *argv[])
 {
-
     int pickCharacter = 0,exit = 0,ingame = 0,connected, i,done = 0,timeDiff;
     int choice,newline,moved = 0,type,direct = 0,enterIPmenu,lastPrint=300000;
     unsigned int lastTime,currentTime;
@@ -22,7 +22,7 @@ int main(int argc, char *argv[])
     bullet.texture=initBullet();
     Bullet ammo[20];
 
-    TTF_Init();
+
 
     int spawnTimer=4;
     srand(time(NULL));
@@ -30,25 +30,28 @@ int main(int argc, char *argv[])
     connected = 1;
 
     /** INIT SOUNDS,PICTURES,TEXTURES ETC **/
+    TTF_Init();
     loadSounds(&player);
     initMenu(&menu,&player);
     initPick(&pick);
     initLedges(&player);
     initCd(&player);
     SDLNet_Init();
-
     intro();
-    while(!exit) ///**** MAIN MENU ****/
+
+    /**** MAIN MENU ****/
+    while(!exit)
     {
         if(LINUX)
             Mix_PlayMusic(player.sounds.backgroundLinux, -1);
         else
-            Mix_PlayMusic(player.sounds.backgroundSound,-1);
+            Mix_PlayMusic(player.sounds.backgroundSound, -1);
 
         displayMenu(menu);
         enterIPmenu = handleMenu(&exit);
 
-        while(enterIPmenu) /***** SKRIV IN IP ****/
+        /**** SKRIV IN IP ****/
+        while(enterIPmenu)
         {
             pickCharacter = enterIP(&player);
             SDL_StopTextInput();
@@ -69,7 +72,8 @@ int main(int argc, char *argv[])
             else
                 enterIPmenu = 0;
 
-            while(pickCharacter) /**** PICK CHARACTER ****/
+            /**** PICK CHARACTER ****/
+            while(pickCharacter)
             {
                 displayMenu(pick);
                 ingame = handlePick(&pickCharacter,&player);
@@ -84,9 +88,10 @@ int main(int argc, char *argv[])
                     send_data(&player,&client,12);
                 }
                 recv_data(&player,&client,&done,ammo);
-                while(ingame==1) /**** INGAME ****/
-                {
 
+                /**** INGAME ****/
+                while(ingame==1)
+                {
                     if(player.deltaTimeMs < 1)
                     {
                         frameStart = SDL_GetTicks();
@@ -100,8 +105,8 @@ int main(int argc, char *argv[])
                     direct = 0;
                     done = 0;
 
+                    // hanterar spelarens handlingar
                     done = processEvents(&player,ammo,&moved,&type,&direct,&client);
-
 
                     updateEnemyBullet(&player);
                     updateLogic(&player,ammo);
@@ -109,19 +114,24 @@ int main(int argc, char *argv[])
                         collisionDetect(&player, &direct);
                     bulletGone(ammo,&player,&client);
 
+                    // skickar data till servern
                     if(moved && player.alive)
                     {
                         send_data(&player,&client,type);
                         moved = 0;
                     }
 
+                    // tar emot data från servern
                     if (done != 1)
                         recv_data(&player,&client,&done,ammo);
 
-                    doRender(&player,ammo); //,&enemies[i]
+                    // ritar allting på spelplanen
+                    doRender(&player,ammo);
+
                     detectHit(&player,ammo,&client);
 
-                    if(!player.alive) /** RESPAWNING IN 4 SECONDS **/
+                    /** RESPAWNING IN 4 SECONDS **/
+                    if(!player.alive)
                     {
                         currentTime = SDL_GetTicks();
                         currentTime = currentTime/1000;
@@ -138,6 +148,7 @@ int main(int argc, char *argv[])
                             spawnTimer = 4;
                         }
                     }
+
                     if(player.gameStarted)
                     {
                         player.currentRTime = SDL_GetTicks();
@@ -151,20 +162,19 @@ int main(int argc, char *argv[])
                         }
                     }
 
-
-
                     if(done || player.disconnected)
                     {
                         ingame = 0;
                         if(LINUX)
                             Mix_PlayMusic(player.sounds.backgroundLinux, -1);
                         else
-                            Mix_PlayMusic(player.sounds.backgroundSound,-1);
+                            Mix_PlayMusic(player.sounds.backgroundSound, -1);
                     }
                     frameEnd = SDL_GetTicks();
                     player.deltaTimeMs = frameEnd - frameStart;
                 }
 
+                // om spelaren backar ur spelet till main menu
                 if(ingame==-1 || player.disconnected)
                 {
                     if(!player.disconnected)
