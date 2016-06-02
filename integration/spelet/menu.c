@@ -63,22 +63,21 @@ void initMenu(Menu *menu,Player *man)
 /***** skapar introt till spelet *****/
 void intro()
 {
-    TTF_Font* Sans = TTF_OpenFont("BlackOpsOne-Regular.ttf", 24);
+    TTF_Font* Tough = TTF_OpenFont("BlackOpsOne-Regular.ttf", 24);
 
-    SDL_Color White = {255, 255, 255};  // this is the color in rgb format, maxing out all would give you the color white, and it will be your text's color
+    SDL_Color White = {255, 255, 255};
 
-    SDL_Surface* surfaceMessage = TTF_RenderText_Solid(Sans, "Give War A Chance", White); // as TTF_RenderText_Solid could only be used on SDL_Surface then you have to create the surface first
-    SDL_Surface* subtitle = TTF_RenderText_Solid(Sans,"Press any key to continue",White);
+    SDL_Surface* surfaceMessage = TTF_RenderText_Solid(Tough, "Give War A Chance", White);
+    SDL_Surface* subtitle = TTF_RenderText_Solid(Tough,"Press any key to continue",White);
 
-    SDL_Texture* Message = SDL_CreateTextureFromSurface(program.renderer, surfaceMessage); //now you can convert it into a texture
+    SDL_Texture* Message = SDL_CreateTextureFromSurface(program.renderer, surfaceMessage);
     SDL_Texture* Submessage = SDL_CreateTextureFromSurface(program.renderer,subtitle);
     int *i;
-    SDL_Rect Message_rect; //create a rect
+    SDL_Rect Message_rect;
     SDL_Rect mini;
-    //Message_rect.x = 1024/2-125;  //controls the rect's x coordinate
-    Message_rect.y = 768/2; // controls the rect's y coordinte
-    Message_rect.w = 300; // controls the width of the rect
-    Message_rect.h = 100; // controls the height of the rect
+    Message_rect.y = 768/2;
+    Message_rect.w = 300;
+    Message_rect.h = 100;
     Message_rect.x =0;
 
 
@@ -94,7 +93,7 @@ void intro()
     }
     else
     {
-       Mix_LoadMUS("Soundeffects/ATeam_theme5.mp3");
+       Mix_LoadMUS("Soundeffects/ATeam_theme5.MP3");
     }
     Mix_PlayMusic(introMusic, -1);
 
@@ -117,10 +116,8 @@ void intro()
           quit = true;
        }
      }
-      //set the drawing color to blue
     SDL_SetRenderDrawColor(program.renderer, 0, 0, 255, 255);
 
-    //Clear the screen (to blue)
     SDL_RenderClear(program.renderer);
      if(Message_rect.x != 1024/2-125)
      {
@@ -132,7 +129,7 @@ void intro()
      SDL_RenderPresent(program.renderer);
      SDL_Delay(20);
      }
-    TTF_CloseFont(Sans);
+    TTF_CloseFont(Tough);
 }
 
 /***** hjälpmenyn som visar hur man spelar *****/
