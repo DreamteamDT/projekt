@@ -655,8 +655,8 @@ void doRender(Player *man,Bullet b[])
         if(b[i].active == 1)
         {
 
-            SDL_Rect faggot = {b[i].x , b[i].y,8,8};
-            SDL_RenderCopy(program.renderer,man->bullet,NULL,&faggot);
+            SDL_Rect object = {b[i].x , b[i].y,8,8};
+            SDL_RenderCopy(program.renderer,man->bullet,NULL,&object);
         }
     }
     for(i=0; i<4; i++)
