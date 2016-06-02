@@ -89,11 +89,11 @@ void intro()
     Mix_Music *introMusic;
     if(LINUX)
     {
-       Mix_LoadMUS("Soundeffects/ATeam_theme5.wav");
+      introMusic = Mix_LoadMUS("Soundeffects/ATeam_theme5.wav");
     }
     else
     {
-       Mix_LoadMUS("Soundeffects/ATeam_theme5.MP3");
+      introMusic = Mix_LoadMUS("Soundeffects/ATeam_theme5.MP3");
     }
     Mix_PlayMusic(introMusic, -1);
 
