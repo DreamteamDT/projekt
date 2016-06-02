@@ -79,7 +79,10 @@ void getSpawn(int next,Player *player)
 
 int main(int argc, char **argv)
 {
-    int maxPlayers = 4;
+    /***** en bugg gör så att maxPlayers måste vara 5,
+           ett tillägg görs senare i koden (rad 168) så att
+           bara 4 spelare kan connecta till servern i alla fall *****/
+    int maxPlayers = 5;
     int x,y,type,id,next=0,offset,max,hitid;
     IPaddress ip;
     char tmp[1024];
@@ -99,7 +102,7 @@ int main(int argc, char **argv)
     Player players[maxPlayers];
     SDL_Init(SDL_INIT_EVERYTHING);
     SDLNet_Init();
-    int i,k,len,size;
+    int i,k, j,len,size;
     int killed,died,scoreUpdate = 0;
 
     for(i=0; i<maxPlayers; i++) //initiera allt till 0
@@ -161,7 +164,8 @@ int main(int argc, char **argv)
         /***** lägger till ny klient *****/
         if(players[next].tcpsock)
         {
-            if(playernum<maxPlayers)
+            /***** -1 gör så att bara 4 spelare kan connecta till servern *****/
+            if(playernum<maxPlayers-1)
             {
                 if(playernum > 0)
                     if(gameStarted == 0)
@@ -364,12 +368,12 @@ int main(int argc, char **argv)
                             printf("Successfully disconnected player %d.\n",id);
 
                             /***** hittar första bästa lediga spot *****/
-                            for(i=0; i<maxPlayers; i++)
+                            for(j=0; j<maxPlayers; j++)
                             {
-                                if(!players[i].exists)
+                                if(!players[j].exists)
                                 {
-                                    next = i;
-                                    i = 10;
+                                    next = j;
+                                    j = 5;
                                 }
                             }
                         }
@@ -378,6 +382,7 @@ int main(int argc, char **argv)
                             for(k=0; k<maxPlayers; k++)
                             {
                                 if(players[k].exists)
+                                {
                                     if(k!=i)
                                     {
                                         size=0;
@@ -391,7 +396,7 @@ int main(int argc, char **argv)
                                             }
                                         }
                                     }
-
+                                }
                             }
                         }
 
@@ -432,12 +437,12 @@ int main(int argc, char **argv)
                     printf("Player %d has been kicked for being AFK.\n",i);
 
                     /***** hittar första bästa lediga spot *****/
-                    for(i=0; i<maxPlayers; i++)
+                    for(j=0; j<maxPlayers; j++)
                     {
-                        if(!players[i].exists)
+                        if(!players[j].exists)
                         {
-                            next = i;
-                            i = 10;
+                            next = j;
+                            j = 5;
                         }
                     }
                 }
@@ -493,9 +498,6 @@ int main(int argc, char **argv)
                 lastPrint=roundTime;
             }
         }
-
-
-
     }
 
     SDLNet_TCP_Close(tcpsock);
