@@ -18,7 +18,7 @@ const int WINDOW_WIDTH = 640;
 const int WINDOW_HEIGHT = 480;
 const char* WINDOW_TITLE = "SDL Start";
 
-/** LÄSER IN HELA STRÄNGEN**/
+/***** läser in hela strängen *****/
 int uncomplete_string(char tmp[])
 {
     int i=0;
@@ -31,7 +31,7 @@ int uncomplete_string(char tmp[])
     return 1;
 }
 
-/** STRUCT FÖR ALLA CONNECTADE KLIENTER **/
+/***** struct för alla connectade klienter *****/
 typedef struct
 {
     UDPpacket *p;
@@ -51,7 +51,7 @@ struct Program
     SDL_Renderer *renderer;
 };
 
-/** SKICKAR SPAWN POS TILL NYA SPELARE **/
+/***** skickar spawn position till nya spelare *****/
 void getSpawn(int next,Player *player)
 {
     int i;
@@ -155,9 +155,11 @@ int main(int argc, char **argv)
     int running = 1;
     while(running)
     {
-        /** KOLLAR IFALL EN NY KLIENT VILL ANSLUTA **/
+        /***** kollar ifall en ny klient vill ansluta *****/
         players[next].tcpsock = SDLNet_TCP_Accept(tcpsock);
-        if(players[next].tcpsock) /** LÄGGER TILL NY KLIENT **/
+
+        /***** lägger till ny klient *****/
+        if(players[next].tcpsock)
         {
             if(playernum<maxPlayers)
             {
@@ -192,7 +194,8 @@ int main(int argc, char **argv)
                 SDLNet_TCP_Send(players[next].tcpsock,tmp,strlen(tmp)+1);
                 players[next].ip = *SDLNet_TCP_GetPeerAddress(players[next].tcpsock);
 
-                for(i=0; i<maxPlayers; i++) /** HITTAR LEDIG SPOT FÖR NÄSTA KLIENT **/
+                /***** hittar ledig plats för nästa klient *****/
+                for(i=0; i<maxPlayers; i++)
                 {
                     if(!players[i].exists)
                     {
@@ -203,7 +206,9 @@ int main(int argc, char **argv)
                 playernum++;
 
             }
-            else /** OM SERVERN ÄR FULL **/
+
+            /***** om servern är full *****/
+            else
             {
                 type = 4;
                 sprintf(tmp,"%d %d",type,next);
@@ -214,7 +219,7 @@ int main(int argc, char **argv)
 
         }
 
-        /** KOLLA INKOMMANDE DATA PÅ UDP-SOCKETEN **/
+        /***** kolla inkommande data på UDP-socketen *****/
         while(SDLNet_CheckSockets(udpset,0)>0)
         {
             SDLNet_UDP_Recv(rcvSock,rcvPack);
@@ -295,12 +300,15 @@ int main(int argc, char **argv)
                 }
             }
         }
-        while(SDLNet_CheckSockets(tcpset,0)>0) /** KOLLA OM DATA KOMMER IN PÅ NÅGON AV TCP-SOCKETS **/
+
+        /***** kolla om data kommer in på någon av TCP-sockets *****/
+        while(SDLNet_CheckSockets(tcpset,0)>0)
         {
             for(i=0; i<maxPlayers; i++)
             {
                 if(players[i].exists)
-                    if(SDLNet_SocketReady(players[i].tcpsock)) /** KOLLAR VILKEN AV SOCKETARNA SOM DATA KOMMER IN PÅ **/
+                    /***** kollar vilken av socketarna som data kommer in på *****/
+                    if(SDLNet_SocketReady(players[i].tcpsock))
                     {
                         offset = 0;
                         max = 0;
@@ -315,7 +323,9 @@ int main(int argc, char **argv)
                             printf("tar emot data\n");
                             max++;
                         }
-                        while(uncomplete_string(tmp) && max<20); /** LÄSER IN HELA STRÄNGEN SAMT KRASH DETECT (MAX 20)**/
+
+                        /***** läser in hela strängen samt krash detect (MAX 20) *****/
+                        while(uncomplete_string(tmp) && max<20);
 
                         sscanf(tmp,"%d %d",&type,&id);
                         printf("type: %d\n",type);
@@ -325,7 +335,9 @@ int main(int argc, char **argv)
                             type = 3;
                             sprintf(tmp,"%d %d \n",type,i);
                         }
-                        if(type == 3) /** SPELARE DISCONNECTAD **/
+
+                        /***** spelare disconnectad *****/
+                        if(type == 3)
                         {
                             for(k=0; k<maxPlayers; k++)
                             {
@@ -350,7 +362,9 @@ int main(int argc, char **argv)
                             players[i].exists = 0;
                             playernum--;
                             printf("Successfully disconnected player %d.\n",id);
-                            for(i=0; i<maxPlayers; i++) //Hittar första bästa lediga spot
+
+                            /***** hittar första bästa lediga spot *****/
+                            for(i=0; i<maxPlayers; i++)
                             {
                                 if(!players[i].exists)
                                 {
@@ -389,7 +403,8 @@ int main(int argc, char **argv)
         {
             if(players[i].exists)
             {
-                if((SDL_GetTicks()-players[i].lastData > 120000)) /** KICK PLAYER IF AFK FOR >120 SECONDS **/
+                /** KICK PLAYER IF AFK FOR >120 SECONDS **/
+                if((SDL_GetTicks()-players[i].lastData > 120000))
                 {
                     type = 3;
                     sprintf(tmp,"%d %d \n",type,i);
@@ -415,7 +430,9 @@ int main(int argc, char **argv)
                     players[i].exists = 0;
                     playernum--;
                     printf("Player %d has been kicked for being AFK.\n",i);
-                    for(i=0; i<maxPlayers; i++) //Hittar första bästa lediga spot
+
+                    /***** hittar första bästa lediga spot *****/
+                    for(i=0; i<maxPlayers; i++)
                     {
                         if(!players[i].exists)
                         {
