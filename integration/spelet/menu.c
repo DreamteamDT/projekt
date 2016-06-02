@@ -226,12 +226,14 @@ int handleMenu(int *exit)
     return pickCharacter;
 }
 
+/***** visar main menu *****/
 void displayMenu(Menu menu)
 {
     SDL_RenderClear(program.renderer);
     SDL_RenderCopy(program.renderer,menu.texture,&menu.rect,&menu.rect);
     SDL_RenderPresent(program.renderer);
 }
+
 
 void initPick(Menu *pick)
 {
