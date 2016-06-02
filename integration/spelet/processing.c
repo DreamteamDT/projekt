@@ -231,6 +231,7 @@ int processEvents(Player *man,Bullet b[],int *moved,int *type,int *direct,Networ
             man->y+=(unit_vector.y*200);
             *moved = 1;
             *type = 2;
+            // variabler för kollisiondetect
             *direct = -1;
             man->blinkRect.w = 0;
             man->spellReady = 0;
@@ -642,23 +643,25 @@ void checkRunningEnemyDirection(Player *man, int *bulletX, int *bulletY, int id)
 void doRender(Player *man,Bullet b[])
 {
     int i,j;
-    //set the drawing color to blue
+    // set the drawing color to blue
     SDL_SetRenderDrawColor(program.renderer, 0, 0, 255, 255);
-    //Clear the screen (to blue)
+    // Clear the screen (to blue)
 
     SDL_Rect bg = {0,0,1024,768};
 
     SDL_RenderCopy(program.renderer,man->background,NULL,&bg);
 
+    // ritar spelarens skott
     for(i=0; i<20; i++)
     {
         if(b[i].active == 1)
         {
-
             SDL_Rect faggot = {b[i].x , b[i].y,8,8};
             SDL_RenderCopy(program.renderer,man->bullet,NULL,&faggot);
         }
     }
+
+    // ritar fienders skott
     for(i=0; i<4; i++)
     {
         for(j=0; j<20; j++)
@@ -674,6 +677,7 @@ void doRender(Player *man,Bullet b[])
         }
     }
 
+    // ritar spelare
     if(man->alive)
     {
         SDL_Rect rect = { man->x, man->y, 64, 64 };
@@ -682,6 +686,7 @@ void doRender(Player *man,Bullet b[])
         SDL_RenderCopy(program.renderer,man->texture,&src,&rect);
     }
 
+    // ritar fiender
     for(i=0; i<4; i++)
     {
         if (man->enemies[i].exists && man->enemies[i].alive)
@@ -690,20 +695,21 @@ void doRender(Player *man,Bullet b[])
             SDL_RenderCopyEx(program.renderer,man->enemies[i].texture, &man->enemies[i].srcRect, &man->enemies[i].dstRect, 0, NULL, 0);
         }
     }
+    // ritar scoreboard
     SDL_Rect scoreBg = {0,630,1024,138};
     SDL_RenderCopy(program.renderer,man->scoreBackground,NULL,&scoreBg);
-
-    // cd bar för blink
-    SDL_Rect blinkRec = {man->blinkRect.x, man->blinkRect.y, man->blinkRect.w, man->blinkRect.h};
-    SDL_RenderCopy(program.renderer,man->cdTimer,NULL,&blinkRec);
-
     SDL_Rect scoreHeadRect = {164,637,300,20};
     SDL_RenderCopy(program.renderer,man->scoreHead,NULL,&scoreHeadRect);
     SDL_RenderCopy(program.renderer,man->score,NULL,&man->scoreRect);
 
+    // ritar cd bar för blink
+    SDL_Rect blinkRec = {man->blinkRect.x, man->blinkRect.y, man->blinkRect.w, man->blinkRect.h};
+    SDL_RenderCopy(program.renderer,man->cdTimer,NULL,&blinkRec);
+
     SDL_Rect cdRect = {500,637,300,20};
     SDL_RenderCopy(program.renderer,man->cdText,NULL,&cdRect);
 
+    // ritar score
     for(i=0; i<4; i++)
     {
         if(man->enemies[i].exists)
@@ -711,7 +717,6 @@ void doRender(Player *man,Bullet b[])
             SDL_RenderCopy(program.renderer,man->enemies[i].score,NULL,&man->enemies[i].scoreRect);
         }
     }
-
 
     SDL_RenderPresent(program.renderer);
 }
