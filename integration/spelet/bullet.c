@@ -1,17 +1,14 @@
 #include "bullet.h"
-//extern void sendBullets(Player *man,Bullet b[],Network *client);
-//extern void send_data(Player *man,Network *client,int type);
-//extern void enemyDeathSound(Player *man, int hitid);
 
 SDL_Texture *getBulletSprite()
 {
     return bullet.texture;
 }
-/**musklick 'aktiverar' skottet*/
+
+/***** skapar ett skott när man skjutit *****/
 int loadAmmo(Bullet b[])
 {
     int i;
-
     for(i=0; i< 20 ; i++)
     {
         if(b[i].active == 0)
@@ -20,11 +17,10 @@ int loadAmmo(Bullet b[])
             b[i].active = 1;
             return i;
         }
-
     }
     return -1;
-
 }
+
 void shotgun(Player *p)
 {
     if(p->shot == 1)
@@ -36,8 +32,8 @@ void shotgun(Player *p)
         }
     }
 }
-/**Tömma bullet struct**/
 
+/***** tar bort spelarens skott *****/
 void clearCartridge(Bullet a[])
 {
     int i;
@@ -47,8 +43,9 @@ void clearCartridge(Bullet a[])
         memset(&a[i],0,sizeof(Bullet));
     }
 }
-/**funktionen tar spelarens pos. samt muspekarens pos. skapar längdvektor
-och sen bedömmer i vilken riktning ska projektilen färdas*/
+
+/***** funktionen tar spelarens pos. samt muspekarens pos. skapar längdvektor
+       och sen bedömmer i vilken riktning ska projektilen färdas *****/
 int addBullet(int x, int y,int dx, Bullet b[],int b1,int b2)
 {
     int i = loadAmmo(b);
@@ -68,7 +65,9 @@ int addBullet(int x, int y,int dx, Bullet b[],int b1,int b2)
     b[i].vector_unitY = (b[i].directionY) / b[i].v_length;
     return i;
 }
-/**Fiendet avfyra skott*/
+
+/***** skapar ett skott när en fiende har skjutit och
+       sen bedömmer i vilken riktning ska projektilen färdas *****/
 void addEnemyBullet(int x,int y,int dx,Bullet b[],int b1,int b2,int i)
 {
     b[i].x = x;
@@ -82,7 +81,8 @@ void addEnemyBullet(int x,int y,int dx,Bullet b[],int b1,int b2,int i)
     b[i].vector_unitY = (b[i].directionY) / b[i].v_length;
     b[i].active = 1;
 }
-/**Collision detektion för när fiendet träffas av ett skott*/
+
+/***** kollisionsdetektion för när fiender träffas av skott *****/
 void detectHit(Player *man,Bullet b[],Network *client)
 {
     int i,j;
@@ -110,7 +110,8 @@ void detectHit(Player *man,Bullet b[],Network *client)
             }
     }
 }
-/** 'döda' bullet för när det träffar kaktus **/
+
+/***** raderar kulor när de träffar kaktusar *****/
 void bulletGone(Bullet b[],Player *man,Network *client)
 {
     int i, j;
@@ -119,6 +120,7 @@ void bulletGone(Bullet b[],Player *man,Network *client)
     {
         if(b[i].active)
         {
+            /***** går igenom alla kaktusar *****/
             if(b[i].x > 361 && b[i].x < 401 && b[i].y > 181 && b[i].y < 247)
             {
                 b[i].active = 0;
@@ -158,7 +160,7 @@ void bulletGone(Bullet b[],Player *man,Network *client)
             {
                 if(man->enemies[i].bullet[j].active)
                 {
-
+                    /***** går igenom alla kaktusar *****/
                     if(man->enemies[i].bullet[j].x > 361 && man->enemies[i].bullet[j].x < 401
                        && man->enemies[i].bullet[j].y > 181 && man->enemies[i].bullet[j].y < 247)
                     {

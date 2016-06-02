@@ -37,3 +37,4 @@
 //int enterIP(Player *man);
 //void createTextures(Player *player);
 //void initSounds(Player *man);
+//void intro(void);

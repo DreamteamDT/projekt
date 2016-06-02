@@ -1,8 +1,6 @@
 #include "init.h"
 #include <stdio.h>
 
-
-
 /***** laddar in bilder för senare användning *****/
 void initPlayer(Player *player)
 {
