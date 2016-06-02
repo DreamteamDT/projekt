@@ -31,7 +31,7 @@ void shotgun(Player *p)
     {
         if(p->thinkTime <= 0)
         {
-            printf("Shit!\n");
+            printf("it!\n");
             p->thinkTime = 20;
         }
     }

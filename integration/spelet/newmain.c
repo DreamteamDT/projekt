@@ -3,7 +3,7 @@
 extern void initSounds(Player *man);
 extern void intro(void);
 
-int global = 0;
+int global = 0; /**global = ett slag timer som hinder 'burst' skott*/
 int main(int argc, char *argv[])
 {
 
@@ -197,7 +197,7 @@ int main(int argc, char *argv[])
     SDLNet_Quit();
     Quit();
 
-    // Close and destroy the window
+
 
     return 0;
 }
