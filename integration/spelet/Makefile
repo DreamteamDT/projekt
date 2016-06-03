@@ -21,7 +21,7 @@ COMPILER_FLAGS = -w -Wl,-subsystem,windows
 LINKER_FLAGS = -lmingw32 -lSDL2main -lSDL2 -lSDL2_net -lSDL2_image -lSDL2_mixer -lSDL2_ttf -std=c99
 
 #OBJ_NAME specifies the name of our executable
-OBJ_NAME = client
+OBJ_NAME = Give_War_a_Chance
 #This is the target that compiles our executable
 all : $(OBJS)
 	$(CC) $(OBJS) $(INCLUDE_PATHS) $(LIBRARY_PATHS) $(COMPILER_FLAGS) $(LINKER_FLAGS) -o $(OBJ_NAME)
